@@ -1,10 +1,11 @@
 *.class
+*.so
+*.dll
 
 # Package Files #
 *.jar
 *.war
 *.ear
 src/native/build
-native/
 jar/
 
