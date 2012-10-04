@@ -96,6 +96,7 @@ Operators
     sm1.mmul(dm1); // matrix multiply, sparse by dense
 
 Per-element operators:
+
     dm1 = dm1.neg();  // element = - element
     dm1 = dm1.inv();   // element = 1 / element 
     dm1 = dm1.add( dm2 );    // by-element addition
