@@ -41,8 +41,8 @@ public class SparseMatrixLil {
 		}
 		
 	}
-	public final int rows;
-	public final int cols;
+	public int rows;
+	public int cols;
 	final ArrayList<Entry> entries = new ArrayList<Entry>();
 
 	public SparseMatrixLil(int rows, int cols ) {

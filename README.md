@@ -9,8 +9,8 @@ such as add, sub, sum, using native Java.
 
 The matrix classes are :
 
-DenseMatrix: for dense matrices
-SparseMatrixLil: for sparse matrices
+    DenseMatrix // for dense matrices
+    SparseMatrixLil // for sparse matrices
 
 You can import statically MatrixUtil.*, in order to have easy access to 
 commands such as 'zeros', 'ones', 'eye' and 'diag'.
@@ -18,12 +18,12 @@ commands such as 'zeros', 'ones', 'eye' and 'diag'.
 Example usage, to multiply two matrices:
 ========================================
 
-import static jeigen.MatrixUtil.*;
-
-DenseMatrix A = rand(3,3);
-DenseMatrix B = rand(3,3);
-DenseMatrix C = A.mmul(B); // mmul is matrix multiplication
-System.out.println(C); // displays C formatted appropriately
+    import static jeigen.MatrixUtil.*;
+    
+    DenseMatrix A = rand(3,3);
+    DenseMatrix B = rand(3,3);
+    DenseMatrix C = A.mmul(B); // mmul is matrix multiplication
+    System.out.println(C); // displays C formatted appropriately
 
 How to link to Jeigen
 =====================
@@ -71,60 +71,60 @@ when built as release, than when built as debug.
 Commands to create new matrices
 ===============================
 
-import static jeigen.MatrixUtil.*;
+    import static jeigen.MatrixUtil.*;
 
-DenseMatrix dm1;
-DenseMatrix dm2;
-dm1 = zeros(5,3);  // creates a dense matrix with 5 rows, and 3 columns
-dm1 = rand( 5,3); // create a 5*3 dense matrix filled with random numbers
-dm1 = ones(5,3);  // 5*3 matrix filled with '1's
-dm1 = diag(rand(5,1)); // creates a 5*5 diagonal matrix of random numbers
-dm1 = eye(5); // creates a 5*5 identity matrix
+    DenseMatrix dm1;
+    DenseMatrix dm2;
+    dm1 = zeros(5,3);  // creates a dense matrix with 5 rows, and 3 columns
+    dm1 = rand( 5,3); // create a 5*3 dense matrix filled with random numbers
+    dm1 = ones(5,3);  // 5*3 matrix filled with '1's
+    dm1 = diag(rand(5,1)); // creates a 5*5 diagonal matrix of random numbers
+    dm1 = eye(5); // creates a 5*5 identity matrix
 
-SparseMatrixLil sm1;
-sm1 = spzeros(5,3); // creates an empty 5*3 sparse matrix
-sm1 = spdiag(rand(5,1)); // creates a sparse 5*5 diagonal matrix of random 
-                       // numbers
-sm1 = speye(5); // creates a 5*5 identity matrix, sparse
+    SparseMatrixLil sm1;
+    sm1 = spzeros(5,3); // creates an empty 5*3 sparse matrix
+    sm1 = spdiag(rand(5,1)); // creates a sparse 5*5 diagonal matrix of random 
+                           // numbers
+    sm1 = speye(5); // creates a 5*5 identity matrix, sparse
 
 Operators
 =========
 
-dm1.mmul(dm1);  // matrix multiply, dense by dense
-dm1.mmul(sm1);  // matrix multiply, dense by sparse
-sm1.mmul(sm1); // matrix multiply, sparse by sparse
-sm1.mmul(dm1); // matrix multiply, sparse by dense
+    dm1.mmul(dm1);  // matrix multiply, dense by dense
+    dm1.mmul(sm1);  // matrix multiply, dense by sparse
+    sm1.mmul(sm1); // matrix multiply, sparse by sparse
+    sm1.mmul(dm1); // matrix multiply, sparse by dense
 
 Per-element operators:
-dm1 = dm1.neg();  // element = - element
-dm1 = dm1.inv();   // element = 1 / element 
-dm1 = dm1.add( dm2 );    // by-element addition
-dm1 = dm1.add( 3 );    // by-element addition, of 3
-dm1 = dm1.sub( 3 );    // by-element subtraction, of 3
-dm1 = dm1.mul( 3 );    // by-element multiplication, by 3
-dm1 = dm1.div( 3 );    // by-element division, by 3
-dm1 = dm1.sub( dm2 );    // by-element subtraction
-dm1 = dm1.mul( dm2 );    // by-element multiplication
-dm1 = dm1.div( dm2 );    // by-element division
+    dm1 = dm1.neg();  // element = - element
+    dm1 = dm1.inv();   // element = 1 / element 
+    dm1 = dm1.add( dm2 );    // by-element addition
+    dm1 = dm1.add( 3 );    // by-element addition, of 3
+    dm1 = dm1.sub( 3 );    // by-element subtraction, of 3
+    dm1 = dm1.mul( 3 );    // by-element multiplication, by 3
+    dm1 = dm1.div( 3 );    // by-element division, by 3
+    dm1 = dm1.sub( dm2 );    // by-element subtraction
+    dm1 = dm1.mul( dm2 );    // by-element multiplication
+    dm1 = dm1.div( dm2 );    // by-element division
 
 Operators in MatrixUtil:
 ========================
 
-import static jeigen.MatrixUtil.*;
+    import static jeigen.MatrixUtil.*;
 
-DenseMatrix dm1;
-dm1 = abs(dm1);  // element = abs(element)
+    DenseMatrix dm1;
+    dm1 = abs(dm1);  // element = abs(element)
 
 Solvers
 =======
 
-DenseMatrix dm1;
-DenseMatrix dm2;
+    DenseMatrix dm1;
+    DenseMatrix dm2;
 
-// to solve dm1.mmul(result) = dm2:
-DenseMatrix result = dm1.ldltSolve(dm2); // using ldlt, dm1 must be positive or
-                                         // negative definite; fast
-DenseMatrix result = dm1.fullPivHouseholderQRSolve(dm2); // no conditions on 
+    // to solve dm1.mmul(result) = dm2:
+    DenseMatrix result = dm1.ldltSolve(dm2); // using ldlt, dm1 must be positive or
+                                             // negative definite; fast
+    DenseMatrix result = dm1.fullPivHouseholderQRSolve(dm2); // no conditions on 
                                                          // dm1, but slower
 
 License

@@ -12,7 +12,7 @@ public class JeigenJna {
 	public static class Jeigen {
 		public static final void addToJnaPath(String newpath ) throws Exception {
 			String oldLibraryPath = System.getProperty( "jna.library.path");
-			System.out.println("adding " + newpath);
+//			System.out.println("adding " + newpath);
 			System.setProperty( "jna.library.path", oldLibraryPath + ":" + newpath );
 		}
 		static {
