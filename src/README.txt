@@ -32,13 +32,13 @@ First, you need to obtain or build the native library. The native library
 depends only on Eigen, included in the source code for Jeigen, so it is
 very easy to build, just needing CMake, and a c++ compiler.
 
-In Eclipse, add a user library, and add the 'jar/Jeigen.jar' jar to the 
-library.  Then expand the library entry for 'jeigen', select 'Native
-library location', then click 'Edit', and browse to the directory 
-containing the native library.
+In Eclipse, add a user library, and add the 'Jeigen.jar' jar to the library.
+Then expand the library entry for 'jeigen', select 'Native library location',
+then click 'Edit', and browse to the directory containing the native
+library.
 
 (If you are not using Eclipse, then add:
-   -Djava.library.path=/path/to/jeigen/native/<platform>/folder
+   -Djava.library.path=/path/to/libjeigen.so 
 ... to the java vm arguments)
 
 How to build the native library
@@ -126,9 +126,4 @@ DenseMatrix result = dm1.ldltSolve(dm2); // using ldlt, dm1 must be positive or
                                          // negative definite; fast
 DenseMatrix result = dm1.fullPivHouseholderQRSolve(dm2); // no conditions on 
                                                          // dm1, but slower
-
-License
-=======
-
-Jeigen is available under GPL v3, or greater, license, see LICENSE.txt
 

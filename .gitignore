@@ -4,3 +4,7 @@
 *.jar
 *.war
 *.ear
+src/native/build
+native/
+jar/
+
