@@ -21,7 +21,7 @@ void valuesToMatrix( int rows, int cols, double *values, MatrixXd *pM ) {
    }
 }
 
-void matrixToValues( int rows, int cols, MatrixXd *pM, double *values ) {
+void matrixToValues( int rows, int cols, const MatrixXd *pM, double *values ) {
    int i = 0;
    for( int c = 0; c < cols; c++ ) {
       for ( int r = 0; r < rows; r++ ) { 
@@ -132,6 +132,18 @@ void fullpivhouseholderqr_solve( int arows, int acols, int bcols, double *avalue
    valuesToMatrix( acols, bcols, bvalues, &b );
    MatrixXd result = A.fullPivHouseholderQr().solve(b);
    matrixToValues( acols, bcols, &result, xvalues );   
+}
+void svd_dense( int n, int p, double *in, double *u, double *s, double *v ) {
+   int m = min( n,p);
+   MatrixXd In(n, p );
+   valuesToMatrix(n,p, in, &In );
+   JacobiSVD<MatrixXd> svd(In, ComputeThinU | ComputeThinV);
+   matrixToValues( n, m, &(svd.matrixU()), u );
+   for( int i = 0; i < m; i++ ) {
+      s[i] = svd.singularValues()(i);
+   }
+//   matrixToValues( n, p, &(svd.singularValues()), s );
+   matrixToValues( p, m, &(svd.matrixV()), v );
 }
 }
 

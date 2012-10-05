@@ -21,5 +21,8 @@ extern "C" {
    void getSparseMatrixStats( int handle, int* stats ); // rows, cols, nonzero
    void getSparseMatrix( int handle, int *rows, int *cols, double *values );
    void freeSparseMatrix( int handle );
+
+   // does thin svd, returning u,s,v
+   void svd_dense( int numrows, int numcols, double *in, double *u, double *s, double *v );
 }
 

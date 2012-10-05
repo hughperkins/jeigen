@@ -6,8 +6,9 @@
 
 package jeigen;
 
-import junit.framework.TestCase;
 import static jeigen.MatrixUtil.*;
+import jeigen.DenseMatrix.SvdResult;
+import junit.framework.TestCase;
 
 public class TestJeigen extends TestCase {
 	public void testOne() {
@@ -99,6 +100,16 @@ public class TestJeigen extends TestCase {
 		DenseMatrix X = A.fullPivHouseholderQRSolve(B);
 		timer.printTimeCheckMilliseconds();
 		assertTrue( A.mmul(X).equals(B) );
+	}
+	public void testSvd() {
+		DenseMatrix A = rand(5,8);
+		SvdResult result = A.svd();
+		assertEquals(A, result.U.mmul(diag(result.S)).mmul(result.V.t()));
+		A = rand(500,1000);
+		Timer timer = new Timer();
+		result = A.svd();
+		timer.printTimeCheckMilliseconds();
+		assertEquals(A, result.U.mmul(diag(result.S)).mmul(result.V.t()));
 	}
 	public void testElements() {
 		DenseMatrix A = rand(5,8);

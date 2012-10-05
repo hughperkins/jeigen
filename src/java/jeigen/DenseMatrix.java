@@ -425,4 +425,25 @@ public class DenseMatrix {
 				values, b.values, result.values );
 		return result;		
 	}
+	public static class SvdResult {
+		public final DenseMatrix U;
+		public final DenseMatrix S;
+		public final DenseMatrix V;
+		public SvdResult(DenseMatrix u, DenseMatrix s, DenseMatrix v) {
+			U = u;
+			S = s;
+			V = v;
+		}
+	}
+	public SvdResult svd() { // returns the thin U and V (Note:  I have no objection to extending this to make
+		                     // the thinness of U and V optional)
+		int n = rows;
+		int p = cols;
+		int m = Math.min(n,p);
+		DenseMatrix U = zeros(n,m);
+		DenseMatrix S = zeros(m,1);
+		DenseMatrix V = zeros(p,m);
+		JeigenJna.Jeigen.svd_dense(rows, cols, values, U.values, S.values, V.values);
+		return new SvdResult(U, S, V);
+	}
 }
