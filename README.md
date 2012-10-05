@@ -141,5 +141,5 @@ Solvers
 License
 =======
 
-Jeigen is available under GPL v3, or greater, license, see LICENSE.txt
+Jeigen is available under MPL v2 license, http://mozilla.org/MPL/2.0/
 

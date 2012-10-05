@@ -1,6 +1,8 @@
 // Copyright Hugh Perkins 2012, hughperkins -at- gmail
 //
-// License: GNU GPL v3 (or any later version), see LICENSE.txt for details.
+// This Source Code Form is subject to the terms of the Mozilla Public License, 
+// v. 2.0. If a copy of the MPL was not distributed with this file, You can 
+// obtain one at http://mozilla.org/MPL/2.0/.
 
 #pragma once
 
@@ -8,6 +10,7 @@
 // which is then easy to link with from jna
 
 extern "C" {
+
    void init();
    void dense_multiply( int rows, int middle, int cols, double *first, double *second, double *result );
    void sparse_dense_multiply( int rows, int middle, int cols, int oneHandle, double *second, double *result );
