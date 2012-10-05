@@ -100,4 +100,14 @@ public class TestJeigen extends TestCase {
 		timer.printTimeCheckMilliseconds();
 		assertTrue( A.mmul(X).equals(B) );
 	}
+	public void testElements() {
+		DenseMatrix A = rand(5,8);
+		DenseMatrix B = rand(5,8);
+		assertTrue(zeros(5,8).equals(A.sub(A)));
+		assertTrue(A.equals(A.add(A).div(2)));
+		assertTrue(ones(5,8).equals(A.div(A)));
+		assertTrue(A.equals(A.mul(A).div(A)));
+		assertTrue(A.neg().abs().equals(A));
+		assertTrue(A.neg().add(A).equals(zeros(5,8)));
+	}
 }

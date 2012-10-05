@@ -173,7 +173,7 @@ public class DenseMatrix {
 		return result;		
 	}
 	public DenseMatrix mul(DenseMatrix second){
-		if( this.cols != second.cols || this.rows != second.cols ) {
+		if( this.cols != second.cols || this.rows != second.rows ) {
 			throw new RuntimeException("matrix size mismatch: " + shape() + " vs " + second.shape() );
 		}
 		DenseMatrix result = new DenseMatrix(rows,cols);
@@ -184,7 +184,7 @@ public class DenseMatrix {
 		return result;		
 	}
 	public DenseMatrix div(DenseMatrix second){
-		if( this.cols != second.cols || this.rows != second.cols ) {
+		if( this.cols != second.cols || this.rows != second.rows ) {
 			throw new RuntimeException("matrix size mismatch: " + shape() + " vs " + second.shape() );
 		}
 		DenseMatrix result = new DenseMatrix(rows,cols);
@@ -195,7 +195,7 @@ public class DenseMatrix {
 		return result;		
 	}
 	public DenseMatrix add(DenseMatrix second){
-		if( this.cols != second.cols || this.rows != second.cols ) {
+		if( this.cols != second.cols || this.rows != second.rows ) {
 			throw new RuntimeException("matrix size mismatch: " + shape() + " vs " + second.shape() );
 		}
 		DenseMatrix result = new DenseMatrix(rows,cols);
@@ -206,7 +206,7 @@ public class DenseMatrix {
 		return result;		
 	}
 	public DenseMatrix sub(DenseMatrix second){
-		if( this.cols != second.cols || this.rows != second.cols ) {
+		if( this.cols != second.cols || this.rows != second.rows ) {
 			throw new RuntimeException("matrix size mismatch: " + shape() + " vs " + second.shape() );
 		}
 		DenseMatrix result = new DenseMatrix(rows,cols);
@@ -222,12 +222,12 @@ public class DenseMatrix {
 			return false;
 		}
 		DenseMatrix second = (DenseMatrix)osecond;
-		if( this.cols != second.cols || this.rows != second.cols ) {
+		if( this.cols != second.cols || this.rows != second.rows ) {
 			return false;
 		}
 		int numElements = rows * cols;
 		for( int i = 0; i < numElements; i++ ) {
-			if( Math.abs( values[i] - second.values[i] ) > 0.0000001 ) {
+			if( Math.abs( values[i] - second.values[i] ) > 0.000001 ) {
 				return false;
 			}
 		}
@@ -294,7 +294,7 @@ public class DenseMatrix {
 		return result;
 	}
 	public DenseMatrix eq( DenseMatrix second ) {
-		if( this.cols != second.cols || this.rows != second.cols ) {
+		if( this.cols != second.cols || this.rows != second.rows ) {
 			throw new RuntimeException("matrix size mismatch " + shape() + " vs " + second.shape() );
 		}
 		DenseMatrix result = new DenseMatrix(rows,cols);
@@ -307,7 +307,7 @@ public class DenseMatrix {
 		return result;
 	}
 	public DenseMatrix ne( DenseMatrix second ) {
-		if( this.cols != second.cols || this.rows != second.cols ) {
+		if( this.cols != second.cols || this.rows != second.rows ) {
 			throw new RuntimeException("matrix size mismatch " + shape() + " vs " + second.shape() );
 		}
 		DenseMatrix result = new DenseMatrix(rows,cols);
@@ -320,7 +320,7 @@ public class DenseMatrix {
 		return result;
 	}
 	public DenseMatrix le( DenseMatrix second ) {
-		if( this.cols != second.cols || this.rows != second.cols ) {
+		if( this.cols != second.cols || this.rows != second.rows ) {
 			throw new RuntimeException("matrix size mismatch " + shape() + " vs " + second.shape() );
 		}
 		DenseMatrix result = new DenseMatrix(rows,cols);
@@ -333,7 +333,7 @@ public class DenseMatrix {
 		return result;
 	}
 	public DenseMatrix ge( DenseMatrix second ) {
-		if( this.cols != second.cols || this.rows != second.cols ) {
+		if( this.cols != second.cols || this.rows != second.rows ) {
 			throw new RuntimeException("matrix size mismatch " + shape() + " vs " + second.shape() );
 		}
 		DenseMatrix result = new DenseMatrix(rows,cols);
@@ -346,7 +346,7 @@ public class DenseMatrix {
 		return result;
 	}
 	public DenseMatrix gt( DenseMatrix second ) {
-		if( this.cols != second.cols || this.rows != second.cols ) {
+		if( this.cols != second.cols || this.rows != second.rows ) {
 			throw new RuntimeException("matrix size mismatch " + shape() + " vs " + second.shape() );
 		}
 		DenseMatrix result = new DenseMatrix(rows,cols);
@@ -359,7 +359,7 @@ public class DenseMatrix {
 		return result;
 	}
 	public DenseMatrix lt( DenseMatrix second ) {
-		if( this.cols != second.cols || this.rows != second.cols ) {
+		if( this.cols != second.cols || this.rows != second.rows ) {
 			throw new RuntimeException("matrix size mismatch " + shape() + " vs " + second.shape() );
 		}
 		DenseMatrix result = new DenseMatrix(rows,cols);
