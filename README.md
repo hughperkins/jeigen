@@ -97,8 +97,8 @@ Update matrices
     
     sm1.append( 2, 3, 5.0 ); // adds value 5.0 at row 2, column 3
 
-Operators
-=========
+Matrix Operators
+================
 
     dm1.mmul(dm1);  // matrix multiply, dense by dense
     dm1.mmul(sm1);  // matrix multiply, dense by sparse
@@ -106,6 +106,7 @@ Operators
     sm1.mmul(dm1); // matrix multiply, sparse by dense
 
 Per-element operators:
+======================
 
     dm1 = dm1.neg();  // element = - element
     dm1 = dm1.inv();   // element = 1 / element 
@@ -117,6 +118,32 @@ Per-element operators:
     dm1 = dm1.sub( dm2 );    // by-element subtraction
     dm1 = dm1.mul( dm2 );    // by-element multiplication
     dm1 = dm1.div( dm2 );    // by-element division
+
+Aggregation operators
+=====================
+
+These work for both sparse and dense matrices.
+
+    dm1 = dm1.sum(0); // sum over all rows
+    dm1 = dms.sum(1); // sum over all columns
+
+Scalar operators
+================
+
+Work for both dense and sparse.
+
+    double value = dm1.s();  // returns dm1.get(0,0);
+
+Slicing
+=======
+
+Slices are by-value.  They work for both dense and sparse matrices.
+
+   dm1 = dm1.slice(startrow, endrowexclusive, startcol, endcolexclusive);
+   dm1 = dm1.row(row);
+   dm1 = dm1.col(col);
+   dm1 = dm1.rows(startrow, endrowexclusive);
+   dm1 = dm1.cols(startcol, endcolexclusive);
 
 Operators in MatrixUtil:
 ========================
