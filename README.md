@@ -105,6 +105,9 @@ Matrix Operators
     sm1.mmul(sm1); // matrix multiply, sparse by sparse
     sm1.mmul(dm1); // matrix multiply, sparse by dense
 
+    dm1 = dm1.t(); // matrix transpose, dense
+    sm1 = sm1.t(); // matrix transpose, sparse
+
 Per-element operators:
 ======================
 
