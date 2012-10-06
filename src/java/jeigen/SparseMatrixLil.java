@@ -14,38 +14,43 @@ import java.util.*;
 // Note that DenseMatrix is faster than SparseMatrixLil, if the matrix is fully dense
 // SparseMatrixLil is only faster if a lot of the matrix values are zero
 public class SparseMatrixLil {
-	public static class Entry implements Comparable<Entry> {
-		public int row;
-		public int col;
-		public double value;
-		public Entry(int row, int col, double value) {
-			this.row = row;
-			this.col = col;
-			this.value = value;
-		}
-		@Override
-		public int compareTo(Entry o) {
-			if( o.col > col ) {
-				return 1;
-			} else if( o.col < col ) {
-				return -1;
-			}
-			if( o.row > row ) {
-				return 1;
-			} else if( o.row < row ) {
-				return -1;
-			}
-			return 0;
-		}
-		@Override
-		public String toString() {
-			return "Entry [row=" + row + ", col=" + col + ", value=" + value + "]";
-		}
-		
-	}
+//	public static class Entry implements Comparable<Entry> {
+//		public int row;
+//		public int col;
+//		public double value;
+//		public Entry(int row, int col, double value) {
+//			this.row = row;
+//			this.col = col;
+//			this.value = value;
+//		}
+//		@Override
+//		public int compareTo(Entry o) {
+//			if( o.col > col ) {
+//				return 1;
+//			} else if( o.col < col ) {
+//				return -1;
+//			}
+//			if( o.row > row ) {
+//				return 1;
+//			} else if( o.row < row ) {
+//				return -1;
+//			}
+//			return 0;
+//		}
+//		@Override
+//		public String toString() {
+//			return "Entry [row=" + row + ", col=" + col + ", value=" + value + "]";
+//		}
+//		
+//	}
 	public int rows;
 	public int cols;
-	final ArrayList<Entry> entries = new ArrayList<Entry>();
+	int size = 0;
+	int capacity = 1000;
+//	final ArrayList<Entry> entries = new ArrayList<Entry>();
+	int[] rowIdx = new int[capacity];
+	int[] colIdx = new int[capacity];
+	double[] values = new double[capacity];
 
 	public SparseMatrixLil(int rows, int cols ) {
 		this.rows = rows;
@@ -80,10 +85,11 @@ public class SparseMatrixLil {
 			throw new RuntimeException("startcol must be at least 0, but was  " + startcol );			
 		}
 		SparseMatrixLil result = new SparseMatrixLil(resultrows, resultcols);
-		for( Entry entry : entries ) {
-			if( entry.row >= startrow && entry.row < endrowexclusive
-					&& entry.col >= startcol && entry.col < endcolexclusive ) {
-				result.append(entry.row - startrow,entry.col - startcol, entry.value );
+		int count = size; for( int i = 0; i < count; i++ ) {
+			int row = rowIdx[i]; int col = colIdx[i]; double value = values[i];
+			if( row >= startrow && row < endrowexclusive
+					&& col >= startcol && col < endcolexclusive ) {
+				result.append(row - startrow,col - startcol, value );
 			}
 		}
 		return result;
@@ -100,11 +106,15 @@ public class SparseMatrixLil {
 			throw new RuntimeException("row mismatch " + rows + " vs " + two.rows );
 		}
 		SparseMatrixLil result = spzeros(rows,cols + two.cols );
-		for( Entry entry : entries ) {
-			result.append(entry.row, entry.col, entry.value );
+		int count = size; for( int i = 0; i < count; i++ ) {
+			int row = rowIdx[i]; int col = colIdx[i]; double value = values[i];
+//		for( Entry entry : entries ) {
+			result.append(row, col, value );
 		}
-		for( Entry entry : two.entries ) {
-			result.append(entry.row, entry.col + cols, entry.value );
+		count = two.size; for( int i = 0; i < count; i++ ) {
+			int row = two.rowIdx[i]; int col = two.colIdx[i]; double value = two.values[i];
+//		for( Entry entry : two.entries ) {
+			result.append(row, col + cols, value );
 		}
 		return result;
 	}
@@ -113,29 +123,52 @@ public class SparseMatrixLil {
 			throw new RuntimeException("col mismatch " + cols + " vs " + two.cols );
 		}
 		SparseMatrixLil result = spzeros(rows + two.rows,cols );
-		for( Entry entry : entries ) {
-			result.append(entry.row, entry.col, entry.value );
+		int count = size; for( int i = 0; i < count; i++ ) {
+			int row = rowIdx[i]; int col = colIdx[i]; double value = values[i];
+//		for( Entry entry : entries ) {
+			result.append(row, col, value );
 		}
-		for( Entry entry : two.entries ) {
-			result.append(entry.row + rows, entry.col, entry.value );
+		count = two.size; for( int i = 0; i < count; i++ ) {
+			int row = two.rowIdx[i]; int col = two.colIdx[i]; double value = two.values[i];
+//		for( Entry entry : two.entries ) {
+			result.append(row + rows, col, value );
 		}
 		return result;
 	}
 	public SparseMatrixLil t() {
 		SparseMatrixLil result = new SparseMatrixLil(cols, rows);
-		int numElements = entries.size();
+		int numElements = size;
 		result.reserve(numElements);
-		for( int i = 0; i < numElements; i++ ) {
-			Entry entry = entries.get(i);
-			result.append(entry.col, entry.row, entry.value );
+		int count = size; for( int i = 0; i < count; i++ ) {
+			int row = rowIdx[i]; int col = colIdx[i]; double value = values[i];
+			result.append(col, row, value );
 		}
 		return result;
 	}
 	public void reserve(int capacity) {
-		entries.ensureCapacity(capacity);
+		if( capacity > this.capacity ) {
+			int[] newrows = new int[capacity];
+			int[] newcols = new int[capacity];
+			double[] newvalues = new double[capacity];
+			for( int i = 0; i < this.size; i++ ) {
+				newrows[i] = rowIdx[i];
+				newcols[i] = colIdx[i];
+				newvalues[i] = values[i];
+			}
+			this.capacity = capacity;
+			this.rowIdx = newrows;
+			this.colIdx = newcols;
+			this.values = newvalues;
+		}
 	}
 	public void append(int row, int col, double value ) {
-		entries.add( new Entry(row,col,value));
+		if( size >= capacity - 1 ) {
+			reserve( capacity * 2 );
+		}
+		rowIdx[size] = row;
+		colIdx[size] = col;
+		values[size] = value;
+		size++;
 	}
 	// sparse fill for now...
 	public static SparseMatrixLil rand( int rows, int cols ) {
@@ -150,26 +183,19 @@ public class SparseMatrixLil {
 		return result;
 	}
 	void validateEntries() {
-		for( Entry entry : entries ) {
-			if( entry.row < 0 || entry.col < 0 || entry.row >= rows || entry.col >= cols ) {
-				throw new RuntimeException("entry " + entry + " outside of matrix dimensions");
+		int count = size; for( int i = 0; i < count; i++ ) {
+			int row = rowIdx[i]; int col = colIdx[i]; double value = values[i];
+//		for( Entry entry : entries ) {
+			if( row < 0 || col < 0 || row >= rows || col >= cols ) {
+				throw new RuntimeException("entry " + row + " " + col + " outside of matrix dimensions");
 			}
 		}
 	}
 	static int allocateSparseMatrix(SparseMatrixLil mat ) {
 //		Collections.sort(mat.entries);
 		mat.validateEntries();
-		int numEntries = mat.entries.size();
-		int[] rowarray = new int[numEntries];
-		int[] colarray = new int[numEntries];
-		double[] valuearray = new double[numEntries];
-		for( int i = 0; i < numEntries; i++ ) {
-			Entry entry = mat.entries.get(i);
-			rowarray[i] = entry.row;
-			colarray[i] = entry.col;
-			valuearray[i] = entry.value;
-		}
-		return JeigenJna.Jeigen.allocateSparseMatrix(mat.entries.size(), mat.rows, mat.cols, rowarray, colarray, valuearray);		
+		return JeigenJna.Jeigen.allocateSparseMatrix(mat.size, mat.rows, mat.cols, 
+				mat.rowIdx, mat.colIdx, mat.values);		
 	}
 	static SparseMatrixLil getSparseMatrixFromHandle(int handle ) {
 		int[] stats = new int[3];
@@ -230,64 +256,72 @@ public class SparseMatrixLil {
 	}
 	public SparseMatrixLil neg() {
 		SparseMatrixLil result = new SparseMatrixLil(rows,cols);
-		result.reserve(entries.size());
-		for( Entry entry : entries ) {
-			result.append(entry.row,entry.col, - entry.value ); 
+		result.reserve(size);
+		int count = size; for( int i = 0; i < count; i++ ) {
+			int row = rowIdx[i]; int col = colIdx[i]; double value = values[i];
+			result.append(row,col, - value ); 
 		}
 		return result;		
 	}
 	public SparseMatrixLil inv() {
 		SparseMatrixLil result = new SparseMatrixLil(rows,cols);
-		result.reserve(entries.size());
-		for( Entry entry : entries ) {
-			result.append(entry.row,entry.col, 1 / entry.value ); 
+		result.reserve(size);
+		int count = size; for( int i = 0; i < count; i++ ) {
+			int row = rowIdx[i]; int col = colIdx[i]; double value = values[i];
+			result.append(row,col, 1 / value ); 
 		}
 		return result;		
 	}
 	public SparseMatrixLil add(double s) {
 		SparseMatrixLil result = new SparseMatrixLil(rows,cols);
-		result.reserve(entries.size());
-		for( Entry entry : entries ) {
-			result.append(entry.row,entry.col, entry.value + s ); 
+		result.reserve(size);
+		int count = size; for( int i = 0; i < count; i++ ) {
+			int row = rowIdx[i]; int col = colIdx[i]; double value = values[i];
+			result.append(row,col, value + s ); 
 		}
 		return result;		
 	}
 	public SparseMatrixLil sub(double s) {
 		SparseMatrixLil result = new SparseMatrixLil(rows,cols);
-		result.reserve(entries.size());
-		for( Entry entry : entries ) {
-			result.append(entry.row,entry.col, entry.value - s ); 
+		result.reserve(size);
+		int count = size; for( int i = 0; i < count; i++ ) {
+			int row = rowIdx[i]; int col = colIdx[i]; double value = values[i];
+			result.append(row,col, value - s ); 
 		}
 		return result;		
 	}
 	public SparseMatrixLil mul(double s) {
 		SparseMatrixLil result = new SparseMatrixLil(rows,cols);
-		result.reserve(entries.size());
-		for( Entry entry : entries ) {
-			result.append(entry.row,entry.col, entry.value * s ); 
+		result.reserve(size);
+		int count = size; for( int i = 0; i < count; i++ ) {
+			int row = rowIdx[i]; int col = colIdx[i]; double value = values[i];
+			result.append(row,col, value * s ); 
 		}
 		return result;		
 	}
 	public SparseMatrixLil div(double s) {
 		SparseMatrixLil result = new SparseMatrixLil(rows,cols);
-		result.reserve(entries.size());
-		for( Entry entry : entries ) {
-			result.append(entry.row,entry.col, entry.value / s ); 
+		result.reserve(size);
+		int count = size; for( int i = 0; i < count; i++ ) {
+			int row = rowIdx[i]; int col = colIdx[i]; double value = values[i];
+			result.append(row,col, value / s ); 
 		}
 		return result;		
 	}
 	public SparseMatrixLil pow( double power ) {
 		SparseMatrixLil result = new SparseMatrixLil(rows,cols);
-		result.reserve(entries.size());
-		for( Entry entry : entries ) {
-			result.append(entry.row,entry.col, Math.pow( entry.value, power ) ); 
+		result.reserve(size);
+		int count = size; for( int i = 0; i < count; i++ ) {
+			int row = rowIdx[i]; int col = colIdx[i]; double value = values[i];
+			result.append(row,col, Math.pow( value, power ) ); 
 		}
 		return result;		
 	}
 	public DenseMatrix toDense() {
 		DenseMatrix result = new DenseMatrix(rows,cols);
-		for( Entry entry : entries ) {
-			result.set(entry.row, entry.col, entry.value);
+		int count = size; for( int i = 0; i < count; i++ ) {
+			int row = rowIdx[i]; int col = colIdx[i]; double value = values[i];
+			result.set(row, col, value);
 		}
 		return result;
 	}
@@ -317,37 +351,38 @@ public class SparseMatrixLil {
 		}
 		return result;
 	}
-	public SparseMatrixCCS toCCS() {
-		SparseMatrixCCS result = new SparseMatrixCCS(rows, cols);
-		result.reserve(entries.size());
-		Collections.sort(entries);
-		int i = 0;
-		int lastCol = -1;
-		for( Entry entry : entries) {
-			int thiscol = lastCol + 1;
-			while( thiscol <= entry.col ) {
-				result.outerStarts.set(thiscol, i);
-				thiscol += 1;
-			}
-			lastCol = entry.col;
-			result.innerIndices.set(i, entry.row );
-			result.values.set(i, entry.value );
-			i += 1;
-		}
-		int thiscol = lastCol + 1;
-		while( thiscol < cols ) {
-			result.outerStarts.set(thiscol, i);
-			thiscol += 1;
-		}
-		lastCol = cols - 1;
-		result.outerStarts.set(lastCol+1, i );
-		return result;
-	}
+//	public SparseMatrixCCS toCCS() {
+//		SparseMatrixCCS result = new SparseMatrixCCS(rows, cols);
+//		result.reserve(size);
+//		Collections.sort(entries);
+//		int i = 0;
+//		int lastCol = -1;
+//		for( Entry entry : entries) {
+//			int thiscol = lastCol + 1;
+//			while( thiscol <= col ) {
+//				result.outerStarts.set(thiscol, i);
+//				thiscol += 1;
+//			}
+//			lastCol = col;
+//			result.innerIndices.set(i, row );
+//			result.values.set(i, value );
+//			i += 1;
+//		}
+//		int thiscol = lastCol + 1;
+//		while( thiscol < cols ) {
+//			result.outerStarts.set(thiscol, i);
+//			thiscol += 1;
+//		}
+//		lastCol = cols - 1;
+//		result.outerStarts.set(lastCol+1, i );
+//		return result;
+//	}
 	public String toString() {
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append("SparseMatrixLil, " + rows + " * " + cols + ":\n");
-		for( Entry entry : entries) {
-			stringBuilder.append("( " + entry.row + ", " + entry.col + ", " + entry.value + " )\n");
+		int count = size; for( int i = 0; i < count; i++ ) {
+			int row = rowIdx[i]; int col = colIdx[i]; double value = values[i];
+			stringBuilder.append("( " + row + ", " + col + ", " + value + " )\n");
 		}		
 		return stringBuilder.toString();
 	}
@@ -358,15 +393,17 @@ public class SparseMatrixLil {
 		if( axis == 0 ) {
 			DenseMatrix result = new DenseMatrix(1, cols);
 			// cheat and use densematrix for now...
-			for( Entry entry : entries ) {
-				result.set(0, entry.col, result.get(0, entry.col) + entry.value);
+			int count = size; for( int i = 0; i < count; i++ ) {
+				int row = rowIdx[i]; int col = colIdx[i]; double value = values[i];
+				result.set(0, col, result.get(0, col) + value);
 			}
 			return result.toSparseLil();
 		} else if( axis == 1 ) {
 			DenseMatrix result = new DenseMatrix(rows, 1);
 			// cheat and use densematrix for now...
-			for( Entry entry : entries ) {
-				result.set(entry.row, 0, result.get(entry.row, 0) + entry.value);
+			int count = size; for( int i = 0; i < count; i++ ) {
+				int row = rowIdx[i]; int col = colIdx[i]; double value = values[i];
+				result.set(row, 0, result.get(row, 0) + value);
 			}
 			return result.toSparseLil();
 		} else {
@@ -375,9 +412,10 @@ public class SparseMatrixLil {
 	}
 	public double s() {
 		// assumes out of order
-		for( Entry entry : entries ) {
-			if( entry.row == 0 && entry.col == 0 ) {
-				return entry.value;
+		int count = size; for( int i = 0; i < count; i++ ) {
+			int row = rowIdx[i]; int col = colIdx[i]; double value = values[i];
+			if( row == 0 && col == 0 ) {
+				return value;
 			}
 		}
 		return 0;
