@@ -22,6 +22,111 @@ public class DenseMatrix {
 	public double s() {
 		return values[0];
 	}
+//	public class Row {
+//		final int row;
+//		public Row(int row ){
+//			this.row = row;
+//		}
+//		public double get(int col) {
+//			return values[rows * col + row];
+//		}
+//		public void set( int col, double value ){
+//			values[rows * col + row] = value;
+//		}
+//	}
+//	public class Col {
+//		final int col;
+//		final int offset;
+//		public Col(int col ){
+//			this.col = col;
+//			this.offset = rows * col;
+//		}
+//		public double get(int row) {
+//			return values[offset + row];
+//		}
+//		public void set( int row, double value ){
+//			values[offset + row] = value;
+//		}
+//	}
+	public DenseMatrix col( int col ) {
+		return slice(0, rows, col, col + 1 );
+	}
+	public DenseMatrix row( int row ) {
+		return slice(row, row + 1, 0, cols );
+	}
+	public DenseMatrix cols( int startcol, int endcolexclusive ) {
+		return slice(0, rows, startcol, endcolexclusive );
+	}
+	public DenseMatrix rows( int startrow, int endrowexclusive ) {
+		return slice(startrow, endrowexclusive, 0, cols );
+	}
+	public DenseMatrix slice(int startrow, int endrowexclusive, int startcol, int endcolexclusive) {
+		int resultrows = endrowexclusive - startrow;
+		int resultcols = endcolexclusive - startcol;
+		if( endrowexclusive > rows ) {
+			throw new RuntimeException("endrow must not exceed rows " + endrowexclusive + " vs " + rows );
+		}
+		if( endcolexclusive > cols ) {
+			throw new RuntimeException("endcol must not exceed cols " + endcolexclusive + " vs " + cols );
+		}
+		if( startrow < 0 ) {
+			throw new RuntimeException("startrow must be at least 0, but was  " + startrow );			
+		}
+		if( startcol < 0 ) {
+			throw new RuntimeException("startcol must be at least 0, but was  " + startcol );			
+		}
+		DenseMatrix result = new DenseMatrix(resultrows,resultcols);
+		for( int c = 0; c < resultcols; c++ ) {
+			int resultoffset = resultrows * c;
+			int sourceoffset = (startcol + c ) * rows;
+			for( int r = 0; r < resultrows; r++ ) {
+				result.values[resultoffset + r] = values[sourceoffset + startrow + r ];
+			}
+		}
+		return result;
+	}
+	public DenseMatrix concatRight(DenseMatrix two ){
+		if( rows != two.rows ) {
+			throw new RuntimeException("row mismatch " + rows + " vs " + two.rows );
+		}
+		DenseMatrix result = zeros(rows,cols + two.cols );
+		for( int c = 0; c < cols; c++ ) {
+			for( int r = 0; r < rows; r++ ) {
+				result.set(r,c,get(r,c));
+			}
+		}
+		for( int c = 0; c < two.cols; c++ ) {
+			for( int r = 0; r < rows; r++ ) {
+				result.set(r,cols + c,two.get(r,c));
+			}
+		}
+		return result;
+	}
+	public DenseMatrix concatDown(DenseMatrix two ){
+		if( cols != two.cols ) {
+			throw new RuntimeException("col mismatch " + cols + " vs " + two.cols );
+		}
+		DenseMatrix result = zeros(rows + two.rows,cols );
+		for( int c = 0; c < cols; c++ ) {
+			for( int r = 0; r < rows; r++ ) {
+				result.set(r,c,get(r,c));
+			}
+		}
+		for( int c = 0; c < cols; c++ ) {
+			for( int r = 0; r < two.rows; r++ ) {
+				result.set(rows + r,c,two.get(r,c));
+			}
+		}
+		return result;
+	}
+//	public DenseMatrix getCol(int col) {
+//		DenseMatrix result = new DenseMatrix(rows,1);
+//		int offset = rows * col;
+//		for( int i = 0; i < rows; i++ ) {
+//			result.values[i] = values[offset + i ];
+//		}
+//		return result;
+//	}
 	public static DenseMatrix rand(int rows, int cols ) {
 		DenseMatrix result = new DenseMatrix(rows,cols);
 		Random random = new Random();
@@ -223,7 +328,12 @@ public class DenseMatrix {
 		if( osecond == null ) {
 			return false;
 		}
-		DenseMatrix second = (DenseMatrix)osecond;
+		DenseMatrix second = null;
+		if( osecond instanceof SparseMatrixLil ) {
+			second = ((SparseMatrixLil)osecond).toDense();
+		} else {
+			second = (DenseMatrix)osecond;
+		}
 		if( this.cols != second.cols || this.rows != second.rows ) {
 			return false;
 		}
@@ -447,5 +557,25 @@ public class DenseMatrix {
 		DenseMatrix V = zeros(p,m);
 		JeigenJna.Jeigen.svd_dense(rows, cols, values, U.values, S.values, V.values);
 		return new SvdResult(U, S, V);
+	}
+	SparseMatrixLil toSparseLil(){
+		SparseMatrixLil result = new SparseMatrixLil(rows,cols);
+		int notZero = 0;
+		int count = rows * cols;
+		for( int i = 0; i < count; i++ ) {
+			if( values[i] != 0 ) {
+				notZero++;
+			}
+		}
+		result.reserve(notZero);
+		for( int c = 0; c < cols; c++ ) {
+			for( int r = 0; r < rows; r++ ) {
+				double value = values[rows * c + r]; 
+				if( value != 0 ) {
+					result.append(r,c,value);
+				}
+			}
+		}
+		return result;
 	}
 }

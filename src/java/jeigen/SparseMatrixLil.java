@@ -51,6 +51,76 @@ public class SparseMatrixLil {
 		this.rows = rows;
 		this.cols = cols;
 	}
+	public SparseMatrixLil col( int col ) {
+		return slice(0, rows, col, col + 1 );
+	}
+	public SparseMatrixLil row( int row ) {
+		return slice(row, row + 1, 0, cols );
+	}
+	public SparseMatrixLil cols( int startcol, int endcolexclusive ) {
+		return slice(0, rows, startcol, endcolexclusive );
+	}
+	public SparseMatrixLil rows( int startrow, int endrowexclusive ) {
+		return slice(startrow, endrowexclusive, 0, cols );
+	}
+	public SparseMatrixLil slice( int startrow, int endrowexclusive, int startcol, int endcolexclusive ) {
+		// this implementation is far from ideal, but at least it avoids sorting
+		int resultrows = endrowexclusive - startrow;
+		int resultcols = endcolexclusive - startcol;
+		if( endrowexclusive > rows ) {
+			throw new RuntimeException("endrow must not exceed rows " + endrowexclusive + " vs " + rows );
+		}
+		if( endcolexclusive > cols ) {
+			throw new RuntimeException("endcol must not exceed cols " + endcolexclusive + " vs " + cols );
+		}
+		if( startrow < 0 ) {
+			throw new RuntimeException("startrow must be at least 0, but was  " + startrow );			
+		}
+		if( startcol < 0 ) {
+			throw new RuntimeException("startcol must be at least 0, but was  " + startcol );			
+		}
+		SparseMatrixLil result = new SparseMatrixLil(resultrows, resultcols);
+		for( Entry entry : entries ) {
+			if( entry.row >= startrow && entry.row < endrowexclusive
+					&& entry.col >= startcol && entry.col < endcolexclusive ) {
+				result.append(entry.row - startrow,entry.col - startcol, entry.value );
+			}
+		}
+		return result;
+	}
+	@Override
+	public boolean equals( Object second ) {
+		if( second == null ) {
+			return false;
+		}
+		return toDense().equals(second);
+	}
+	public SparseMatrixLil concatRight(SparseMatrixLil two ){
+		if( rows != two.rows ) {
+			throw new RuntimeException("row mismatch " + rows + " vs " + two.rows );
+		}
+		SparseMatrixLil result = spzeros(rows,cols + two.cols );
+		for( Entry entry : entries ) {
+			result.append(entry.row, entry.col, entry.value );
+		}
+		for( Entry entry : two.entries ) {
+			result.append(entry.row, entry.col + cols, entry.value );
+		}
+		return result;
+	}
+	public SparseMatrixLil concatDown(SparseMatrixLil two ){
+		if( cols != two.cols ) {
+			throw new RuntimeException("col mismatch " + cols + " vs " + two.cols );
+		}
+		SparseMatrixLil result = spzeros(rows + two.rows,cols );
+		for( Entry entry : entries ) {
+			result.append(entry.row, entry.col, entry.value );
+		}
+		for( Entry entry : two.entries ) {
+			result.append(entry.row + rows, entry.col, entry.value );
+		}
+		return result;
+	}
 	public SparseMatrixLil t() {
 		SparseMatrixLil result = new SparseMatrixLil(cols, rows);
 		int numElements = entries.size();
@@ -145,6 +215,19 @@ public class SparseMatrixLil {
 	public DenseMatrix eq( DenseMatrix second ) {
 		return this.toDense().eq(second);
 	}
+	// if second matrix is dense, then simply convert to dense then do the operation
+	public DenseMatrix sub( DenseMatrix second ) {
+		return toDense().sub(second);
+	}
+	public DenseMatrix add( DenseMatrix second ) {
+		return toDense().sub(second);
+	}
+	public DenseMatrix div( DenseMatrix second ) {
+		return toDense().sub(second);
+	}
+	public DenseMatrix mul( DenseMatrix second ) {
+		return toDense().sub(second);
+	}
 	public DenseMatrix toDense() {
 		DenseMatrix result = new DenseMatrix(rows,cols);
 		for( Entry entry : entries ) {
@@ -154,6 +237,17 @@ public class SparseMatrixLil {
 	}
 	public static SparseMatrixLil spzeros( int r, int c ) {
 		return new SparseMatrixLil(r, c);
+	}
+	public static SparseMatrixLil sprand( int rows, int cols ) { // note: need to add fillfactor
+		SparseMatrixLil result = new SparseMatrixLil(rows, cols);
+		Random random = new Random();
+		result.reserve(rows * cols );
+		for( int c = 0; c < cols; c++ ) {
+			for( int r = 0; r < rows; r++ ) {
+				result.append(r,c, random.nextDouble());
+			}
+		}
+		return result;
 	}
 	public static SparseMatrixLil spdiag( DenseMatrix v ) {
 		if( v.cols != 1 ) {
@@ -203,5 +297,33 @@ public class SparseMatrixLil {
 	}
 	public DenseMatrix shape() {
 		return new DenseMatrix(new double[][]{{rows,cols}}); 
+	}
+	public SparseMatrixLil sum(int axis ) {
+		if( axis == 0 ) {
+			DenseMatrix result = new DenseMatrix(1, cols);
+			// cheat and use densematrix for now...
+			for( Entry entry : entries ) {
+				result.set(0, entry.col, result.get(0, entry.col) + entry.value);
+			}
+			return result.toSparseLil();
+		} else if( axis == 1 ) {
+			DenseMatrix result = new DenseMatrix(rows, 1);
+			// cheat and use densematrix for now...
+			for( Entry entry : entries ) {
+				result.set(entry.row, 0, result.get(entry.row, 0) + entry.value);
+			}
+			return result.toSparseLil();
+		} else {
+			throw new RuntimeException("invalid axis " + axis );
+		}
+	}
+	public double s() {
+		// assumes out of order
+		for( Entry entry : entries ) {
+			if( entry.row == 0 && entry.col == 0 ) {
+				return entry.value;
+			}
+		}
+		return 0;
 	}
 }

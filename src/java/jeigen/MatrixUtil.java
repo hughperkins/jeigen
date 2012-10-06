@@ -34,4 +34,7 @@ public final class MatrixUtil {
 	public static SparseMatrixLil spzeros( int r, int c ) {
 		return SparseMatrixLil.spzeros(r, c);
 	}
+	public static SparseMatrixLil sprand( int r, int c ) {
+		return SparseMatrixLil.sprand(r, c);
+	}
 }

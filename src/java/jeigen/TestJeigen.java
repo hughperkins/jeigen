@@ -107,8 +107,9 @@ public class TestJeigen extends TestCase {
 		DenseMatrix A = rand(5,8);
 		SvdResult result = A.svd();
 		assertEquals(A, result.U.mmul(diag(result.S)).mmul(result.V.t()));
-		A = rand(500,1000);
 		Timer timer = new Timer();
+		A = rand(500,1000);
+		timer.printTimeCheckMilliseconds();
 		result = A.svd();
 		timer.printTimeCheckMilliseconds();
 		assertEquals(A, result.U.mmul(diag(result.S)).mmul(result.V.t()));
@@ -123,4 +124,56 @@ public class TestJeigen extends TestCase {
 		assertTrue(A.neg().abs().equals(A));
 		assertTrue(A.neg().add(A).equals(zeros(5,8)));
 	}
+	public void testSlice(){
+		DenseMatrix A = rand(5,8);
+		DenseMatrix B = rand(5,12);
+		DenseMatrix C = rand(4,8);
+		DenseMatrix AB = A.concatRight(B);
+		assertTrue(A.equals(AB.cols(0,8)));
+		assertTrue(B.equals(AB.cols(8,20)));
+		DenseMatrix AC = A.concatDown(C);
+		assertTrue(A.equals(AC.rows(0,5)));
+		assertTrue(C.equals(AC.rows(5,9)));
+	}
+	public void testSliceSparse(){
+		SparseMatrixLil A = sprand(5,8);
+		SparseMatrixLil B = sprand(5,12);
+		SparseMatrixLil C = sprand(4,8);
+		SparseMatrixLil AB = A.concatRight(B);
+		assertTrue(A.equals(AB.cols(0,8)));
+		assertTrue(B.equals(AB.cols(8,20)));
+		SparseMatrixLil AC = A.concatDown(C);
+		assertTrue(A.equals(AC.rows(0,5)));
+		assertTrue(C.equals(AC.rows(5,9)));
+		
+		A = spzeros(1,5);
+		A.append(0, 2, 3);
+		assertEquals(A.row(0).cols, 5);
+	}
+	public void testToSparse(){
+		DenseMatrix A = rand(5,8);
+		assertTrue(A.equals(A.toSparseLil().toDense()));
+	}
+	public void testSum() {
+		DenseMatrix A = new DenseMatrix(new double[][]{{1,9},{7,3}});
+		assertTrue( new DenseMatrix(new double[][]{{8,12}}).equals(A.sum(0)) );
+		assertTrue( new DenseMatrix(new double[][]{{10},{10}}).equals(A.sum(1)) );
+		SparseMatrixLil B = A.toSparseLil();
+		assertTrue( new DenseMatrix(new double[][]{{8,12}}).toSparseLil().equals(B.sum(0)) );
+		assertTrue( new DenseMatrix(new double[][]{{10},{10}}).toSparseLil().equals(B.sum(1)) );
+		assertTrue(B.sum(0).equals(A.sum(0)));
+		assertTrue(B.sum(1).equals(A.sum(1)));
+		assertTrue(B.sum(0).sum(1).equals(A.sum(0).sum(1)));
+		SparseMatrixLil C = spzeros(4,5);
+		C.append(1,2,5);
+		C.append(3,1,3);
+		C.append(3,2,7);
+		C.append(1,4,11);
+		System.out.println(C.sum(0).toDense() );
+		assertTrue(new DenseMatrix(new double[][]{{0,3,12,0,11}}).equals(C.sum(0)));
+		System.out.println(C.sum(1).toDense() );
+		assertTrue(new DenseMatrix(new double[][]{{0},{16},{0},{10}}).equals(C.sum(1)));
+		assertEquals(26.0, C.sum(1).sum(0).s());
+		assertEquals(26.0, C.sum(0).sum(1).s());
+	}	
 }
