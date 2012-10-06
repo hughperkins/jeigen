@@ -22,7 +22,7 @@ public class TestJeigen extends TestCase {
 		System.out.println(C);
 	}
 	public void testOneSparse() {
-		SparseMatrixLil A = SparseMatrixLil.rand(3, 3);
+		SparseMatrixLil A = SparseMatrixLil.rand(3, 3).t();
 		System.out.println(A);
 		SparseMatrixLil B = SparseMatrixLil.rand(3, 3);
 		System.out.println(B);
@@ -31,6 +31,19 @@ public class TestJeigen extends TestCase {
 		DenseMatrix CDense = A.toDense().mmul(B.toDense());
 		System.out.println(CDense);
 		assertTrue(C.equals(CDense));
+	}
+	public void testCreateSparse() {
+		DenseMatrix A = rand(5,5);
+		SparseMatrixLil B = A.toSparseLil();
+		assertTrue(B.equals(B.mmul(eye(5))));
+		assertTrue(B.equals(B.t().mmul(eye(5)).t()));
+		B = spzeros(2,2);
+		B.append(1, 0, 5);
+		B.append(0,1,7);
+		B.append(0,0,11);
+		System.out.println(B.toDense());
+		System.out.println(B.mmul(eye(2)));
+		assertTrue( B.equals(B.mmul(eye(2))));
 	}
 	public void testTwo() {
 		int K = 100;
@@ -81,6 +94,22 @@ public class TestJeigen extends TestCase {
 		SparseMatrixLil C2 = B.mmul(A);
 		timer.printTimeCheckMilliseconds();
 		DenseMatrix CDense = B.toDense().mmul(A.toDense());
+		timer.printTimeCheckMilliseconds("for dense");
+		assertTrue(C.equals(CDense));
+
+		K = 400;
+		N = 1000;
+		A = SparseMatrixLil.rand(N, K);
+		B = SparseMatrixLil.rand(K, N);
+//		System.out.println(A.toDense());
+		timer = new Timer();
+		C = B.mmul(A);
+		timer.printTimeCheckMilliseconds();
+		C1 = B.mmul(A);
+		timer.printTimeCheckMilliseconds();
+		C2 = B.mmul(A);
+		timer.printTimeCheckMilliseconds();
+		CDense = B.toDense().mmul(A.toDense());
 		timer.printTimeCheckMilliseconds("for dense");
 		assertTrue(C.equals(CDense));
 	}
@@ -176,4 +205,17 @@ public class TestJeigen extends TestCase {
 		assertEquals(26.0, C.sum(1).sum(0).s());
 		assertEquals(26.0, C.sum(0).sum(1).s());
 	}	
+	public void testTranspose() {
+		DenseMatrix A = rand(5,8);
+		DenseMatrix At = A.t();
+		assertEquals(5,At.cols);
+		assertEquals(8,At.rows);
+		assertTrue(A.equals(At.t()));
+		SparseMatrixLil B = A.toSparseLil();
+		SparseMatrixLil Bt = B.t();
+		assertEquals(5,Bt.cols);
+		assertEquals(8,Bt.rows);
+		assertTrue(At.equals(Bt));		
+		assertTrue(A.equals(Bt.t()));		
+	}
 }

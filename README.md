@@ -113,6 +113,7 @@ Per-element operators:
 
     dm1 = dm1.neg();  // element = - element
     dm1 = dm1.inv();   // element = 1 / element 
+
     dm1 = dm1.add( dm2 );    // by-element addition
     dm1 = dm1.add( 3 );    // by-element addition, of 3
     dm1 = dm1.sub( 3 );    // by-element subtraction, of 3
@@ -121,6 +122,13 @@ Per-element operators:
     dm1 = dm1.sub( dm2 );    // by-element subtraction
     dm1 = dm1.mul( dm2 );    // by-element multiplication
     dm1 = dm1.div( dm2 );    // by-element division
+
+    dm1 = dm1.le(dm2); // element1 <= element2
+    dm1 = dm1.ge(dm2); // element1 >= element2
+    dm1 = dm1.eq(dm2); // element1 == element2
+    dm1 = dm1.ne(dm2); // element1 != element2
+    dm1 = dm1.lt(dm2); // element1 &lt; element2
+    dm1 = dm1.gt(dm2); // element1 &gt; element2
 
 Aggregation operators
 =====================
@@ -147,6 +155,9 @@ Slices are by-value.  They work for both dense and sparse matrices.
    dm1 = dm1.col(col);
    dm1 = dm1.rows(startrow, endrowexclusive);
    dm1 = dm1.cols(startcol, endcolexclusive);
+
+   dm1 = dm1.concatRight(dm2); // concatenate [ dm1 dm2 ]
+   dm1 = dm1.concatDown(dm2); // concatenate [ dm1; dm2 ]
 
 Operators in MatrixUtil:
 ========================

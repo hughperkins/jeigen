@@ -11,8 +11,8 @@ import java.util.Random;
 // a dense matrix;  this is faster than SparseMatrixLil, for fully dense matrices
 // SparseMatrixLil will be faster if much of the matrix is zeros
 public class DenseMatrix {
-	final int rows;
-	final int cols;
+	public final int rows;
+	public final int cols;
 	double[] values;
 	public DenseMatrix(int rows, int cols ) {
 		this.rows = rows;
@@ -252,6 +252,14 @@ public class DenseMatrix {
 		int capacity = rows * cols;
 		for( int i = 0; i < capacity; i++ ) {
 			result.values[i] = values[i] * scalar;
+		}
+		return result;		
+	}
+	public DenseMatrix pow( double power ) {
+		DenseMatrix result = new DenseMatrix(rows,cols);
+		int capacity = rows * cols;
+		for( int i = 0; i < capacity; i++ ) {
+			result.values[i] = Math.pow( values[i], power );
 		}
 		return result;		
 	}

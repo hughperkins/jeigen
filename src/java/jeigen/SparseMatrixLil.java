@@ -157,7 +157,7 @@ public class SparseMatrixLil {
 		}
 	}
 	static int allocateSparseMatrix(SparseMatrixLil mat ) {
-		Collections.sort(mat.entries);
+//		Collections.sort(mat.entries);
 		mat.validateEntries();
 		int numEntries = mat.entries.size();
 		int[] rowarray = new int[numEntries];
@@ -227,6 +227,62 @@ public class SparseMatrixLil {
 	}
 	public DenseMatrix mul( DenseMatrix second ) {
 		return toDense().sub(second);
+	}
+	public SparseMatrixLil neg() {
+		SparseMatrixLil result = new SparseMatrixLil(rows,cols);
+		result.reserve(entries.size());
+		for( Entry entry : entries ) {
+			result.append(entry.row,entry.col, - entry.value ); 
+		}
+		return result;		
+	}
+	public SparseMatrixLil inv() {
+		SparseMatrixLil result = new SparseMatrixLil(rows,cols);
+		result.reserve(entries.size());
+		for( Entry entry : entries ) {
+			result.append(entry.row,entry.col, 1 / entry.value ); 
+		}
+		return result;		
+	}
+	public SparseMatrixLil add(double s) {
+		SparseMatrixLil result = new SparseMatrixLil(rows,cols);
+		result.reserve(entries.size());
+		for( Entry entry : entries ) {
+			result.append(entry.row,entry.col, entry.value + s ); 
+		}
+		return result;		
+	}
+	public SparseMatrixLil sub(double s) {
+		SparseMatrixLil result = new SparseMatrixLil(rows,cols);
+		result.reserve(entries.size());
+		for( Entry entry : entries ) {
+			result.append(entry.row,entry.col, entry.value - s ); 
+		}
+		return result;		
+	}
+	public SparseMatrixLil mul(double s) {
+		SparseMatrixLil result = new SparseMatrixLil(rows,cols);
+		result.reserve(entries.size());
+		for( Entry entry : entries ) {
+			result.append(entry.row,entry.col, entry.value * s ); 
+		}
+		return result;		
+	}
+	public SparseMatrixLil div(double s) {
+		SparseMatrixLil result = new SparseMatrixLil(rows,cols);
+		result.reserve(entries.size());
+		for( Entry entry : entries ) {
+			result.append(entry.row,entry.col, entry.value / s ); 
+		}
+		return result;		
+	}
+	public SparseMatrixLil pow( double power ) {
+		SparseMatrixLil result = new SparseMatrixLil(rows,cols);
+		result.reserve(entries.size());
+		for( Entry entry : entries ) {
+			result.append(entry.row,entry.col, Math.pow( entry.value, power ) ); 
+		}
+		return result;		
 	}
 	public DenseMatrix toDense() {
 		DenseMatrix result = new DenseMatrix(rows,cols);
