@@ -218,4 +218,199 @@ public class TestJeigen extends TestCase {
 		assertTrue(At.equals(Bt));		
 		assertTrue(A.equals(Bt.t()));		
 	}
+	public void testSort() {
+		SparseMatrixLil B = spzeros(2,2);
+		B.append(1, 0, 5);
+		B.append(0,1,7);
+		B.append(0,0,11);
+		System.out.println(B.toDense());
+		System.out.println(B);
+		B.sort();
+		System.out.println(B.toDense());
+		System.out.println(B);
+		assertEquals(11.0, B.values[0]);
+		assertEquals(5.0, B.values[1]);
+		assertEquals(7.0, B.values[2]);
+		
+		SparseMatrixLil A = sprand(5,8);
+		B = A.add(0); // make copy
+		System.out.println(B);
+		B.sort();
+		for( int i = 1; i < B.size; i++ ) {
+			assertTrue( B.colIdx[i] >= B.colIdx[i-1] );
+			if( B.colIdx[i] == B.colIdx[i-1]) {
+				assertTrue( B.rowIdx[i] >= B.rowIdx[i-1] );
+			}
+		}
+		assertTrue( A.equals(B));
+		System.out.println(B);
+		SparseMatrixLil Bt = B.t();
+		System.out.println(Bt);
+		Bt.sort();
+		for( int i = 1; i < Bt.size; i++ ) {
+			assertTrue( Bt.colIdx[i] >= Bt.colIdx[i-1] );
+			if( Bt.colIdx[i] == Bt.colIdx[i-1]) {
+				assertTrue( Bt.rowIdx[i] >= Bt.rowIdx[i-1] );
+			}
+		}
+		System.out.println(Bt);
+		assertTrue( A.toDense().t().equals(Bt));
+	}
+	public void xtestSortViaNative() {
+		SparseMatrixLil B = spzeros(2,2);
+		
+		int R = 1000;
+		int C = 8000;
+		SparseMatrixLil A = sprand(R,C);
+		System.out.println("created A");
+		B = A.add(0); // make copy
+		System.out.println("created B");
+//		System.out.println(B);
+//		B.sort();
+		B = B.mmul(speye(C));
+		for( int i = 0; i < B.size; i++ ) {
+			if( i > 0 ) {
+			assertTrue( B.colIdx[i] >= B.colIdx[i-1] );
+			if( B.colIdx[i] == B.colIdx[i-1]) {
+				assertTrue( B.rowIdx[i] >= B.rowIdx[i-1] );
+			}
+			}
+			assertEquals(A.rowIdx[i], B.rowIdx[i]);
+			assertEquals(A.colIdx[i], B.colIdx[i]);
+			assertEquals(A.values[i], B.values[i]);
+		}
+		System.out.println("sorted B");
+//		assertTrue( A.equals(B));
+//		System.out.println("asserted equals");
+//		System.out.println(B);
+		B = null;
+		SparseMatrixLil Bt = A.t(); // t() is also a copy
+		System.out.println("transposed A");
+//		System.out.println(Bt);
+//		Bt.sort();
+		Bt = Bt.mmul(speye(R));
+		System.out.println("sorted Bt");
+		for( int i = 0; i < Bt.size; i++ ) {
+			if( i > 0 ) {
+			assertTrue( Bt.colIdx[i] >= Bt.colIdx[i-1] );
+			if( Bt.colIdx[i] == Bt.colIdx[i-1]) {
+				assertTrue( Bt.rowIdx[i] >= Bt.rowIdx[i-1] );
+			}
+			}
+		}
+//		System.out.println(Bt);
+		assertTrue( A.toDense().t().equals(Bt));
+		System.out.println("checed equal to At");		
+	}
+	public void testSortBigMatrixFast() {
+		SparseMatrixLil B = spzeros(2,2);
+		
+		SparseMatrixLil A = sprand(1000,10000);
+		System.out.println("created A");
+		B = A.add(0); // make copy
+		System.out.println("created B");
+//		System.out.println(B);
+		B.sortFast();
+		for( int i = 0; i < B.size; i++ ) {
+			if( i > 0 ) {
+			assertTrue( B.colIdx[i] >= B.colIdx[i-1] );
+			if( B.colIdx[i] == B.colIdx[i-1]) {
+				assertTrue( B.rowIdx[i] >= B.rowIdx[i-1] );
+			}
+			}
+			assertEquals(A.rowIdx[i], B.rowIdx[i]);
+			assertEquals(A.colIdx[i], B.colIdx[i]);
+			assertEquals(A.values[i], B.values[i]);
+		}
+		System.out.println("sorted B");
+//		assertTrue( A.equals(B));
+//		System.out.println("asserted equals");
+//		System.out.println(B);
+		B = null;
+		SparseMatrixLil Bt = A.t(); // t() is also a copy
+		System.out.println("transposed A");
+//		System.out.println(Bt);
+		Timer timer = new Timer();
+		Bt.sortFast();
+		timer.printTimeCheckMilliseconds();
+		System.out.println("sorted Bt");
+		for( int i = 0; i < Bt.size; i++ ) {
+			if( i > 0 ) {
+			assertTrue( Bt.colIdx[i] >= Bt.colIdx[i-1] );
+			if( Bt.colIdx[i] == Bt.colIdx[i-1]) {
+				assertTrue( Bt.rowIdx[i] >= Bt.rowIdx[i-1] );
+			}
+			}
+		}
+//		System.out.println(Bt);
+		assertTrue( A.toDense().t().equals(Bt));
+		System.out.println("checed equal to At");
+	}
+	public void testSortBigMatrixInplace() {
+		SparseMatrixLil B = spzeros(2,2);
+		
+		SparseMatrixLil A = sprand(1000,12000);
+		System.out.println("size: " + A.getSize() );
+		System.out.println("created A");
+		B = A.add(0); // make copy
+		System.out.println("created B");
+//		System.out.println(B);
+		B.sortInplace();
+		for( int i = 0; i < B.size; i++ ) {
+			if( i > 0 ) {
+			assertTrue( B.colIdx[i] >= B.colIdx[i-1] );
+			if( B.colIdx[i] == B.colIdx[i-1]) {
+				assertTrue( B.rowIdx[i] >= B.rowIdx[i-1] );
+			}
+			}
+			assertEquals(A.rowIdx[i], B.rowIdx[i]);
+			assertEquals(A.colIdx[i], B.colIdx[i]);
+			assertEquals(A.values[i], B.values[i]);
+		}
+		System.out.println("sorted B");
+//		assertTrue( A.equals(B));
+//		System.out.println("asserted equals");
+//		System.out.println(B);
+		B = null;
+		SparseMatrixLil Bt = A.t(); // t() is also a copy
+		System.out.println("transposed A");
+//		System.out.println(Bt);
+		Timer timer = new Timer();
+		Bt.sortInplace();
+		timer.printTimeCheckMilliseconds();
+		System.out.println("sorted Bt");
+		for( int i = 0; i < Bt.size; i++ ) {
+			if( i > 0 ) {
+			assertTrue( Bt.colIdx[i] >= Bt.colIdx[i-1] );
+			if( Bt.colIdx[i] == Bt.colIdx[i-1]) {
+				assertTrue( Bt.rowIdx[i] >= Bt.rowIdx[i-1] );
+			}
+			}
+		}
+//		System.out.println(Bt);
+		assertTrue( A.toDense().t().equals(Bt));
+		System.out.println("checed equal to At");
+	}
+	public void testToCCS(){
+		SparseMatrixLil A = sprand(10,10);
+		SparseMatrixLil B = A.toCCS().toLil();
+		assertTrue(A.equals(B));
+		A = sprand(1000,1000);
+		B = A.toCCS().toLil();
+		assertTrue(A.equals(B));
+		A = A.t();
+		B = A.toCCS().toLil();
+		assertTrue(A.equals(B));
+	}
+	public void testCCsGetNonZeros(){
+		SparseMatrixLil A = spzeros(3,3);
+		A.append(1, 0, 5);
+		A.append(0,1,7);
+		A.append(0,0,11);
+		SparseMatrixCCS B = A.toCCS();
+		assertEquals(3,B.nonZeros());
+		assertEquals(2,B.nonZeros(0));
+		assertEquals(1,B.nonZeros(1));
+		assertEquals(0,B.nonZeros(2));
+	}
 }

@@ -13,13 +13,22 @@ import java.util.*;
 public class SparseMatrixCCS {
 	final int rows;
 	final int cols;
-	ArrayList<Integer> outerStarts = new ArrayList<Integer>();
-	ArrayList<Integer> innerIndices = new ArrayList<Integer>();
-	ArrayList<Double> values = new ArrayList<Double>();
+	public final ArrayList<Integer> outerStarts = new ArrayList<Integer>();
+	public final ArrayList<Integer> innerIndices = new ArrayList<Integer>();
+	public final ArrayList<Double> values = new ArrayList<Double>();
 	public SparseMatrixCCS(int rows, int cols ) {
 		this.rows = rows;
 		this.cols = cols;
-		outerStarts.ensureCapacity(cols);
+		outerStarts.ensureCapacity(cols + 1);
+		for( int i = 0; i < cols + 1; i++ ) {
+			outerStarts.add(0);
+		}
+	}
+	public int nonZeros() {
+		return outerStarts.get(cols);
+	}
+	public int nonZeros( int col  ){
+		return outerStarts.get(col + 1) - outerStarts.get(col);		
 	}
 	public void reserve(int capacity) {
 		outerStarts.ensureCapacity(cols);

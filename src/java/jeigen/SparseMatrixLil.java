@@ -52,6 +52,27 @@ public class SparseMatrixLil {
 	int[] colIdx = new int[capacity];
 	double[] values = new double[capacity];
 
+	public int getRowIdx(int i ) {
+		return rowIdx[i];
+	}
+	public int getColIdx(int i ) {
+		return colIdx[i];
+	}
+	public double getValue(int i ) {
+		return values[i];
+	}
+	public int getSize() {
+		return size;
+	}
+	public void sort() {
+		sortFast();
+	}
+	public void sortFast() { // uses more memory
+		SparseMatrixLilSorter2.sort(this);		
+	}
+	public void sortInplace() { // uses less memory
+		SparseMatrixLilSorter.sort(this, 0, size);		
+	}
 	public SparseMatrixLil(int rows, int cols ) {
 		this.rows = rows;
 		this.cols = cols;
@@ -170,6 +191,20 @@ public class SparseMatrixLil {
 		values[size] = value;
 		size++;
 	}
+	public void shrink() { // shrinks capacity down to size
+		int[] newrows = new int[size];
+		int[] newcols = new int[size];
+		double[] newvalues = new double[size];
+		for( int i = 0; i < this.size; i++ ) {
+			newrows[i] = rowIdx[i];
+			newcols[i] = colIdx[i];
+			newvalues[i] = values[i];
+		}
+		this.capacity = size;
+		this.rowIdx = newrows;
+		this.colIdx = newcols;
+		this.values = newvalues;		
+	}
 	// sparse fill for now...
 	public static SparseMatrixLil rand( int rows, int cols ) {
 		SparseMatrixLil result = new SparseMatrixLil(rows,cols);
@@ -184,7 +219,7 @@ public class SparseMatrixLil {
 	}
 	void validateEntries() {
 		int count = size; for( int i = 0; i < count; i++ ) {
-			int row = rowIdx[i]; int col = colIdx[i]; double value = values[i];
+			int row = rowIdx[i]; int col = colIdx[i];
 //		for( Entry entry : entries ) {
 			if( row < 0 || col < 0 || row >= rows || col >= cols ) {
 				throw new RuntimeException("entry " + row + " " + col + " outside of matrix dimensions");
@@ -328,6 +363,14 @@ public class SparseMatrixLil {
 	public static SparseMatrixLil spzeros( int r, int c ) {
 		return new SparseMatrixLil(r, c);
 	}
+	public static SparseMatrixLil speye( int size ) { // note: need to add fillfactor
+		SparseMatrixLil result = new SparseMatrixLil(size, size);
+		result.reserve(size );
+		for( int i = 0; i < size; i++ ) {
+			result.append(i, i, 1);
+		}
+		return result;
+	}
 	public static SparseMatrixLil sprand( int rows, int cols ) { // note: need to add fillfactor
 		SparseMatrixLil result = new SparseMatrixLil(rows, cols);
 		Random random = new Random();
@@ -351,32 +394,9 @@ public class SparseMatrixLil {
 		}
 		return result;
 	}
-//	public SparseMatrixCCS toCCS() {
-//		SparseMatrixCCS result = new SparseMatrixCCS(rows, cols);
-//		result.reserve(size);
-//		Collections.sort(entries);
-//		int i = 0;
-//		int lastCol = -1;
-//		for( Entry entry : entries) {
-//			int thiscol = lastCol + 1;
-//			while( thiscol <= col ) {
-//				result.outerStarts.set(thiscol, i);
-//				thiscol += 1;
-//			}
-//			lastCol = col;
-//			result.innerIndices.set(i, row );
-//			result.values.set(i, value );
-//			i += 1;
-//		}
-//		int thiscol = lastCol + 1;
-//		while( thiscol < cols ) {
-//			result.outerStarts.set(thiscol, i);
-//			thiscol += 1;
-//		}
-//		lastCol = cols - 1;
-//		result.outerStarts.set(lastCol+1, i );
-//		return result;
-//	}
+	public SparseMatrixCCS toCCS() {
+		return Conversion.toCCS(this);
+	}
 	public String toString() {
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append("SparseMatrixLil, " + rows + " * " + cols + ":\n");
@@ -394,7 +414,7 @@ public class SparseMatrixLil {
 			DenseMatrix result = new DenseMatrix(1, cols);
 			// cheat and use densematrix for now...
 			int count = size; for( int i = 0; i < count; i++ ) {
-				int row = rowIdx[i]; int col = colIdx[i]; double value = values[i];
+				int col = colIdx[i]; double value = values[i];
 				result.set(0, col, result.get(0, col) + value);
 			}
 			return result.toSparseLil();
@@ -402,7 +422,7 @@ public class SparseMatrixLil {
 			DenseMatrix result = new DenseMatrix(rows, 1);
 			// cheat and use densematrix for now...
 			int count = size; for( int i = 0; i < count; i++ ) {
-				int row = rowIdx[i]; int col = colIdx[i]; double value = values[i];
+				int row = rowIdx[i]; double value = values[i];
 				result.set(row, 0, result.get(row, 0) + value);
 			}
 			return result.toSparseLil();
