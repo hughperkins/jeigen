@@ -13,6 +13,7 @@ using namespace std;
 #include "Eigen/Sparse"
 using namespace Eigen;
 
+/* use Map intead of this method
 void valuesToMatrix( int rows, int cols, double *values, MatrixXd *pM ) {
    int i = 0;
    for( int c = 0; c < cols; c++ ) {
@@ -21,7 +22,7 @@ void valuesToMatrix( int rows, int cols, double *values, MatrixXd *pM ) {
          i++;
       }
    }
-}
+}*/
 
 void matrixToValues( int rows, int cols, const MatrixXd *pM, double *values ) {
    int i = 0;
@@ -95,28 +96,34 @@ void freeSparseMatrix( int handle ) {
 }
 // dummy operation to measure end to end latency
 void dense_dummy_op1( int rows, int cols, double *afirst, double *aresult ) {
-   MatrixXd first(rows,cols);
-   valuesToMatrix( rows, cols, afirst, &first );
-   MatrixXd result = first; // aliasing doesnt matter since we will copy this anyway
-   matrixToValues( rows, cols, &result, aresult );
+   Map<MatrixXd> first(afirst,rows,cols);
+   Map<MatrixXd> result(aresult,rows,cols);
+   //valuesToMatrix( rows, cols, afirst, &first );
+  // MatrixXd result = first; // aliasing doesnt matter since we will copy this anyway
+//   matrixToValues( rows, cols, &result, aresult );
 }
 // dummy operation to measure end to end latency
 void dense_dummy_op2( int rows, int middle, int cols, double *afirst, double *asecond, double *aresult ) {
-   MatrixXd first(rows,middle);
-   valuesToMatrix( rows, middle, afirst, &first );
-   MatrixXd second(middle,cols);
-   valuesToMatrix( middle, cols, asecond, &second );
-   //MatrixXd result = first * second;
-   MatrixXd result(rows,cols);
-   matrixToValues( rows, cols, &result, aresult );
+//   MatrixXd first(rows,middle);
+ //  valuesToMatrix( rows, middle, afirst, &first );
+  // MatrixXd second(middle,cols);
+   //valuesToMatrix( middle, cols, asecond, &second );
+   Map<MatrixXd>first(afirst,rows,middle);
+   Map<MatrixXd>second(asecond,middle,cols);
+   Map<MatrixXd>result(aresult,rows,cols);
+   //MatrixXd result(rows,cols);
+   //matrixToValues( rows, cols, &result, aresult );
 }
 void dense_multiply( int rows, int middle, int cols, double *afirst, double *asecond, double *aresult ) {
-   MatrixXd first(rows,middle);
-   valuesToMatrix( rows, middle, afirst, &first );
-   MatrixXd second(middle,cols);
-   valuesToMatrix( middle, cols, asecond, &second );
-   MatrixXd result = first * second;
-   matrixToValues( rows, cols, &result, aresult );
+   //MatrixXd first(rows,middle);
+   //valuesToMatrix( rows, middle, afirst, &first );
+   //MatrixXd second(middle,cols);
+   //valuesToMatrix( middle, cols, asecond, &second );
+   Map<MatrixXd>first(afirst,rows,middle);
+   Map<MatrixXd>second(asecond,middle,cols);
+   Map<MatrixXd>result(aresult,rows,cols);
+   result = first * second;
+//   matrixToValues( rows, cols, &result, aresult );
 }
 int sparse_multiply( int rows, int middle, int cols,
    int onehandle, int twohandle ) {
@@ -140,37 +147,41 @@ int sparse_dummy_op2( int rows, int middle, int cols,
    return storeData_(presult);
 }
 void sparse_dense_multiply( int rows, int middle, int cols, int onehandle, double *asecond, double *aresult ) {
-   MatrixXd second(middle,cols);
-   valuesToMatrix( middle, cols, asecond, &second );
-   MatrixXd result = (*getSparseMatrix_(onehandle)) * second;
-   matrixToValues( rows, cols, &result, aresult );
+   Map<MatrixXd> second(asecond,middle,cols);
+   //valuesToMatrix( middle, cols, asecond, &second );
+   Map<MatrixXd> result(aresult,rows,cols);
+   result = (*getSparseMatrix_(onehandle)) * second;
+//   matrixToValues( rows, cols, &result, aresult );
 }
 void dense_sparse_multiply( int rows, int middle, int cols, double *afirst, int twohandle, double *aresult ) {
-   MatrixXd first(rows,middle);
-   valuesToMatrix( rows, middle, afirst, &first );
-   MatrixXd result =  first * (*getSparseMatrix_(twohandle));
-   matrixToValues( rows, cols, &result, aresult );
+   Map<MatrixXd> first(afirst, rows,middle);
+//   valuesToMatrix( rows, middle, afirst, &first );
+   Map<MatrixXd> result(aresult,rows,cols);
+   result =  first * (*getSparseMatrix_(twohandle));
+   //matrixToValues( rows, cols, &result, aresult );
 }
 void ldlt_solve( int arows, int acols, int bcols, double *avalues, double *bvalues, double *xvalues ) {
-   MatrixXd A(arows, acols);
-   valuesToMatrix( arows, acols, avalues, &A );
-   MatrixXd b(acols, bcols);
-   valuesToMatrix( acols, bcols, bvalues, &b );
-   MatrixXd result = A.ldlt().solve(b);
-   matrixToValues( acols, bcols, &result, xvalues );   
+   Map<MatrixXd> A(avalues,arows, acols);
+   //valuesToMatrix( arows, acols, avalues, &A );
+   Map<MatrixXd> b(bvalues, acols, bcols);
+   //valuesToMatrix( acols, bcols, bvalues, &b );
+   Map<MatrixXd> result(xvalues,acols,bcols);
+   result = A.ldlt().solve(b);
+   //matrixToValues( acols, bcols, &result, xvalues );   
 }
 void fullpivhouseholderqr_solve( int arows, int acols, int bcols, double *avalues, double *bvalues, double *xvalues ) {
-   MatrixXd A(arows, acols);
-   valuesToMatrix( arows, acols, avalues, &A );
-   MatrixXd b(acols, bcols);
-   valuesToMatrix( acols, bcols, bvalues, &b );
-   MatrixXd result = A.fullPivHouseholderQr().solve(b);
-   matrixToValues( acols, bcols, &result, xvalues );   
+   Map<MatrixXd> A(avalues, arows, acols);
+   //valuesToMatrix( arows, acols, avalues, &A );
+   Map<MatrixXd> b(bvalues, acols, bcols);
+   //valuesToMatrix( acols, bcols, bvalues, &b );
+   Map<MatrixXd> result(xvalues,acols,bcols);
+   result = A.fullPivHouseholderQr().solve(b);
+   //matrixToValues( acols, bcols, &result, xvalues );   
 }
 void svd_dense( int n, int p, double *in, double *u, double *s, double *v ) {
    int m = min( n,p);
-   MatrixXd In(n, p );
-   valuesToMatrix(n,p, in, &In );
+   Map<MatrixXd> In(in, n, p );
+   //valuesToMatrix(n,p, in, &In );
    JacobiSVD<MatrixXd,HouseholderQRPreconditioner> svd(In, ComputeThinU | ComputeThinV);
    matrixToValues( n, m, &(svd.matrixU()), u );
    for( int i = 0; i < m; i++ ) {

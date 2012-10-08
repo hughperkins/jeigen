@@ -21,6 +21,23 @@ public class TestJeigen extends TestCase {
 		System.out.println(B);
 		DenseMatrix C = A.mmul(B);
 		System.out.println(C);
+		assertEquals(3.0,C.get(0,0));
+		assertEquals(3.0,C.get(0,2));
+		assertEquals(3.0,C.get(2,0));
+		assertEquals(3.0,C.get(2,2));
+	}
+	public void testMultBasic() {
+		DenseMatrix A = new DenseMatrix(new double[][]{{3,4},
+				                                         {5,6},
+				                                         {3,9}});
+		DenseMatrix B = new DenseMatrix(new double[][]{{2,9,1,2},
+				                                         {4,1,3,2}});
+		DenseMatrix C = A.mmul(B);
+		System.out.println(C);
+		DenseMatrix Ccorrect = new DenseMatrix(new double[][]{{22,31,15,14},
+				                                                {34,51,23,22},
+				                                                {42,36,30,24}});
+		assertTrue(C.equals(Ccorrect));
 	}
 	public void testOneSparse() {
 		SparseMatrixLil A = SparseMatrixLil.rand(3, 3).t();

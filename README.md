@@ -207,11 +207,11 @@ Example results:
 So, for 2000 by 2000 matrices, the overhead of using java/jna, instead of 
 programming directly in C++, is about 408/13600*100 = 3%.
 
-For N*N matrices, the percent overhead is about:
+For N*N matrices, the empirical percent overhead is about:
 
-    N = 10: 38.5%
-    N = 100: 22.4%
-    N = 1000: 5.8%
+    N = 10: 27%
+    N = 100: 14%
+    N = 1000: 4%
 
 Sparse
 ------
@@ -237,9 +237,9 @@ The overhead for sparse 1000*1000 matrices with full density is about
 Here are approximate empirical overheads for multiplication of two sparse
 N*N matrices:
 
-    N = 10: 79.6%
-    N = 100: 21.8%
-    N = 1000: 10.2%
+    N = 10: 80%
+    N = 100: 22%
+    N = 1000: 10%
 
 License
 =======
