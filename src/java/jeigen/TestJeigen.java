@@ -46,19 +46,6 @@ public class TestJeigen extends TestCase {
 		System.out.println(B.mmul(eye(2)));
 		assertTrue( B.equals(B.mmul(eye(2))));
 	}
-	public void testTwo() {
-		int K = 100;
-		int N = 100000;
-		DenseMatrix A = rand(N, K);
-		DenseMatrix B = rand(K, N);
-		Timer timer = new Timer();
-		DenseMatrix C = B.mmul(A);
-		timer.printTimeCheckMilliseconds();
-		DenseMatrix C1 = B.mmul(A);
-		timer.printTimeCheckMilliseconds();
-		DenseMatrix C2 = B.mmul(A);
-		timer.printTimeCheckMilliseconds();
-	}
 	public void testDenseSparseMmul() {
 		int K = 60;
 		int N = 1000;
@@ -306,7 +293,7 @@ public class TestJeigen extends TestCase {
 	public void testSortBigMatrixFast() {
 		SparseMatrixLil B = spzeros(2,2);
 		
-		SparseMatrixLil A = sprand(1000,10000);
+		SparseMatrixLil A = sprand(1000,8000);
 		System.out.println("created A");
 		B = A.add(0); // make copy
 		System.out.println("created B");
@@ -348,9 +335,8 @@ public class TestJeigen extends TestCase {
 		System.out.println("checed equal to At");
 	}
 	public void testSortBigMatrixInplace() {
-		SparseMatrixLil B = spzeros(2,2);
-		
-		SparseMatrixLil A = sprand(1000,12000);
+		SparseMatrixLil B;
+		SparseMatrixLil A = sprand(1000,8000);
 		System.out.println("size: " + A.getSize() );
 		System.out.println("created A");
 		B = A.add(0); // make copy
@@ -413,79 +399,5 @@ public class TestJeigen extends TestCase {
 		assertEquals(2,B.nonZeros(0));
 		assertEquals(1,B.nonZeros(1));
 		assertEquals(0,B.nonZeros(2));
-	}
-	public void testMultiply() {
-		DenseMatrix a = rand(2782,128);
-		DenseMatrix b = rand(4000,128);
-		tic();
-		DenseMatrix c = a.mmul(b.t());
-		toc();
-		c = a.mmul(b.t());
-		toc();
-		c = a.mmul(b.t());
-		toc();
-	}
-	public void testMultiplySimple(){
-		DenseMatrix b = rand(4000,128);
-		DenseMatrix a, c;
-		tic();
-		c = b.mmul(eye(128)); toc();		
-		c = b.mmul(eye(128)); toc();		
-		c = b.mmul(eye(128)); toc();		
-		a = rand(2782,128);
-		c = a.mmul(eye(128)); toc();		
-		c = a.mmul(eye(128)); toc();		
-		c = a.mmul(eye(128)); toc();	
-		b.t(); toc();
-		b.t(); toc();
-		b.t(); toc();
-	}
-	public void testLatencyDense() {
-		DenseMatrix a = rand(2782,128);
-		DenseMatrix b = rand(4000,128);
-		tic();
-		DenseMatrix c;
-		c = a.dummy_mmul(b.t()); toc();
-		c = a.dummy_mmul(b.t()); toc();
-		c = a.dummy_mmul(b.t()); toc();
-	}
-	public void testLatency2() {
-		DenseMatrix a,b;
-		a = rand(100,100);
-		b = rand(100,100);
-		tic(); a.mmul(b); toc();		
-		tic(); a.mmul(b); toc();		
-		tic(); a.dummy_mmul(b); toc();		
-		tic(); a.dummy_mmul(b); toc();		
-
-		a = rand(2000,2000);
-		b = rand(2000,2000);
-		tic(); a.mmul(b); toc();		
-		tic(); a.mmul(b); toc();		
-		tic(); a.dummy_mmul(b); toc();		
-		tic(); a.dummy_mmul(b); toc();		
-	}
-	public void testSparseLatency() {
-		SparseMatrixLil a,b;
-		a = sprand(100,100);
-		b = sprand(100,100);
-		tic(); a.mmul(b); toc();		
-		tic(); a.mmul(b); toc();		
-		tic(); a.dummy_mmul(b,b.cols); toc();		
-		tic(); a.dummy_mmul(b,b.cols); toc();
-		
-		a = sprand(500,500);
-		b = sprand(500,500);
-		tic(); a.mmul(b); toc();		
-		tic(); a.mmul(b); toc();		
-		tic(); a.dummy_mmul(b,b.cols); toc();		
-		tic(); a.dummy_mmul(b,b.cols); toc();		
-		
-		a = sprand(1000,1000);
-		b = sprand(1000,1000);
-		tic(); a.mmul(b); toc();		
-		tic(); a.mmul(b); toc();		
-		tic(); a.dummy_mmul(b,b.cols); toc();		
-		tic(); a.dummy_mmul(b,b.cols); toc();		
 	}
 }
