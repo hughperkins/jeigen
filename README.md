@@ -216,7 +216,7 @@ For N*N matrices, the empirical percent overhead is about:
 Sparse
 ------
 
-For sparse matrices, a corresponding test method and results are:
+For sparse matrices, a corresponding test method is:
 
     SparseMatrixLil a,b;	
     a = sprand(1000,1000);
@@ -226,16 +226,8 @@ For sparse matrices, a corresponding test method and results are:
     tic(); a.dummy_mmul(b,b.cols); toc();	
     tic(); a.dummy_mmul(b,b.cols); toc();	
 
-    Elapsed time: 9352 ms
-    Elapsed time: 9269 ms
-    Elapsed time: 986 ms
-    Elapsed time: 997 ms
-
-The overhead for sparse 1000*1000 matrices with full density is about
-990*100/9300 = 10.6%
-
-Here are approximate empirical overheads for multiplication of two sparse
-N*N matrices:
+Approximate empirical overheads for multiplication of two sparse
+N*N matrices are:
 
     N = 10: 80%
     N = 100: 22%
