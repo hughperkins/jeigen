@@ -262,6 +262,19 @@ public class SparseMatrixLil {
 		JeigenJna.Jeigen.freeSparseMatrix(resulthandle);
 		return result;
 	}
+	public SparseMatrixLil dummy_mmul( SparseMatrixLil second, int numFilledResultColumns ) {
+		if( this.cols != second.rows ) {
+			throw new RuntimeException("matrix size mismatch " + shape() + " vs " + second.shape());
+		}
+		int onehandle = allocateSparseMatrix(this);
+		int twohandle = allocateSparseMatrix(second);
+		int resulthandle = JeigenJna.Jeigen.sparse_dummy_op2(rows, cols, second.cols, onehandle, twohandle, numFilledResultColumns);
+		JeigenJna.Jeigen.freeSparseMatrix(onehandle);
+		JeigenJna.Jeigen.freeSparseMatrix(twohandle);
+		SparseMatrixLil result = getSparseMatrixFromHandle(resulthandle); 
+		JeigenJna.Jeigen.freeSparseMatrix(resulthandle);
+		return result;
+	}
 	public DenseMatrix mmul( DenseMatrix second ) {
 		if( this.cols != second.rows ) {
 			throw new RuntimeException("matrix size mismatch " + shape() + " vs " + second.shape());

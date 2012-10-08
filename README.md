@@ -179,6 +179,55 @@ Solvers
     DenseMatrix result = dm1.fullPivHouseholderQRSolve(dm2); // no conditions on 
                                                          // dm1, but slower
 
+Overhead of using java/jna?
+===========================
+
+Dense
+-----
+
+You can use the 'dummy_mmul' method of DenseMatrix to measure the overhead. 
+It makes a call, with two matrices, right through to the native layer, doing
+everything that would be done for a real multiplication, but not actually
+calling the Eigen multiplication method:
+
+    DenseMatrix a = rand(2000,2000);
+    DenseMatrix b = rand(2000,2000);
+    tic(); a.mmul(b); toc();	
+    tic(); a.mmul(b); toc();	
+    tic(); a.dummy_mmul(b); toc();	
+    tic(); a.dummy_mmul(b); toc();	
+
+Example results:
+
+    Elapsed time: 13786 ms
+    Elapsed time: 13588 ms
+    Elapsed time: 408 ms
+    Elapsed time: 407 ms
+
+So, for 2000 by 2000 matrices, the overhead of using java/jna, instead of 
+programming directly in C++, is about 408/13600*100 = 3%.
+
+Sparse
+------
+
+For sparse matrices, a corresponding test method and results are:
+
+    SparseMatrixLil a,b;		
+    a = sprand(1000,1000);
+    b = sprand(1000,1000);
+    tic(); a.mmul(b); toc();		
+    tic(); a.mmul(b); toc();		
+    tic(); a.dummy_mmul(b,b.cols); toc();		
+    tic(); a.dummy_mmul(b,b.cols); toc();	
+
+    Elapsed time: 9352 ms
+    Elapsed time: 9269 ms
+    Elapsed time: 986 ms
+    Elapsed time: 997 ms
+
+The overhead for sparse 1000*1000 matrices with full density is about
+990*100/9300 = 10.6%
+
 License
 =======
 

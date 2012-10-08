@@ -496,7 +496,7 @@ public class DenseMatrix {
 			throw new RuntimeException("matrix size mismatch " + shape() + " vs " + second.shape());
 		}
 		DenseMatrix result = new DenseMatrix(this.rows, second.cols);
-		JeigenJna.Jeigen.dummy_op2(this.rows, this.cols, second.cols, this.values, second.values, result.values );
+		JeigenJna.Jeigen.dense_dummy_op2(this.rows, this.cols, second.cols, this.values, second.values, result.values );
 		return result;
 	}
 	public DenseMatrix mmul( DenseMatrix second ) {

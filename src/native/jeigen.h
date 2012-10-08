@@ -12,8 +12,9 @@
 extern "C" {
 
    void init();
-   void dummy_op1( int rows, int cols, double *one, double *result ); // just used for measuring the overhead of java/jna calls
-   void dummy_op2( int rows, int middle, int cols, double *one, double *two, double *result ); // just used for measuring the overhead of java/jna calls
+   void dense_dummy_op1( int rows, int cols, double *one, double *result ); // just used for measuring the overhead of java/jna calls
+   void dense_dummy_op2( int rows, int middle, int cols, double *one, double *two, double *result ); // just used for measuring the overhead of java/jna calls
+   int sparse_dummy_multiply( int rows, int middle, int cols, int oneHandle, int twoHandle, int numResultElements );
    void dense_multiply( int rows, int middle, int cols, double *first, double *second, double *result );
    void sparse_dense_multiply( int rows, int middle, int cols, int oneHandle, double *second, double *result );
    void dense_sparse_multiply( int rows, int middle, int cols, double *first, int twoHandle, double *result );

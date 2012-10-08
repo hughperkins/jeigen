@@ -46,7 +46,10 @@ public class JeigenJna {
 		public static native void freeSparseMatrix( int handle );
 
 		// dummy ops to measure latency
-		public static native void dummy_op1( int rows, int cols, double []first, double []result );
-		public static native void dummy_op2( int rows, int middle, int cols, double []first, double []second, double []result );
+		public static native void dense_dummy_op1( int rows, int cols, double []first, double []result );
+		public static native void dense_dummy_op2( int rows, int middle, int cols, double []first, double []second, double []result );
+		public static native int sparse_dummy_op2( int rows, int middle, int cols,
+			       int oneHandle,
+			       int twoHandle, int numResultColumns );
 	}
 }

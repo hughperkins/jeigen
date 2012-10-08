@@ -449,4 +449,43 @@ public class TestJeigen extends TestCase {
 		c = a.dummy_mmul(b.t()); toc();
 		c = a.dummy_mmul(b.t()); toc();
 	}
+	public void testLatency2() {
+		DenseMatrix a,b;
+		a = rand(100,100);
+		b = rand(100,100);
+		tic(); a.mmul(b); toc();		
+		tic(); a.mmul(b); toc();		
+		tic(); a.dummy_mmul(b); toc();		
+		tic(); a.dummy_mmul(b); toc();		
+
+		a = rand(2000,2000);
+		b = rand(2000,2000);
+		tic(); a.mmul(b); toc();		
+		tic(); a.mmul(b); toc();		
+		tic(); a.dummy_mmul(b); toc();		
+		tic(); a.dummy_mmul(b); toc();		
+	}
+	public void testSparseLatency() {
+		SparseMatrixLil a,b;
+		a = sprand(100,100);
+		b = sprand(100,100);
+		tic(); a.mmul(b); toc();		
+		tic(); a.mmul(b); toc();		
+		tic(); a.dummy_mmul(b,b.cols); toc();		
+		tic(); a.dummy_mmul(b,b.cols); toc();
+		
+		a = sprand(500,500);
+		b = sprand(500,500);
+		tic(); a.mmul(b); toc();		
+		tic(); a.mmul(b); toc();		
+		tic(); a.dummy_mmul(b,b.cols); toc();		
+		tic(); a.dummy_mmul(b,b.cols); toc();		
+		
+		a = sprand(1000,1000);
+		b = sprand(1000,1000);
+		tic(); a.mmul(b); toc();		
+		tic(); a.mmul(b); toc();		
+		tic(); a.dummy_mmul(b,b.cols); toc();		
+		tic(); a.dummy_mmul(b,b.cols); toc();		
+	}
 }

@@ -94,14 +94,14 @@ void freeSparseMatrix( int handle ) {
    data[handle] = 0;
 }
 // dummy operation to measure end to end latency
-void dummy_op1( int rows, int cols, double *afirst, double *aresult ) {
+void dense_dummy_op1( int rows, int cols, double *afirst, double *aresult ) {
    MatrixXd first(rows,cols);
    valuesToMatrix( rows, cols, afirst, &first );
    MatrixXd result = first; // aliasing doesnt matter since we will copy this anyway
    matrixToValues( rows, cols, &result, aresult );
 }
 // dummy operation to measure end to end latency
-void dummy_op2( int rows, int middle, int cols, double *afirst, double *asecond, double *aresult ) {
+void dense_dummy_op2( int rows, int middle, int cols, double *afirst, double *asecond, double *aresult ) {
    MatrixXd first(rows,middle);
    valuesToMatrix( rows, middle, afirst, &first );
    MatrixXd second(middle,cols);
@@ -122,6 +122,21 @@ int sparse_multiply( int rows, int middle, int cols,
    int onehandle, int twohandle ) {
    SparseMatrix<double> *presult = new SparseMatrix<double>(rows,cols);
    *presult = (*getSparseMatrix_(onehandle)) * (*getSparseMatrix_(twohandle));
+   return storeData_(presult);
+}
+int sparse_dummy_op2( int rows, int middle, int cols,
+   int onehandle, int twohandle, int numResultColumns ) {
+   SparseMatrix<double> *presult = new SparseMatrix<double>(rows,cols);
+   presult->reserve(numResultColumns*rows);
+   typedef Eigen::Triplet<double> T;
+   std::vector<T> tripletList;
+   for( int c = 0; c < numResultColumns; c++ ) {
+      for( int r = 0; r < rows; r++ ) {
+         tripletList.push_back(T(r,c,1));
+      }
+   }
+   presult->setFromTriplets(tripletList.begin(), tripletList.end() );
+//   *presult = (*getSparseMatrix_(onehandle)) * (*getSparseMatrix_(twohandle));
    return storeData_(presult);
 }
 void sparse_dense_multiply( int rows, int middle, int cols, int onehandle, double *asecond, double *aresult ) {
