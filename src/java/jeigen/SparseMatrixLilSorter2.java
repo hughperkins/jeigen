@@ -1,7 +1,16 @@
+// Copyright Hugh Perkins 2012, hughperkins -at- gmail
+//
+// This Source Code Form is subject to the terms of the Mozilla Public License, 
+// v. 2.0. If a copy of the MPL was not distributed with this file, You can 
+// obtain one at http://mozilla.org/MPL/2.0/.
+
 package jeigen;
 
 import java.util.*;
 
+// copies the matrix into an arraylist of Entry objects, then uses Collections sorter
+// advantages: fast (since just sorts pointers), simple
+// disadvantages: uses more memory
 public class SparseMatrixLilSorter2 {
 	public static class Entry implements Comparable<Entry> {
 		public int row;

@@ -290,7 +290,7 @@ public class TestJeigen extends TestCase {
 		assertTrue( A.toDense().t().equals(Bt));
 		System.out.println("checed equal to At");		
 	}
-	public void testSortBigMatrixFast() {
+	public void testSortBigMatrixFast() { // you will need to add option -Xmx1400m to run this
 		SparseMatrixLil B = spzeros(2,2);
 		
 		SparseMatrixLil A = sprand(1000,8000);
@@ -334,7 +334,7 @@ public class TestJeigen extends TestCase {
 		assertTrue( A.toDense().t().equals(Bt));
 		System.out.println("checed equal to At");
 	}
-	public void testSortBigMatrixInplace() {
+	public void testSortBigMatrixInplace() { // you will need to add option -Xmx1400m to run this
 		SparseMatrixLil B;
 		SparseMatrixLil A = sprand(1000,8000);
 		System.out.println("size: " + A.getSize() );

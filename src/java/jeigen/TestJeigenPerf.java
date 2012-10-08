@@ -1,3 +1,9 @@
+// Copyright Hugh Perkins 2012, hughperkins -at- gmail
+//
+// This Source Code Form is subject to the terms of the Mozilla Public License, 
+// v. 2.0. If a copy of the MPL was not distributed with this file, You can 
+// obtain one at http://mozilla.org/MPL/2.0/.
+
 package jeigen;
 
 import static jeigen.MatrixUtil.*;
@@ -6,6 +12,7 @@ import junit.framework.TestCase;
 
 // contains methods to measure perf
 // expected usage: in eclipse, put cursor on method name, and press 'f11'
+// You might need to add java heap space, eg -Xmx1400m
 public class TestJeigenPerf extends TestCase {
 	public void testTwo() {
 		int K = 100;
@@ -20,7 +27,7 @@ public class TestJeigenPerf extends TestCase {
 		DenseMatrix C2 = B.mmul(A);
 		timer.printTimeCheckMilliseconds();
 	}
-	public void testSortBigMatrixFast() {
+	public void testSortBigMatrixFast() { // you will need to add option -Xmx1400m to run this
 		SparseMatrixLil B = spzeros(2,2);
 		
 		SparseMatrixLil A = sprand(1000,10000);
@@ -64,7 +71,7 @@ public class TestJeigenPerf extends TestCase {
 		assertTrue( A.toDense().t().equals(Bt));
 		System.out.println("checed equal to At");
 	}
-	public void testSortBigMatrixInplace() {
+	public void testSortBigMatrixInplace() { // you will need to add option -Xmx1400m to run this
 		SparseMatrixLil B;
 		SparseMatrixLil A = sprand(1000,12000);
 		System.out.println("size: " + A.getSize() );
