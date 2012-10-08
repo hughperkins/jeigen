@@ -36,32 +36,32 @@ public class DenseMatrix {
 	public double s() {
 		return values[0];
 	}
-//	public class Row {
-//		final int row;
-//		public Row(int row ){
-//			this.row = row;
-//		}
-//		public double get(int col) {
-//			return values[rows * col + row];
-//		}
-//		public void set( int col, double value ){
-//			values[rows * col + row] = value;
-//		}
-//	}
-//	public class Col {
-//		final int col;
-//		final int offset;
-//		public Col(int col ){
-//			this.col = col;
-//			this.offset = rows * col;
-//		}
-//		public double get(int row) {
-//			return values[offset + row];
-//		}
-//		public void set( int row, double value ){
-//			values[offset + row] = value;
-//		}
-//	}
+	//	public class Row {
+	//		final int row;
+	//		public Row(int row ){
+	//			this.row = row;
+	//		}
+	//		public double get(int col) {
+	//			return values[rows * col + row];
+	//		}
+	//		public void set( int col, double value ){
+	//			values[rows * col + row] = value;
+	//		}
+	//	}
+	//	public class Col {
+	//		final int col;
+	//		final int offset;
+	//		public Col(int col ){
+	//			this.col = col;
+	//			this.offset = rows * col;
+	//		}
+	//		public double get(int row) {
+	//			return values[offset + row];
+	//		}
+	//		public void set( int row, double value ){
+	//			values[offset + row] = value;
+	//		}
+	//	}
 	/**
 	 * return copy of column col
 	 */
@@ -155,14 +155,14 @@ public class DenseMatrix {
 		}
 		return result;
 	}
-//	public DenseMatrix getCol(int col) {
-//		DenseMatrix result = new DenseMatrix(rows,1);
-//		int offset = rows * col;
-//		for( int i = 0; i < rows; i++ ) {
-//			result.values[i] = values[offset + i ];
-//		}
-//		return result;
-//	}
+	//	public DenseMatrix getCol(int col) {
+	//		DenseMatrix result = new DenseMatrix(rows,1);
+	//		int offset = rows * col;
+	//		for( int i = 0; i < rows; i++ ) {
+	//			result.values[i] = values[offset + i ];
+	//		}
+	//		return result;
+	//	}
 	/**
 	 * return rows*cols matrix of uniform random values from 0 to 1
 	 */
@@ -222,51 +222,55 @@ public class DenseMatrix {
 		return result;
 	}
 	/**
-	 * returns the sums of each column
+	 * returns the sum over rows, or if only one row, returns
+	 * sum over columns
 	 */
 	public DenseMatrix sum() {
-		return sum(0);
+		if( rows > 1 ) {
+			return sumOverRows();
+		}
+		return sumOverCols();
 	}
 	/**
-	 * returns the sums:
-	 * when axis = 0, sums of columns
-	 * when axis = 1, sums or rows
+	 * sum aggregate over rows
+	 * result has a single row,
+	 * and the same columns as the input
+	 * matrix.
 	 */
-	public DenseMatrix sum( int axis ) {
-		if( axis == 0 ) {
-			DenseMatrix result = new DenseMatrix(1, cols );
-			for( int c = 0; c < cols; c++ ) {
-				int offset = c * rows;
-				double sum = 0;
-				for( int r = 0; r < rows; r++ ) {
-					sum += values[offset + r];
-				}
-				result.set(0,c,sum);
-			}
-			return result;
-		} else {
-			DenseMatrix result = new DenseMatrix(rows, 1 );
+	public DenseMatrix sumOverRows() {
+		DenseMatrix result = new DenseMatrix(1, cols );
+		for( int c = 0; c < cols; c++ ) {
+			int offset = c * rows;
+			double sum = 0;
 			for( int r = 0; r < rows; r++ ) {
-				double sum = 0;
-				for( int c = 0; c < cols; c++ ) {
-					sum += get(r,c);
-				}
-				result.set(r,0,sum);
-			}			
-			return result;
+				sum += values[offset + r];
+			}
+			result.set(0,c,sum);
 		}
+		return result;
+	}
+	public DenseMatrix sumOverCols() {
+		DenseMatrix result = new DenseMatrix(rows, 1 );
+		for( int r = 0; r < rows; r++ ) {
+			double sum = 0;
+			for( int c = 0; c < cols; c++ ) {
+				sum += get(r,c);
+			}
+			result.set(r,0,sum);
+		}			
+		return result;
 	}
 	/**
 	 * returns transpose
 	 */
 	public DenseMatrix t() { // this could be optimized a lot, by not actually transposing...
-	    DenseMatrix result = new DenseMatrix(cols,rows );
-	    for( int r = 0; r < rows; r++ ) {
-		    for( int c = 0; c < cols; c++ ) {
-		    	result.set(c, r, get(r,c));
-		    }
-	    }
-	    return result;
+		DenseMatrix result = new DenseMatrix(cols,rows );
+		for( int r = 0; r < rows; r++ ) {
+			for( int c = 0; c < cols; c++ ) {
+				result.set(c, r, get(r,c));
+			}
+		}
+		return result;
 	}
 	/**
 	 * constructs new dense matrix from values
@@ -309,7 +313,7 @@ public class DenseMatrix {
 	/**
 	 * for each element: element = 1 / element
 	 */
-	public DenseMatrix inv(){// note: per element inverse, ie 1/element
+	public DenseMatrix recpr(){// note: per element reciprocal, ie 1/element
 		DenseMatrix result = new DenseMatrix(rows,cols);
 		int capacity = rows * cols;
 		for( int i = 0; i < capacity; i++ ) {
@@ -748,7 +752,7 @@ public class DenseMatrix {
 	 * uses Jacobi, which is accurate, and good for small matrices
 	 */
 	public SvdResult svd() { // returns the thin U and V (Note:  I have no objection to extending this to make
-		                     // the thinness of U and V optional)
+		// the thinness of U and V optional)
 		int n = rows;
 		int p = cols;
 		int m = Math.min(n,p);

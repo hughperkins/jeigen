@@ -7,14 +7,14 @@
 package jeigen;
 
 import static jeigen.TicToc.*;
-import static jeigen.MatrixUtil.*;
+import static jeigen.Shortcuts.*;
 import jeigen.DenseMatrix.SvdResult;
 import junit.framework.TestCase;
 
 /**
  * Unit tests
  */
-class TestJeigen extends TestCase {
+public class TestJeigen extends TestCase {
 	public void testOne() {
 		DenseMatrix A = ones(3, 3);
 		System.out.println(A);
@@ -85,6 +85,13 @@ class TestJeigen extends TestCase {
 		timer.printTimeCheckMilliseconds();
 		DenseMatrix C2 = A.toDense().mmul(B);
 		assertTrue(C.equals(C2));
+	}
+	public void testSparseMultiply(){
+		SparseMatrixLil A = sprand(3,5);
+		System.out.println(A);
+		SparseMatrixLil A2 = A.mmul(speye(5));
+		System.out.println(A2);
+		assertTrue(A.equals(A2));
 	}
 	public void testThreeSparse() {
 		int K = 60;
@@ -191,25 +198,25 @@ class TestJeigen extends TestCase {
 	}
 	public void testSum() {
 		DenseMatrix A = new DenseMatrix(new double[][]{{1,9},{7,3}});
-		assertTrue( new DenseMatrix(new double[][]{{8,12}}).equals(A.sum(0)) );
-		assertTrue( new DenseMatrix(new double[][]{{10},{10}}).equals(A.sum(1)) );
+		assertTrue( new DenseMatrix(new double[][]{{8,12}}).equals(A.sumOverRows()) );
+		assertTrue( new DenseMatrix(new double[][]{{10},{10}}).equals(A.sumOverCols()) );
 		SparseMatrixLil B = A.toSparseLil();
-		assertTrue( new DenseMatrix(new double[][]{{8,12}}).toSparseLil().equals(B.sum(0)) );
-		assertTrue( new DenseMatrix(new double[][]{{10},{10}}).toSparseLil().equals(B.sum(1)) );
-		assertTrue(B.sum(0).equals(A.sum(0)));
-		assertTrue(B.sum(1).equals(A.sum(1)));
-		assertTrue(B.sum(0).sum(1).equals(A.sum(0).sum(1)));
+		assertTrue( new DenseMatrix(new double[][]{{8,12}}).toSparseLil().equals(B.sumOverRows()) );
+		assertTrue( new DenseMatrix(new double[][]{{10},{10}}).toSparseLil().equals(B.sumOverCols()) );
+		assertTrue(B.sumOverRows().equals(A.sumOverRows()));
+		assertTrue(B.sumOverCols().equals(A.sumOverCols()));
+		assertEquals(B.sum().sum().s(), A.sum().sum().s() );
 		SparseMatrixLil C = spzeros(4,5);
 		C.append(1,2,5);
 		C.append(3,1,3);
 		C.append(3,2,7);
 		C.append(1,4,11);
-		System.out.println(C.sum(0).toDense() );
-		assertTrue(new DenseMatrix(new double[][]{{0,3,12,0,11}}).equals(C.sum(0)));
-		System.out.println(C.sum(1).toDense() );
-		assertTrue(new DenseMatrix(new double[][]{{0},{16},{0},{10}}).equals(C.sum(1)));
-		assertEquals(26.0, C.sum(1).sum(0).s());
-		assertEquals(26.0, C.sum(0).sum(1).s());
+		System.out.println(C.sumOverRows() );
+		assertTrue(new DenseMatrix(new double[][]{{0,3,12,0,11}}).equals(C.sumOverRows()));
+		System.out.println(C.sumOverCols() );
+		assertTrue(new DenseMatrix(new double[][]{{0},{16},{0},{10}}).equals(C.sumOverCols()));
+		assertEquals(26.0, C.sumOverCols().sumOverRows().s());
+		assertEquals(26.0, C.sumOverRows().sumOverCols().s());
 	}	
 	public void testTranspose() {
 		DenseMatrix A = rand(5,8);
@@ -417,5 +424,11 @@ class TestJeigen extends TestCase {
 		assertEquals(2,B.nonZeros(0));
 		assertEquals(1,B.nonZeros(1));
 		assertEquals(0,B.nonZeros(2));
+	}
+	public void testMin(){
+		SparseMatrixLil A = speye(5);
+		DenseMatrix B = A.minOverCols();
+		System.out.println(B);
+		assertEquals(5.0,B.sumOverRows().s());
 	}
 }

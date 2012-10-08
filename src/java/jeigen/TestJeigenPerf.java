@@ -6,7 +6,7 @@
 
 package jeigen;
 
-import static jeigen.MatrixUtil.*;
+import static jeigen.Shortcuts.*;
 import static jeigen.TicToc.*;
 import junit.framework.TestCase;
 
@@ -14,7 +14,7 @@ import junit.framework.TestCase;
  * Expected usage: in eclipse, put cursor on method name, and press 'f11'.
  * You might need to add java heap space, eg -Xmx1400m.
  */
-class TestJeigenPerf extends TestCase {
+public class TestJeigenPerf extends TestCase {
 	public void testTwo() {
 		int K = 100;
 		int N = 100000;

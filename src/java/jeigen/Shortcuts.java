@@ -7,12 +7,10 @@
 package jeigen;
 
 /**
- * Deprecated: please use Shortcuts class instead
  * You can import this statically for convenience, like this:
- *    "import static jeigen.MatrixUtil.*;"
+ *    "import static jeigen.Shortcuts.*;"
 */
-@Deprecated
-public final class MatrixUtil {
+public final class Shortcuts {
 	/**
 	 * returns dense rows*cols matrix of uniform random numbers from 0 to 1
 	 */

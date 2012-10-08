@@ -12,13 +12,13 @@ The matrix classes are :
     DenseMatrix // for dense matrices
     SparseMatrixLil // for sparse matrices
 
-You can import statically MatrixUtil.*, in order to have easy access to 
+You can import statically Shortcuts.*, in order to have easy access to 
 commands such as 'zeros', 'ones', 'eye' and 'diag'.
 
 Example usage, to multiply two matrices:
 ========================================
 
-    import static jeigen.MatrixUtil.*;
+    import static jeigen.Shortcuts.*;
     
     DenseMatrix A = rand(3,3);
     DenseMatrix B = rand(3,3);
@@ -71,7 +71,7 @@ when built as release, than when built as debug.
 Commands to create new matrices
 ===============================
 
-    import static jeigen.MatrixUtil.*;
+    import static jeigen.Shortcuts.*;
 
     DenseMatrix dm1;
     DenseMatrix dm2;
@@ -112,7 +112,10 @@ Per-element operators:
 ======================
 
     dm1 = dm1.neg();  // element = - element
-    dm1 = dm1.inv();   // element = 1 / element 
+    dm1 = dm1.recpr();   // element = 1 / element 
+    dm1 = dm1.ceil();   // element = Math.ceil( element )
+    dm1 = dm1.floor();   // element = Math.floor( element )
+    dm1 = dm1.round();   // element = Math.round( element )
 
     dm1 = dm1.add( dm2 );    // by-element addition
     dm1 = dm1.add( 3 );    // by-element addition, of 3
@@ -135,8 +138,14 @@ Aggregation operators
 
 These work for both sparse and dense matrices.
 
-    dm1 = dm1.sum(0); // sum over all rows
-    dm1 = dms.sum(1); // sum over all columns
+    dm1 = dm1.sumOverRows(); // sum over all rows
+    dm1 = dm1.sumOverCols(); // sum over all columns
+    dm1 = dm1.sum(); // sum over rows, unless 1 row, in which case
+                     // sum over columns
+    dm1 = dm1.minOverRows();
+    dm1 = dm1.maxOverRows();
+    dm1 = dm1.minOverCols();
+    dm1 = dm1.maxOverCols();
 
 Scalar operators
 ================
@@ -150,19 +159,19 @@ Slicing
 
 Slices are by-value.  They work for both dense and sparse matrices.
 
-   dm1 = dm1.slice(startrow, endrowexclusive, startcol, endcolexclusive);
-   dm1 = dm1.row(row);
-   dm1 = dm1.col(col);
-   dm1 = dm1.rows(startrow, endrowexclusive);
-   dm1 = dm1.cols(startcol, endcolexclusive);
+    dm1 = dm1.slice(startrow, endrowexclusive, startcol, endcolexclusive);
+    dm1 = dm1.row(row);
+    dm1 = dm1.col(col);
+    dm1 = dm1.rows(startrow, endrowexclusive);
+    dm1 = dm1.cols(startcol, endcolexclusive);
 
-   dm1 = dm1.concatRight(dm2); // concatenate [ dm1 dm2 ]
-   dm1 = dm1.concatDown(dm2); // concatenate [ dm1; dm2 ]
+    dm1 = dm1.concatRight(dm2); // concatenate [ dm1 dm2 ]
+    dm1 = dm1.concatDown(dm2); // concatenate [ dm1; dm2 ]
 
-Operators in MatrixUtil:
+Operators in Shortcuts:
 ========================
 
-    import static jeigen.MatrixUtil.*;
+    import static jeigen.Shortcuts.*;
 
     DenseMatrix dm1;
     dm1 = abs(dm1);  // element = abs(element)
@@ -178,6 +187,13 @@ Solvers
                                              // negative definite; fast
     DenseMatrix result = dm1.fullPivHouseholderQRSolve(dm2); // no conditions on 
                                                          // dm1, but slower
+
+Svd
+===
+
+    DenseMatrix dm1;
+    SvdResult result = dm1.svd();  // uses Jacobi, and returns thin U and V
+    // result contains U, S and V matrices
 
 Overhead of using java/jna?
 ===========================
@@ -217,7 +233,7 @@ Sparse
 ------
 
 For sparse matrices, a corresponding test method is:
-
+cut
     SparseMatrixLil a,b;	
     a = sprand(1000,1000);
     b = sprand(1000,1000);
@@ -229,9 +245,9 @@ For sparse matrices, a corresponding test method is:
 Approximate empirical overheads for multiplication of two sparse
 N*N matrices are:
 
-    N = 10: 80%
-    N = 100: 22%
-    N = 1000: 10%
+    N = 10: 77%
+    N = 100: 35%
+    N = 1000: 9%
 
 License
 =======
