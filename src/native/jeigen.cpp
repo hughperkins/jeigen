@@ -93,6 +93,23 @@ void freeSparseMatrix( int handle ) {
    delete (SparseMatrix<double> *)(data[handle] );
    data[handle] = 0;
 }
+// dummy operation to measure end to end latency
+void dummy_op1( int rows, int cols, double *afirst, double *aresult ) {
+   MatrixXd first(rows,cols);
+   valuesToMatrix( rows, cols, afirst, &first );
+   MatrixXd result = first; // aliasing doesnt matter since we will copy this anyway
+   matrixToValues( rows, cols, &result, aresult );
+}
+// dummy operation to measure end to end latency
+void dummy_op2( int rows, int middle, int cols, double *afirst, double *asecond, double *aresult ) {
+   MatrixXd first(rows,middle);
+   valuesToMatrix( rows, middle, afirst, &first );
+   MatrixXd second(middle,cols);
+   valuesToMatrix( middle, cols, asecond, &second );
+   //MatrixXd result = first * second;
+   MatrixXd result(rows,cols);
+   matrixToValues( rows, cols, &result, aresult );
+}
 void dense_multiply( int rows, int middle, int cols, double *afirst, double *asecond, double *aresult ) {
    MatrixXd first(rows,middle);
    valuesToMatrix( rows, middle, afirst, &first );
@@ -139,12 +156,11 @@ void svd_dense( int n, int p, double *in, double *u, double *s, double *v ) {
    int m = min( n,p);
    MatrixXd In(n, p );
    valuesToMatrix(n,p, in, &In );
-   JacobiSVD<MatrixXd> svd(In, ComputeThinU | ComputeThinV);
+   JacobiSVD<MatrixXd,HouseholderQRPreconditioner> svd(In, ComputeThinU | ComputeThinV);
    matrixToValues( n, m, &(svd.matrixU()), u );
    for( int i = 0; i < m; i++ ) {
       s[i] = svd.singularValues()(i);
    }
-//   matrixToValues( n, p, &(svd.singularValues()), s );
    matrixToValues( p, m, &(svd.matrixV()), v );
 }
 }

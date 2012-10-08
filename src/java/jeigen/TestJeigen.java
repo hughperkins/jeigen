@@ -8,6 +8,7 @@
 
 package jeigen;
 
+import static jeigen.TicToc.*;
 import static jeigen.MatrixUtil.*;
 import jeigen.DenseMatrix.SvdResult;
 import junit.framework.TestCase;
@@ -412,5 +413,40 @@ public class TestJeigen extends TestCase {
 		assertEquals(2,B.nonZeros(0));
 		assertEquals(1,B.nonZeros(1));
 		assertEquals(0,B.nonZeros(2));
+	}
+	public void testMultiply() {
+		DenseMatrix a = rand(2782,128);
+		DenseMatrix b = rand(4000,128);
+		tic();
+		DenseMatrix c = a.mmul(b.t());
+		toc();
+		c = a.mmul(b.t());
+		toc();
+		c = a.mmul(b.t());
+		toc();
+	}
+	public void testMultiplySimple(){
+		DenseMatrix b = rand(4000,128);
+		DenseMatrix a, c;
+		tic();
+		c = b.mmul(eye(128)); toc();		
+		c = b.mmul(eye(128)); toc();		
+		c = b.mmul(eye(128)); toc();		
+		a = rand(2782,128);
+		c = a.mmul(eye(128)); toc();		
+		c = a.mmul(eye(128)); toc();		
+		c = a.mmul(eye(128)); toc();	
+		b.t(); toc();
+		b.t(); toc();
+		b.t(); toc();
+	}
+	public void testLatencyDense() {
+		DenseMatrix a = rand(2782,128);
+		DenseMatrix b = rand(4000,128);
+		tic();
+		DenseMatrix c;
+		c = a.dummy_mmul(b.t()); toc();
+		c = a.dummy_mmul(b.t()); toc();
+		c = a.dummy_mmul(b.t()); toc();
 	}
 }

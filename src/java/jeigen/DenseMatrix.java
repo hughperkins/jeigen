@@ -491,6 +491,14 @@ public class DenseMatrix {
 		}
 		return result;
 	}
+	public DenseMatrix dummy_mmul( DenseMatrix second ) { // just to test latency
+		if( this.cols != second.rows ) {
+			throw new RuntimeException("matrix size mismatch " + shape() + " vs " + second.shape());
+		}
+		DenseMatrix result = new DenseMatrix(this.rows, second.cols);
+		JeigenJna.Jeigen.dummy_op2(this.rows, this.cols, second.cols, this.values, second.values, result.values );
+		return result;
+	}
 	public DenseMatrix mmul( DenseMatrix second ) {
 		if( this.cols != second.rows ) {
 			throw new RuntimeException("matrix size mismatch " + shape() + " vs " + second.shape());

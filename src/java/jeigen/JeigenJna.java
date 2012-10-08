@@ -44,5 +44,9 @@ public class JeigenJna {
 		public static native void getSparseMatrixStats( int handle, int[] stats ); // rows, cols, nonzeros
 		public static native void getSparseMatrix( int handle, int []rows, int []cols, double []values );
 		public static native void freeSparseMatrix( int handle );
+
+		// dummy ops to measure latency
+		public static native void dummy_op1( int rows, int cols, double []first, double []result );
+		public static native void dummy_op2( int rows, int middle, int cols, double []first, double []second, double []result );
 	}
 }
