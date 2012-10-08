@@ -8,11 +8,10 @@ package jeigen;
 
 import java.util.*;
 
-// stores a sparse matrix as row,column,value triplets
-// this is the most convenient for sending through jna to eigen
-// it's also the fastest for appending new values to a new matrix
-// Note that DenseMatrix is faster than SparseMatrixLil, if the matrix is fully dense
-// SparseMatrixLil is only faster if a lot of the matrix values are zero
+/** Stores a sparse matrix as row,column,value triplets. 
+ * SparseMatrixLil is faster if a lot of the matrix values are zero.
+ * When the matrix is fully dense, DenseMatrix is faster.
+ */
 public class SparseMatrixLil {
 //	public static class Entry implements Comparable<Entry> {
 //		public int row;

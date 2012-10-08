@@ -10,10 +10,11 @@ import static jeigen.MatrixUtil.*;
 import static jeigen.TicToc.*;
 import junit.framework.TestCase;
 
-// contains methods to measure perf
-// expected usage: in eclipse, put cursor on method name, and press 'f11'
-// You might need to add java heap space, eg -Xmx1400m
-public class TestJeigenPerf extends TestCase {
+/**Contains methods to measure perf.
+ * Expected usage: in eclipse, put cursor on method name, and press 'f11'.
+ * You might need to add java heap space, eg -Xmx1400m.
+ */
+class TestJeigenPerf extends TestCase {
 	public void testTwo() {
 		int K = 100;
 		int N = 100000;

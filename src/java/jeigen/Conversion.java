@@ -1,6 +1,6 @@
 package jeigen;
 
-public final class Conversion {
+final class Conversion {
 	public static final SparseMatrixCCS toCCS( SparseMatrixLil in ) {
 		SparseMatrixCCS result = new SparseMatrixCCS(in.rows, in.cols);
 		in.shrink();

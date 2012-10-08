@@ -8,8 +8,9 @@ package jeigen;
 
 import java.util.*;
 
-// sparse matrix in sparse column format; this isn't used at the moment
-// since Lil format is easier for sending to Eigen, and also for creating new matrices
+/** Sparse matrix in sparse column format.  This isn't used at the moment
+ * since Lil format is easier for sending to Eigen, and also for creating new matrices.
+ */
 public class SparseMatrixCCS {
 	final int rows;
 	final int cols;

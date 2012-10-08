@@ -1,6 +1,6 @@
 package jeigen;
 
-public class SparseMatrixLilSorter {
+class SparseMatrixLilSorter {
 	// adapted from http://en.wikipedia.org/wiki/Smoothsort
 	// sorts in column-major
 	// to sort in row-major, either modify the algorithm, or:

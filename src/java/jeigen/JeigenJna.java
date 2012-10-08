@@ -4,13 +4,14 @@
 // v. 2.0. If a copy of the MPL was not distributed with this file, You can 
 // obtain one at http://mozilla.org/MPL/2.0/.
 
-// the jna link from java to the native Eigen library
-
 package jeigen;
 
 import com.sun.jna.Native;
 
-public class JeigenJna {
+/**
+ *  the jna link from java to the native Eigen library
+ */
+class JeigenJna {
 	public static class Jeigen {
 		public static final void addToJnaPath(String newpath ) throws Exception {
 			String oldLibraryPath = System.getProperty( "jna.library.path");

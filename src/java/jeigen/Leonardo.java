@@ -2,7 +2,10 @@ package jeigen;
 
 import java.util.*;
 
-public class Leonardo {
+/**
+ * Used by SparseMatrixLilSorter
+ */
+class Leonardo {
 	public static long[] generate(int N) {
 		long a = 1;
 		long b = 1;

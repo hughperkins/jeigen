@@ -8,8 +8,10 @@ package jeigen;
 
 import java.util.Random;
 
-// a dense matrix;  this is faster than SparseMatrixLil, for fully dense matrices
-// SparseMatrixLil will be faster if much of the matrix is zeros
+/**
+ * A dense matrix. This is faster than SparseMatrixLil for fully dense matrices.
+ * SparseMatrixLil will be faster if much of the matrix is zeros.
+ */
 public class DenseMatrix {
 	/**
 	 * Number of rows
@@ -718,9 +720,21 @@ public class DenseMatrix {
 				values, b.values, result.values );
 		return result;		
 	}
+	/**
+	 * Stores result of singular value decomposition
+	 */
 	public static class SvdResult {
+		/**
+		 * U matrix
+		 */
 		public final DenseMatrix U;
+		/**
+		 * S matrix (singular values)
+		 */
 		public final DenseMatrix S;
+		/**
+		 * V matrix
+		 */
 		public final DenseMatrix V;
 		public SvdResult(DenseMatrix u, DenseMatrix s, DenseMatrix v) {
 			U = u;

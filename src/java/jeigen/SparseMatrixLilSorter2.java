@@ -11,7 +11,7 @@ import java.util.*;
 // copies the matrix into an arraylist of Entry objects, then uses Collections sorter
 // advantages: fast (since just sorts pointers), simple
 // disadvantages: uses more memory
-public class SparseMatrixLilSorter2 {
+class SparseMatrixLilSorter2 {
 	public static class Entry implements Comparable<Entry> {
 		public int row;
 		public int col;
