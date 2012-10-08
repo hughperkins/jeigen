@@ -207,17 +207,23 @@ Example results:
 So, for 2000 by 2000 matrices, the overhead of using java/jna, instead of 
 programming directly in C++, is about 408/13600*100 = 3%.
 
+For N*N matrices, the percent overhead is about:
+
+    N = 10: 38.5
+    N = 100: 22.4
+    N = 1000: 5.8
+
 Sparse
 ------
 
 For sparse matrices, a corresponding test method and results are:
 
-    SparseMatrixLil a,b;		
+    SparseMatrixLil a,b;	
     a = sprand(1000,1000);
     b = sprand(1000,1000);
-    tic(); a.mmul(b); toc();		
-    tic(); a.mmul(b); toc();		
-    tic(); a.dummy_mmul(b,b.cols); toc();		
+    tic(); a.mmul(b); toc();	
+    tic(); a.mmul(b); toc();	
+    tic(); a.dummy_mmul(b,b.cols); toc();	
     tic(); a.dummy_mmul(b,b.cols); toc();	
 
     Elapsed time: 9352 ms
@@ -227,6 +233,13 @@ For sparse matrices, a corresponding test method and results are:
 
 The overhead for sparse 1000*1000 matrices with full density is about
 990*100/9300 = 10.6%
+
+Here are approximate empirical overheads for multiplication of two sparse
+N*N matrices:
+
+    N = 10: 79.6
+    N = 100: 21.8
+    N = 1000: 10.2
 
 License
 =======
