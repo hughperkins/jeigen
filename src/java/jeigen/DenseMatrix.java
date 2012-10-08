@@ -11,14 +11,26 @@ import java.util.Random;
 // a dense matrix;  this is faster than SparseMatrixLil, for fully dense matrices
 // SparseMatrixLil will be faster if much of the matrix is zeros
 public class DenseMatrix {
+	/**
+	 * Number of rows
+	 */
 	public final int rows;
+	/**
+	 * Number of columns
+	 */
 	public final int cols;
+	/**
+	 * underlying array of values, in column-major, dense format
+	 */
 	double[] values;
 	public DenseMatrix(int rows, int cols ) {
 		this.rows = rows;
 		this.cols = cols;
 		this.values = new double[rows * cols];
 	}
+	/**
+	 * Return value at positiono (0,0)
+	 */
 	public double s() {
 		return values[0];
 	}
@@ -48,18 +60,34 @@ public class DenseMatrix {
 //			values[offset + row] = value;
 //		}
 //	}
+	/**
+	 * return copy of column col
+	 */
 	public DenseMatrix col( int col ) {
 		return slice(0, rows, col, col + 1 );
 	}
+	/**
+	 * return copy of row row
+	 */
 	public DenseMatrix row( int row ) {
 		return slice(row, row + 1, 0, cols );
 	}
+	/**
+	 * return copy of columns from startcol to (endcolexclusive-1)
+	 */
 	public DenseMatrix cols( int startcol, int endcolexclusive ) {
 		return slice(0, rows, startcol, endcolexclusive );
 	}
+	/**
+	 * return copy of rows from startrow to (endrowexclusive-1)
+	 */
 	public DenseMatrix rows( int startrow, int endrowexclusive ) {
 		return slice(startrow, endrowexclusive, 0, cols );
 	}
+	/**
+	 * return copy of matrix from startrow to (endrowexclusive-1)
+	 * and startcol to (endcolexclusive-1)
+	 */
 	public DenseMatrix slice(int startrow, int endrowexclusive, int startcol, int endcolexclusive) {
 		int resultrows = endrowexclusive - startrow;
 		int resultcols = endcolexclusive - startcol;
@@ -85,6 +113,9 @@ public class DenseMatrix {
 		}
 		return result;
 	}
+	/**
+	 * concatenate two to right of this matrix
+	 */
 	public DenseMatrix concatRight(DenseMatrix two ){
 		if( rows != two.rows ) {
 			throw new RuntimeException("row mismatch " + rows + " vs " + two.rows );
@@ -102,6 +133,9 @@ public class DenseMatrix {
 		}
 		return result;
 	}
+	/**
+	 * concatenate two underneath this matrix
+	 */
 	public DenseMatrix concatDown(DenseMatrix two ){
 		if( cols != two.cols ) {
 			throw new RuntimeException("col mismatch " + cols + " vs " + two.cols );
@@ -127,6 +161,9 @@ public class DenseMatrix {
 //		}
 //		return result;
 //	}
+	/**
+	 * return rows*cols matrix of uniform random values from 0 to 1
+	 */
 	public static DenseMatrix rand(int rows, int cols ) {
 		DenseMatrix result = new DenseMatrix(rows,cols);
 		Random random = new Random();
@@ -139,10 +176,16 @@ public class DenseMatrix {
 		}
 		return result;		
 	}
+	/**
+	 * return rows*cols dense matrix of zeros
+	 */
 	public static DenseMatrix zeros(int rows, int cols ) {
 		DenseMatrix result = new DenseMatrix(rows,cols);
 		return result;
 	}
+	/**
+	 * return rows*cols dense matrix of ones
+	 */
 	public static DenseMatrix ones(int rows, int cols ) {
 		DenseMatrix result = new DenseMatrix(rows,cols);
 		int capacity = rows * cols;
@@ -151,6 +194,9 @@ public class DenseMatrix {
 		}
 		return result;
 	}
+	/**
+	 * return identity matrix of size 'size', as dense matrix
+	 */
 	public static DenseMatrix eye(int size ) {
 		DenseMatrix result = new DenseMatrix(size,size);
 		for( int i = 0; i < size; i++ ) {
@@ -158,6 +204,10 @@ public class DenseMatrix {
 		}
 		return result;
 	}
+	/**
+	 * returns matrix with v along the diagonal
+	 * v should have a single column
+	 */
 	public static DenseMatrix diag( DenseMatrix v ) {
 		if( v.cols != 1 ) {
 			throw new RuntimeException("diag needs a matrix with one column exactly");
@@ -169,9 +219,17 @@ public class DenseMatrix {
 		}
 		return result;
 	}
+	/**
+	 * returns the sums of each column
+	 */
 	public DenseMatrix sum() {
 		return sum(0);
 	}
+	/**
+	 * returns the sums:
+	 * when axis = 0, sums of columns
+	 * when axis = 1, sums or rows
+	 */
 	public DenseMatrix sum( int axis ) {
 		if( axis == 0 ) {
 			DenseMatrix result = new DenseMatrix(1, cols );
@@ -196,6 +254,9 @@ public class DenseMatrix {
 			return result;
 		}
 	}
+	/**
+	 * returns transpose
+	 */
 	public DenseMatrix t() { // this could be optimized a lot, by not actually transposing...
 	    DenseMatrix result = new DenseMatrix(cols,rows );
 	    for( int r = 0; r < rows; r++ ) {
@@ -205,6 +266,9 @@ public class DenseMatrix {
 	    }
 	    return result;
 	}
+	/**
+	 * constructs new dense matrix from values
+	 */
 	public DenseMatrix(double[][] values ) {
 		this.rows = values.length;
 		this.cols = values[0].length;
@@ -217,12 +281,21 @@ public class DenseMatrix {
 			}
 		}
 	}
+	/**
+	 * sets value of matrix at (row,col) to value
+	 */
 	public void set(int row, int col, double value ) {
 		values[rows * col + row] = value;
 	}
+	/**
+	 * gets value of matrix at (row,col)
+	 */
 	public double get(int row, int col ) {
 		return values[rows * col + row];
 	}
+	/**
+	 * for each element: element = - element
+	 */
 	public DenseMatrix neg(){
 		DenseMatrix result = new DenseMatrix(rows,cols);
 		int capacity = rows * cols;
@@ -231,6 +304,9 @@ public class DenseMatrix {
 		}
 		return result;		
 	}
+	/**
+	 * for each element: element = 1 / element
+	 */
 	public DenseMatrix inv(){// note: per element inverse, ie 1/element
 		DenseMatrix result = new DenseMatrix(rows,cols);
 		int capacity = rows * cols;
@@ -239,6 +315,9 @@ public class DenseMatrix {
 		}
 		return result;		
 	}
+	/**
+	 * for each element: element = abs( element )
+	 */
 	public DenseMatrix abs(){
 		DenseMatrix result = new DenseMatrix(rows,cols);
 		int capacity = rows * cols;
@@ -247,6 +326,9 @@ public class DenseMatrix {
 		}
 		return result;		
 	}
+	/**
+	 * for each element: element = element * scalar
+	 */
 	public DenseMatrix mul( double scalar ) {
 		DenseMatrix result = new DenseMatrix(rows,cols);
 		int capacity = rows * cols;
@@ -255,6 +337,9 @@ public class DenseMatrix {
 		}
 		return result;		
 	}
+	/**
+	 * for each element: element = Math.pow(element,power)
+	 */
 	public DenseMatrix pow( double power ) {
 		DenseMatrix result = new DenseMatrix(rows,cols);
 		int capacity = rows * cols;
@@ -263,6 +348,9 @@ public class DenseMatrix {
 		}
 		return result;		
 	}
+	/**
+	 * for each element: element = element / scalar
+	 */
 	public DenseMatrix div( double scalar ) {
 		DenseMatrix result = new DenseMatrix(rows,cols);
 		int capacity = rows * cols;
@@ -271,6 +359,9 @@ public class DenseMatrix {
 		}
 		return result;		
 	}
+	/**
+	 * for each element: element = element + scalar
+	 */
 	public DenseMatrix add( double scalar ) {
 		DenseMatrix result = new DenseMatrix(rows,cols);
 		int capacity = rows * cols;
@@ -279,6 +370,9 @@ public class DenseMatrix {
 		}
 		return result;		
 	}
+	/**
+	 * for each element: element = element - scalar
+	 */
 	public DenseMatrix sub( double scalar ) {
 		DenseMatrix result = new DenseMatrix(rows,cols);
 		int capacity = rows * cols;
@@ -287,6 +381,9 @@ public class DenseMatrix {
 		}
 		return result;		
 	}
+	/**
+	 * for each element: element[result] = element[this] * element[second]
+	 */
 	public DenseMatrix mul(DenseMatrix second){
 		if( this.cols != second.cols || this.rows != second.rows ) {
 			throw new RuntimeException("matrix size mismatch: " + shape() + " vs " + second.shape() );
@@ -298,6 +395,9 @@ public class DenseMatrix {
 		}
 		return result;		
 	}
+	/**
+	 * for each element: element[result] = element[this] / element[second]
+	 */
 	public DenseMatrix div(DenseMatrix second){
 		if( this.cols != second.cols || this.rows != second.rows ) {
 			throw new RuntimeException("matrix size mismatch: " + shape() + " vs " + second.shape() );
@@ -309,6 +409,9 @@ public class DenseMatrix {
 		}
 		return result;		
 	}
+	/**
+	 * for each element: element[result] = element[this] + element[second]
+	 */
 	public DenseMatrix add(DenseMatrix second){
 		if( this.cols != second.cols || this.rows != second.rows ) {
 			throw new RuntimeException("matrix size mismatch: " + shape() + " vs " + second.shape() );
@@ -320,6 +423,9 @@ public class DenseMatrix {
 		}
 		return result;		
 	}
+	/**
+	 * for each element: element[result] = element[this] - element[second]
+	 */
 	public DenseMatrix sub(DenseMatrix second){
 		if( this.cols != second.cols || this.rows != second.rows ) {
 			throw new RuntimeException("matrix size mismatch: " + shape() + " vs " + second.shape() );
@@ -331,6 +437,9 @@ public class DenseMatrix {
 		}
 		return result;		
 	}
+	/**
+	 * checks whether the sizes and values of this and osecond are the same
+	 */
 	@Override
 	public boolean equals( Object osecond ) {
 		if( osecond == null ) {
@@ -353,6 +462,9 @@ public class DenseMatrix {
 		}
 		return true;
 	}
+	/**
+	 * for each element: element[result] = element[this] == s ? 1 : 0
+	 */
 	public DenseMatrix eq( double s ) {
 		DenseMatrix result = new DenseMatrix(rows,cols);
 		int numElements = rows * cols;
@@ -363,6 +475,9 @@ public class DenseMatrix {
 		}
 		return result;
 	}
+	/**
+	 * for each element: element[result] = element[this] != s ? 1 : 0
+	 */
 	public DenseMatrix ne( double s ) {
 		DenseMatrix result = new DenseMatrix(rows,cols);
 		int numElements = rows * cols;
@@ -373,6 +488,9 @@ public class DenseMatrix {
 		}
 		return result;
 	}
+	/**
+	 * for each element: element[result] = element[this] <= s ? 1 : 0
+	 */
 	public DenseMatrix le( double s ) {
 		DenseMatrix result = new DenseMatrix(rows,cols);
 		int numElements = rows * cols;
@@ -383,6 +501,9 @@ public class DenseMatrix {
 		}
 		return result;
 	}
+	/**
+	 * for each element: element[result] = element[this] >= s ? 1 : 0
+	 */
 	public DenseMatrix ge( double s ) {
 		DenseMatrix result = new DenseMatrix(rows,cols);
 		int numElements = rows * cols;
@@ -393,6 +514,9 @@ public class DenseMatrix {
 		}
 		return result;
 	}
+	/**
+	 * for each element: element[result] = element[this] < s ? 1 : 0
+	 */
 	public DenseMatrix lt( double s ) {
 		DenseMatrix result = new DenseMatrix(rows,cols);
 		int numElements = rows * cols;
@@ -403,6 +527,9 @@ public class DenseMatrix {
 		}
 		return result;
 	}
+	/**
+	 * for each element: element[result] = element[this] > s ? 1 : 0
+	 */
 	public DenseMatrix gt( double s ) {
 		DenseMatrix result = new DenseMatrix(rows,cols);
 		int numElements = rows * cols;
@@ -413,6 +540,9 @@ public class DenseMatrix {
 		}
 		return result;
 	}
+	/**
+	 * for each element: element[result] = element[this] == element[second] ? 1 : 0
+	 */
 	public DenseMatrix eq( DenseMatrix second ) {
 		if( this.cols != second.cols || this.rows != second.rows ) {
 			throw new RuntimeException("matrix size mismatch " + shape() + " vs " + second.shape() );
@@ -426,6 +556,9 @@ public class DenseMatrix {
 		}
 		return result;
 	}
+	/**
+	 * for each element: element[result] = element[this] != element[second] ? 1 : 0
+	 */
 	public DenseMatrix ne( DenseMatrix second ) {
 		if( this.cols != second.cols || this.rows != second.rows ) {
 			throw new RuntimeException("matrix size mismatch " + shape() + " vs " + second.shape() );
@@ -439,6 +572,9 @@ public class DenseMatrix {
 		}
 		return result;
 	}
+	/**
+	 * for each element: element[result] = element[this] <= element[second] ? 1 : 0
+	 */
 	public DenseMatrix le( DenseMatrix second ) {
 		if( this.cols != second.cols || this.rows != second.rows ) {
 			throw new RuntimeException("matrix size mismatch " + shape() + " vs " + second.shape() );
@@ -452,6 +588,9 @@ public class DenseMatrix {
 		}
 		return result;
 	}
+	/**
+	 * for each element: element[result] = element[this] >= element[second] ? 1 : 0
+	 */
 	public DenseMatrix ge( DenseMatrix second ) {
 		if( this.cols != second.cols || this.rows != second.rows ) {
 			throw new RuntimeException("matrix size mismatch " + shape() + " vs " + second.shape() );
@@ -465,6 +604,9 @@ public class DenseMatrix {
 		}
 		return result;
 	}
+	/**
+	 * for each element: element[result] = element[this] > element[second] ? 1 : 0
+	 */
 	public DenseMatrix gt( DenseMatrix second ) {
 		if( this.cols != second.cols || this.rows != second.rows ) {
 			throw new RuntimeException("matrix size mismatch " + shape() + " vs " + second.shape() );
@@ -478,6 +620,9 @@ public class DenseMatrix {
 		}
 		return result;
 	}
+	/**
+	 * for each element: element[result] = element[this] < element[second] ? 1 : 0
+	 */
 	public DenseMatrix lt( DenseMatrix second ) {
 		if( this.cols != second.cols || this.rows != second.rows ) {
 			throw new RuntimeException("matrix size mismatch " + shape() + " vs " + second.shape() );
@@ -491,6 +636,9 @@ public class DenseMatrix {
 		}
 		return result;
 	}
+	/**
+	 * Tests latency of multiplication: does everything except call the Eigen multiplication routine
+	 */
 	public DenseMatrix dummy_mmul( DenseMatrix second ) { // just to test latency
 		if( this.cols != second.rows ) {
 			throw new RuntimeException("matrix size mismatch " + shape() + " vs " + second.shape());
@@ -499,6 +647,9 @@ public class DenseMatrix {
 		JeigenJna.Jeigen.dense_dummy_op2(this.rows, this.cols, second.cols, this.values, second.values, result.values );
 		return result;
 	}
+	/**
+	 * matrix multiplication of this by second
+	 */
 	public DenseMatrix mmul( DenseMatrix second ) {
 		if( this.cols != second.rows ) {
 			throw new RuntimeException("matrix size mismatch " + shape() + " vs " + second.shape());
@@ -507,6 +658,9 @@ public class DenseMatrix {
 		JeigenJna.Jeigen.dense_multiply(this.rows, this.cols, second.cols, this.values, second.values, result.values );
 		return result;
 	}
+	/**
+	 * matrix multiplication of this by second
+	 */
 	public DenseMatrix mmul( SparseMatrixLil second ) {
 		if( this.cols != second.rows ) {
 			throw new RuntimeException("matrix size mismatch " + shape() + " vs " + second.shape());
@@ -518,6 +672,9 @@ public class DenseMatrix {
 		JeigenJna.Jeigen.freeSparseMatrix(twohandle);
 		return result;
 	}
+	/**
+	 * returns matrix with number of rows and columns of this
+	 */
 	public DenseMatrix shape() {
 		return new DenseMatrix(new double[][]{{rows,cols}}); 
 	}
@@ -535,6 +692,10 @@ public class DenseMatrix {
 		stringBuilder.append("\n");
 		return stringBuilder.toString();
 	}
+	/**
+	 * Solves this * result = b, and returns result
+	 * ldlt is fast, needs this to be positive or negative definite
+	 */
 	public DenseMatrix ldltSolve(DenseMatrix b ) {
 		if( this.cols != b.rows ) {
 			throw new RuntimeException("ldltsolve matrix size mismatch " + shape() + " vs " + b.shape());
@@ -544,6 +705,10 @@ public class DenseMatrix {
 				values, b.values, result.values );
 		return result;		
 	}
+	/**
+	 * Solves this * result = b, and returns result
+	 * Relatively slow, but accurate, and no conditions on this
+	 */
 	public DenseMatrix fullPivHouseholderQRSolve(DenseMatrix b ) {
 		if( this.cols != b.rows ) {
 			throw new RuntimeException("ldltsolve matrix size mismatch " + shape() + " vs " + b.shape());
@@ -563,6 +728,11 @@ public class DenseMatrix {
 			V = v;
 		}
 	}
+	/**
+	 * Calculates singular value decomposition on this
+	 * returns SvdResult containing U,S,V
+	 * uses Jacobi, which is accurate, and good for small matrices
+	 */
 	public SvdResult svd() { // returns the thin U and V (Note:  I have no objection to extending this to make
 		                     // the thinness of U and V optional)
 		int n = rows;
@@ -574,6 +744,9 @@ public class DenseMatrix {
 		JeigenJna.Jeigen.svd_dense(rows, cols, values, U.values, S.values, V.values);
 		return new SvdResult(U, S, V);
 	}
+	/**
+	 * converts this matrix to sparse lil format
+	 */
 	SparseMatrixLil toSparseLil(){
 		SparseMatrixLil result = new SparseMatrixLil(rows,cols);
 		int notZero = 0;
