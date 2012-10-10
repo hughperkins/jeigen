@@ -25,48 +25,38 @@ Example usage, to multiply two matrices:
     DenseMatrix C = A.mmul(B); // mmul is matrix multiplication
     System.out.println(C); // displays C formatted appropriately
 
+How to build
+============
+
+Pre-requisites
+--------------
+
+- git
+- ant
+- cmake
+- a c++ compiler, eg "g++" on linux, or Visual Studio C++ Express on Windows
+
+Procedure
+---------
+
+1. git clone git://github.com/hughperkins/jeigen.git
+2. cd jeigen
+3. ant
+
+Jeigen.jar will be created in the "jar" directory, and libjeigen.so 
+(or jeigen.dll) will be created in the build/native directory.
+
 How to link to Jeigen
 =====================
 
-First, you need to obtain or build the native library. The native library
-depends only on Eigen, included in the source code for Jeigen, so it is
-very easy to build, just needing CMake, and a c++ compiler.
-
 In Eclipse, add a user library, and add the 'jar/Jeigen.jar' jar to the 
 library.  Then expand the library entry for 'jeigen', select 'Native
-library location', then click 'Edit', and browse to the directory 
-containing the native library.
+library location', then click 'Edit', and browse to the build/native
+directory.
 
 (If you are not using Eclipse, then add:
-   -Djava.library.path=/path/to/jeigen/native/<platform>/folder
+   -Djava.library.path=/path/to/jeigen/build/native
 ... to the java vm arguments)
-
-How to build the native library
-===============================
-
-On ubuntu linux:
-- sudo apt-get install 'cmake'
-- cd into the src/native directory
-- mkdir build
-- cd build
-- cmake ..
-- make
-There should now be a library 'libjeigen.so' in the current directory.
-
-On Windows:
-- install Visual Studio, or your preferred C++ compiler
-- install cmake
-- load the CMakeLists.txt file from src/native using cmake
-- press 'configure' then 'generate'
-    - you will need to specify what C++ compiler you wish to use
-    - I will assume Visual Studio here
-- load the generated project file using Visual Studio and do 'Build'
-- change build type to 'Release'
-- this should create the jeigen.dll native library, in the
-'Release' subdirectory
-
-It is important to build as Release, because Eigen is significantly faster
-when built as release, than when built as debug.
 
 Commands to create new matrices
 ===============================
