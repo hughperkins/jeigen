@@ -58,6 +58,10 @@ directory.
    -Djava.library.path=/path/to/jeigen/build/native
 ... to the java vm arguments)
 
+You will also need the jna.jar file.  This is often platform-dependent,
+eg /usr/share/java/jna.jar .  There is a copy in the 'thirdparty'
+directory.
+
 Commands to create new matrices
 ===============================
 
