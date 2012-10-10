@@ -8,4 +8,6 @@
 *.ear
 src/native/build
 jar/
+build/
+build_windows/
 
