@@ -1,0 +1,34 @@
+<project default="jar">
+  <path id="project.class.path">
+    <pathelement path="${java.class.path}/"/>
+    <pathelement path="thirdparty/junit-4.10.jar"/>
+    <pathelement path="thirdparty/jna.jar"/>
+  </path>
+
+  <taskdef name="cmake" 
+    classname="org.iainhull.ant.CmakeBuilder" classpath="thirdparty/cmakeant.jar " />
+  
+   <target name="compile">
+     <cmake srcdir="src/native"
+         bindir="build/native"
+         buildtype="Release" > 
+           <generator name="Visual Studio 8 2005" platform="windows" />
+           <generator name="Unix Makefiles" platform="SunOS" buildargs="-j 4">
+               <variable name="CMAKE_C_COMPILER" type="FILEPATH" value="/opt/SUNWspro/bin/cc" />
+               <variable name="CMAKE_CXX_COMPILER" type="FILEPATH" value="/opt/SUNWspro/bin/CC" />
+           </generator>
+           <generator name="Unix Makefiles" />
+           <readvar name="CMAKE_CXX_COMPILER" property="cxxCompilerPath" />
+     </cmake>
+      <mkdir dir="build/classes"/>
+      <javac srcdir="src/java" destdir="build/classes"  >
+           <classpath refid="project.class.path" />
+      </javac>
+   </target>
+   <target name="jar" depends="compile">
+      <mkdir dir="jar"/>
+      <jar destfile="jar/Jeigen.jar" basedir="build/classes">
+      </jar>
+   </target>
+</project>
+
