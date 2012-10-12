@@ -21,7 +21,7 @@
            <readvar name="CMAKE_CXX_COMPILER" property="cxxCompilerPath" />
      </cmake>
       <mkdir dir="build/classes"/>
-      <javac srcdir="src/java" destdir="build/classes"  >
+      <javac srcdir="src/java" destdir="build/classes"  debug="true" >
            <classpath refid="project.class.path" />
       </javac>
    </target>
