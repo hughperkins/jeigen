@@ -18,10 +18,9 @@ commands such as 'zeros', 'ones', 'eye' and 'diag'.
 Example usage, to multiply two matrices:
 ========================================
 
-    import static jeigen.Shortcuts.*;
-    
-    DenseMatrix A = rand(3,3);
-    DenseMatrix B = rand(3,3);
+    DenseMatrix A = new DenseMatrix("1 2; 3 5; 7 9"); // matrix with 3 rows and 2 columns with values
+                                                      // {{1,2},{3,5},{7,9}}
+    DenseMatrix B = new DenseMatrix(new double[][]{{4,3},{3,7}}); // matrix with 2 rows and 2 columns
     DenseMatrix C = A.mmul(B); // mmul is matrix multiplication
     System.out.println(C); // displays C formatted appropriately
 
@@ -69,6 +68,8 @@ Commands to create new matrices
 
     DenseMatrix dm1;
     DenseMatrix dm2;
+    dm1 = new DenseMatrix( "1 2; 3 4" ); // create new matrix
+                       // with rows {1,2} and {3,4}
     dm1 = new DenseMatrix( new double[][]{{1,2},{3,4}} ); // create new matrix
                        // with rows {1,2} and {3,4}
     dm1 = zeros(5,3);  // creates a dense matrix with 5 rows, and 3 columns

@@ -51,6 +51,30 @@ public class SparseMatrixLil {
 	int[] colIdx = new int[capacity];
 	double[] values = new double[capacity];
 
+	/**
+	 * Creates matrix from valuesstring in format "12 3; 4 5"
+	 * Result:
+	 *   12 3
+	 *   4  5
+	 *   Note that all entries should be specified, but 0s will not
+	 *   be added to the sparse entries
+	 */
+	public SparseMatrixLil(String valuesstring ) {
+		SparseMatrixLil sm = new DenseMatrix(valuesstring).toSparseLil();
+		copy(sm, this);
+	}
+	/**
+	 * copies values from source to target
+	 */
+	static final void copy(SparseMatrixLil source, SparseMatrixLil target ) {
+		int size = source.size;
+		target.rows = source.rows;
+		target.cols = source.cols;
+		target.reserve(size);
+		for( int i = 0; i < size; i++ ) {
+			target.append(source.rowIdx[i], source.colIdx[i], source.values[i]);
+		}
+	}
 	public int getRowIdx(int i ) {
 		return rowIdx[i];
 	}

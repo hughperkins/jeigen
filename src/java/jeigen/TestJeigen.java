@@ -9,6 +9,8 @@ package jeigen;
 import static jeigen.TicToc.*;
 import static jeigen.Shortcuts.*;
 import jeigen.DenseMatrix.SvdResult;
+import jeigen.statistics.Statistics;
+import static jeigen.statistics.Statistics.*;
 import junit.framework.TestCase;
 
 /**
@@ -430,5 +432,50 @@ public class TestJeigen extends TestCase {
 		DenseMatrix B = A.minOverCols();
 		System.out.println(B);
 		assertEquals(5.0,B.sumOverRows().s());
+	}
+	public void testConstructorByString() {
+		DenseMatrix foo = new DenseMatrix("1 3; 5 7; 3 5");
+		assertEquals(3, foo.rows);
+		assertEquals(2, foo.cols);
+		assertTrue( foo.equals(new DenseMatrix(new double[][]{{1,3},{5,7},{3,5}})));
+		assertEquals(5.0, foo.get(1,0));
+		assertEquals(7.0, foo.get(1,1));
+	}
+	public void testConstructorByStringSparse() {
+		SparseMatrixLil foo = new SparseMatrixLil("1 0; 5 7; 0 5");
+		assertEquals(3, foo.rows);
+		assertEquals(2, foo.cols);
+		assertTrue( foo.equals(new DenseMatrix(new double[][]{{1,0},{5,7},{0,5}})));
+		assertEquals(5.0, foo.toDense().get(1,0));
+		assertEquals(7.0, foo.toDense().get(1,1));
+		assertEquals(4, foo.size);
+	}
+	public void testVarOverCols() {
+		SparseMatrixLil A = new SparseMatrixLil("1 5 3; 2 8 5");
+		DenseMatrix B = meanOverCols(A);
+		assertEquals(1, B.cols);
+		assertEquals(2, B.rows);
+		assertEquals(3.0, B.get(0,0));
+		assertEquals(5.0, B.get(1,0));
+
+		B = varOverCols(A);
+		assertEquals(1, B.cols);
+		assertEquals(2, B.rows);
+		assertEquals(4.0, B.get(0,0));
+		assertEquals(9.0, B.get(1,0));
+	}
+	public void testVarOverRows() {
+		SparseMatrixLil A = new SparseMatrixLil("1 5 3; 2 8 5");
+		DenseMatrix B = meanOverRows(A);
+		assertEquals(3, B.cols);
+		assertEquals(1, B.rows);
+		assertEquals(1.5, B.get(0,0));
+		assertEquals(6.5, B.get(0,1));
+
+		B = varOverRows(A);
+		assertEquals(3, B.cols);
+		assertEquals(1, B.rows);
+		assertEquals(0.5, B.get(0,0));
+		assertEquals(4.5, B.get(0,1));
 	}
 }

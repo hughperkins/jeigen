@@ -81,6 +81,34 @@ public class DenseMatrix {
 		return slice(0, rows, startcol, endcolexclusive );
 	}
 	/**
+	 * Creates matrix from valuesstring in format "12 3; 4 5"
+	 * Result:
+	 *   12 3
+	 *   4  5
+	 */
+	public DenseMatrix(String valuesstring ) {
+		String[] lines = valuesstring.split(";");
+		rows = lines.length;
+		int row = 0;
+		if( rows == 0 ) {
+			cols = 0;
+			return;
+		}
+		cols = lines[0].trim().split(" ").length;
+		values = new double[rows*cols];
+		for( String line : lines ) {
+			line = line.trim();
+			String[] splitline = line.split(" ");
+			if( splitline.length != cols ) {
+				throw new RuntimeException("Unequal sized rows in " + valuesstring );
+			}
+			for( int col = 0; col < cols; col++ ) {
+				set(row,col, Double.parseDouble(splitline[col]));
+			}
+			row++;
+		}
+	}
+	/**
 	 * return copy of rows from startrow to (endrowexclusive-1)
 	 */
 	public DenseMatrix rows( int startrow, int endrowexclusive ) {
