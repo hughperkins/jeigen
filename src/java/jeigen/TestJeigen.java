@@ -485,6 +485,13 @@ public class TestJeigen extends TestCase {
 		System.out.println(B.toDense());
 		assertTrue(B.equals(new SparseMatrixLil("1 9 4; 2 8 5; 2 8 5")));
 	}
+//	public void testRowsIndexed2() {
+//		SparseMatrixLil A = new SparseMatrixLil("1 5 3; 2 8 5; 1 9 4; 2 5 3");
+//		DenseMatrix indexes = new DenseMatrix("2; 1; 1");
+//		SparseMatrixLil B = A.rows2(indexes);
+//		System.out.println(B.toDense());
+//		assertTrue(B.equals(new SparseMatrixLil("1 9 4; 2 8 5; 2 8 5")));
+//	}
 	public void testRowsIndexeddense() {
 		DenseMatrix A = new DenseMatrix("1 5 3; 2 8 5; 1 9 4; 2 5 3");
 		DenseMatrix indexes = new DenseMatrix("2; 1; 1");
