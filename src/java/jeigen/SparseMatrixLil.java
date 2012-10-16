@@ -106,6 +106,29 @@ public class SparseMatrixLil {
 	public SparseMatrixLil row( int row ) {
 		return slice(row, row + 1, 0, cols );
 	}
+	public SparseMatrixLil rows(DenseMatrix indexes ){
+		/**
+		 * returns new sparsematrix containing the rows indexed by
+		 * indexes
+		 * indexes should be a single column
+		 * indexes may contain duplicates
+		 * not terribly efficient right now... 
+		 */
+		if( indexes.cols != 1 ) {
+			throw new RuntimeException("indexes should have one column, but had " + indexes.cols + " columns");
+		}
+		SparseMatrixLil result = new SparseMatrixLil(indexes.rows, cols);
+		for( int i = 0; i < indexes.rows; i++ ) {
+			double index = indexes.get(i,0);
+			int entries = values.length;
+			for( int j = 0; j < entries; j++ ) {
+				if( rowIdx[j] == index ) {
+					result.append(i, colIdx[j], values[j]);
+				}
+			}
+		}
+		return result;
+	}
 	public SparseMatrixLil cols( int startcol, int endcolexclusive ) {
 		return slice(0, rows, startcol, endcolexclusive );
 	}
@@ -207,7 +230,7 @@ public class SparseMatrixLil {
 	}
 	public void append(int row, int col, double value ) {
 		if( size >= capacity - 1 ) {
-			reserve( capacity * 2 );
+			reserve( capacity * 3 / 2 );
 		}
 		rowIdx[size] = row;
 		colIdx[size] = col;

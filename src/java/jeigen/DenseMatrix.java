@@ -109,10 +109,69 @@ public class DenseMatrix {
 		}
 	}
 	/**
+	 * returns new DenseMatrix containing the rows indexed by
+	 * indexes
+	 * indexes should be a single column
+	 * indexes may contain duplicates
+	 * not terribly efficient right now... 
+	 */
+	public DenseMatrix rows(DenseMatrix indexes ){
+		if( indexes.cols != 1 ) {
+			throw new RuntimeException("indexes should have one column, but had " + indexes.cols + " columns");
+		}
+		int cols = this.cols;
+		DenseMatrix result = new DenseMatrix(indexes.rows, cols);
+		for( int i = 0; i < indexes.rows; i++ ) {
+			int srcrow = (int)indexes.get(i,0);
+			for( int c = 0; c < cols; c++ ) {
+				result.set(i,c,get(srcrow,c));
+			}
+		}
+		return result;
+	}
+	/**
 	 * return copy of rows from startrow to (endrowexclusive-1)
 	 */
 	public DenseMatrix rows( int startrow, int endrowexclusive ) {
 		return slice(startrow, endrowexclusive, 0, cols );
+	}
+	/**
+	 * returns indexes of non-zero rows
+	 * we must be a one column matrix
+	 */
+	public DenseMatrix nonZeroRows() {
+		if( cols != 1 ) {
+			throw new RuntimeException("cols should be 1 but was " + cols );
+		}
+		SparseMatrixLil indices = new SparseMatrixLil(0,1);
+		int resultrow = 0;
+		for( int i = 0; i < rows; i++ ) {
+			if( values[i] != 0 ) {
+				indices.append(resultrow, 0, i);
+				resultrow++;
+			}
+		}
+		indices.rows = resultrow;
+		return indices.toDense();
+	}
+	/**
+	 * returns indexes of non-zero cols
+	 * we must be a one row matrix
+	 */
+	public DenseMatrix nonZeroCols() {
+		if( rows != 1 ) {
+			throw new RuntimeException("rows should be 1 but was " + rows );
+		}
+		SparseMatrixLil indices = new SparseMatrixLil(0,1);
+		int resultrow = 0;
+		for( int i = 0; i < cols; i++ ) {
+			if( values[i] != 0 ) {
+				indices.append( resultrow, 0, i);
+				resultrow++;
+			}
+		}
+		indices.rows = resultrow;
+		return indices.toDense();
 	}
 	/**
 	 * return copy of matrix from startrow to (endrowexclusive-1)
@@ -286,6 +345,64 @@ public class DenseMatrix {
 			}
 			result.set(r,0,sum);
 		}			
+		return result;
+	}
+	public DenseMatrix maxOverRows() {
+		if( cols < 1 ) {
+			throw new RuntimeException("maxoverrows can't be called on empty matrix");
+		}
+		DenseMatrix result = new DenseMatrix(1, cols );
+		for( int c = 0; c < cols; c++ ) {
+			int offset = c * rows;
+			double max = get(0,c);
+			for( int r = 0; r < rows; r++ ) {
+				max = Math.max(max, values[offset + r] );
+			}
+			result.set(0,c,max);
+		}
+		return result;
+	}
+	public DenseMatrix maxOverCols() {
+		if( rows < 1 ) {
+			throw new RuntimeException("maxOverCols can't be called on empty matrix");
+		}
+		DenseMatrix result = new DenseMatrix(rows, 1 );
+		for( int r = 0; r < rows; r++ ) {
+			double max = get(r,0);
+			for( int c = 0; c < cols; c++ ) {
+				max = Math.max(max, get(r,c) );
+			}
+			result.set(r,0,max);
+		}
+		return result;
+	}
+	public DenseMatrix minOverRows() {
+		if( cols < 1 ) {
+			throw new RuntimeException("minoverrows can't be called on empty matrix");
+		}
+		DenseMatrix result = new DenseMatrix(1, cols );
+		for( int c = 0; c < cols; c++ ) {
+			int offset = c * rows;
+			double min = get(0,c);
+			for( int r = 0; r < rows; r++ ) {
+				min = Math.min(min, values[offset + r] );
+			}
+			result.set(0,c,min);
+		}
+		return result;
+	}
+	public DenseMatrix minOverCols() {
+		if( rows < 1 ) {
+			throw new RuntimeException("minOverCols can't be called on empty matrix");
+		}
+		DenseMatrix result = new DenseMatrix(rows, 1 );
+		for( int r = 0; r < rows; r++ ) {
+			double min = get(r,0);
+			for( int c = 0; c < cols; c++ ) {
+				min = Math.min(min, get(r,c) );
+			}
+			result.set(r,0,min);
+		}
 		return result;
 	}
 	/**
