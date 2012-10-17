@@ -529,4 +529,13 @@ public class TestJeigen extends TestCase {
 		DenseMatrix B = A.minOverCols();
 		assertTrue(B.equals(new DenseMatrix("1; 2; 1; 2")));
 	}
+	public void testsparseget() {
+		SparseMatrixCCS A = new SparseMatrixLil("1 0; 5 7; 0 5").toCCS();
+		assertEquals(0.0, A.get(0,1) );
+		assertEquals(0.0, A.get(2,0) );
+		assertEquals(1.0, A.get(0,0) );
+		assertEquals(5.0, A.get(1,0) );
+		assertEquals(7.0, A.get(1,1) );
+		assertEquals(5.0, A.get(2,1) );
+	}
 }

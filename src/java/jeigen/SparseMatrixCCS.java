@@ -12,8 +12,8 @@ import java.util.*;
  * since Lil format is easier for sending to Eigen, and also for creating new matrices.
  */
 public class SparseMatrixCCS {
-	final int rows;
-	final int cols;
+	public final int rows;
+	public final int cols;
 	public final ArrayList<Integer> outerStarts = new ArrayList<Integer>();
 	public final ArrayList<Integer> innerIndices = new ArrayList<Integer>();
 	public final ArrayList<Double> values = new ArrayList<Double>();
@@ -53,5 +53,29 @@ public class SparseMatrixCCS {
 	          }
 	      }
 	      return result;
+	}
+	public double get(int row, int col ) {
+		int numEntries = nonZeros(col);
+		if( numEntries == 0 ) {
+			return 0;
+		}
+		int l = outerStarts.get(col);
+		int h = outerStarts.get(col+1) - 1;
+		while( l < h ) {
+			int m =  ( l + h ) / 2;
+			int ixm = innerIndices.get(m);
+			if(ixm < row ) {
+				l = m + 1;
+			} else if( ixm > row ) {
+				h = m - 1;
+			} else {
+				l = h = m;
+			}
+		}
+		int ixl = innerIndices.get(l);
+		if(ixl == row ) {
+			return values.get(l);
+		}
+		return 0;
 	}
 }
