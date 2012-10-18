@@ -23,4 +23,18 @@ public class TestDenseAggregator extends TestCase {
 		System.out.println(B);
 		assertTrue(B.equals(new DenseMatrix("13 1 3; 1 2 3; 8 2 4")));
 	}
+	public void testMean(){
+		DenseMatrix A = new DenseMatrix("1 2 3; 5 1 3; 8 2 4");
+		DenseMatrix B = A.meanOverRows(new DenseMatrix("2"));
+		System.out.println(B);
+		assertTrue(B.equals(new DenseMatrix("3 1.5 3; 8 2 4")));
+		B = A.meanOverRows(new DenseMatrix("2; 1"));
+		System.out.println(B);
+		assertTrue(B.equals(new DenseMatrix("5 1 3; 1 2 3; 8 2 4")));
+		
+		A = new DenseMatrix("1 2 3; 5 1 3; 8 2 4; 8 1 3");
+		B = A.meanOverRows(new DenseMatrix("2; 1"));
+		System.out.println(B);
+		assertTrue(B.equals(new DenseMatrix("6.5 1 3; 1 2 3; 8 2 4")));
+	}
 }

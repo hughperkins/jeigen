@@ -918,6 +918,9 @@ public class DenseMatrix {
 	public DenseMatrix sumOverRows(DenseMatrix keyColumns ) {
 		return DenseAggregator.sumOverRows(this, keyColumns);
 	}
+	public DenseMatrix meanOverRows(DenseMatrix keyColumns ) {
+		return DenseAggregator.meanOverRows(this, keyColumns);
+	}
 	/**
 	 * Calculates singular value decomposition on this
 	 * returns SvdResult containing U,S,V
