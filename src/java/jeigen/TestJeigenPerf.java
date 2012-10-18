@@ -190,5 +190,220 @@ public class TestJeigenPerf extends TestCase {
 		tic(); a.dummy_mmul(b,b.cols); toc();		
 		tic(); a.dummy_mmul(b,b.cols); toc();		
 	}
-
+    public void testJaggedPerf() {
+		final int N = 200;
+		double[][] jagged = new double[N][N];
+		double[][] jagged2 = new double[N][N];
+		for( int j = 0; j < N; j++ ) {
+			double[] r1 = jagged[j];
+			for( int i = 0; i < N; i++ ) {
+				r1[i] = 123;
+			}
+		}
+		for( int j = 0; j < N; j++ ) {
+			double[] r1 = jagged2[j];
+			for( int i = 0; i < N; i++ ) {
+				r1[i] = 123;
+			}
+		}
+		tic();
+		double[] values1 = new double[N*N];
+		double[] values2 = new double[N*N];
+		int i = 0;
+		for( int c = 0; c < N; c++ ) {
+			double[] col = jagged[c];
+			for( int r = 0; r < N;r ++ ) {
+				values1[i] = col[c];
+				i++;
+			}
+		}
+		i = 0;
+		for( int c = 0; c < N; c++ ) {
+			double[] col = jagged2[c];
+			for( int r = 0; r < N;r ++ ) {
+				values2[i] = col[c];
+				i++;
+			}
+		}
+		double[] result = new double[N*N];
+		JeigenJna.Jeigen.dense_multiply(N, N, N, values1, values2, result);
+		values1 = null;
+		values2 = null;
+		double[][] resultjagged = new double[N][N];
+		i = 0;
+		for( int c = 0; c < N; c++ ) {
+			double[] col = resultjagged[c];
+			for( int r = 0; r < N;r ++ ) {
+				col[r] = result[i];
+				i++;
+			}
+		}
+		toc();
+		resultjagged = null;
+		result = null;
+		System.gc();
+		System.gc();
+		tic();
+		values1 = new double[N*N];
+		values2 = new double[N*N];
+		i = 0;
+		for( int c = 0; c < N; c++ ) {
+			double[] col = jagged[c];
+			for( int r = 0; r < N;r ++ ) {
+				values1[i] = col[c];
+				i++;
+			}
+		}
+		i = 0;
+		for( int c = 0; c < N; c++ ) {
+			double[] col = jagged2[c];
+			for( int r = 0; r < N;r ++ ) {
+				values2[i] = col[c];
+				i++;
+			}
+		}
+		result = new double[N*N];
+		JeigenJna.Jeigen.dense_multiply(N, N, N, values1, values2, result);
+		values1 = null;
+		values2 = null;
+		resultjagged = new double[N][N];
+		i = 0;
+		for( int c = 0; c < N; c++ ) {
+			double[] col = resultjagged[c];
+			for( int r = 0; r < N;r ++ ) {
+				col[r] = result[i];
+				i++;
+			}
+		}
+		toc();
+    }
+    public void testJaggedPerfDummy() {
+		final int N = 2000;
+		double[][] jagged = new double[N][N];
+		double[][] jagged2 = new double[N][N];
+		for( int j = 0; j < N; j++ ) {
+			double[] r1 = jagged[j];
+			for( int i = 0; i < N; i++ ) {
+				r1[i] = 123;
+			}
+		}
+		for( int j = 0; j < N; j++ ) {
+			double[] r1 = jagged2[j];
+			for( int i = 0; i < N; i++ ) {
+				r1[i] = 123;
+			}
+		}
+		tic();
+		double[] values1 = new double[N*N];
+		double[] values2 = new double[N*N];
+		int i = 0;
+		for( int c = 0; c < N; c++ ) {
+			double[] col = jagged[c];
+			for( int r = 0; r < N;r ++ ) {
+				values1[i] = col[c];
+				i++;
+			}
+		}
+		i = 0;
+		for( int c = 0; c < N; c++ ) {
+			double[] col = jagged2[c];
+			for( int r = 0; r < N;r ++ ) {
+				values2[i] = col[c];
+				i++;
+			}
+		}
+		double[] result = new double[N*N];
+		JeigenJna.Jeigen.dense_dummy_op2(N, N, N, values1, values2, result);
+		values1 = null;
+		values2 = null;
+		double[][] resultjagged = new double[N][N];
+		i = 0;
+		for( int c = 0; c < N; c++ ) {
+			double[] col = resultjagged[c];
+			for( int r = 0; r < N;r ++ ) {
+				col[r] = result[i];
+				i++;
+			}
+		}
+		toc();
+		resultjagged = null;
+		result = null;
+		System.gc();
+		System.gc();
+		tic();
+		values1 = new double[N*N];
+		values2 = new double[N*N];
+		i = 0;
+		for( int c = 0; c < N; c++ ) {
+			double[] col = jagged[c];
+			for( int r = 0; r < N;r ++ ) {
+				values1[i] = col[c];
+				i++;
+			}
+		}
+		i = 0;
+		for( int c = 0; c < N; c++ ) {
+			double[] col = jagged2[c];
+			for( int r = 0; r < N;r ++ ) {
+				values2[i] = col[c];
+				i++;
+			}
+		}
+		result = new double[N*N];
+		JeigenJna.Jeigen.dense_dummy_op2(N, N, N, values1, values2, result);
+		values1 = null;
+		values2 = null;
+		resultjagged = new double[N][N];
+		i = 0;
+		for( int c = 0; c < N; c++ ) {
+			double[] col = resultjagged[c];
+			for( int r = 0; r < N;r ++ ) {
+				col[r] = result[i];
+				i++;
+			}
+		}
+		toc();
+    }
+    public void testVectorPerf() {
+		final int N = 200;
+		double[] v1 = new double[N*N];
+		double[] v2 = new double[N*N];
+		int size = N * N;
+		for( int i = 0; i < size; i++ ) {
+			v1[i] = 123;
+			v2[i] = 123;
+		}
+		tic();
+		double[] result = new double[N*N];
+		JeigenJna.Jeigen.dense_multiply(N, N, N, v1, v2, result);
+		toc();
+		result = new double[N*N];
+		JeigenJna.Jeigen.dense_multiply(N, N, N, v1, v2, result);
+		toc();
+    }
+    public void testVectorPerfDummy() {
+		final int N = 2000;
+		double[] v1 = new double[N*N];
+		double[] v2 = new double[N*N];
+		int size = N * N;
+		for( int i = 0; i < size; i++ ) {
+			v1[i] = 123;
+			v2[i] = 123;
+		}
+		tic();
+		double[] result = new double[N*N];
+		JeigenJna.Jeigen.dense_dummy_op2(N, N, N, v1, v2, result);
+		toc();
+		result = new double[N*N];
+		JeigenJna.Jeigen.dense_dummy_op2(N, N, N, v1, v2, result);
+		toc();
+    }
+    public void testDenseSortPerf(){
+    	DenseMatrix A = rand(2000,2000);
+    	tic();
+    	DenseMatrix B = A.sortRows( new DenseMatrix("3 5 1 2 4 8 9 10").t());
+    	toc();
+    	System.out.println(B.slice(0, 100, 0, 10));
+    }
 }
+

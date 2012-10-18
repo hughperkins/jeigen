@@ -435,13 +435,20 @@ public class DenseMatrix {
 	/**
 	 * sets value of matrix at (row,col) to value
 	 */
-	public void set(int row, int col, double value ) {
+	public final void set(int row, int col, double value ) {
 		values[rows * col + row] = value;
+	}
+	/**
+	 * sets value of matrix at (offset % rows,offset / rows) to value
+	 * less convenient, but faster
+	 */
+	public final void set(int offset, double value ) {
+		values[offset] = value;
 	}
 	/**
 	 * gets value of matrix at (row,col)
 	 */
-	public double get(int row, int col ) {
+	public final double get(int row, int col ) {
 		return values[rows * col + row];
 	}
 	/**
@@ -496,6 +503,17 @@ public class DenseMatrix {
 		int capacity = rows * cols;
 		for( int i = 0; i < capacity; i++ ) {
 			result.values[i] = Math.pow( values[i], power );
+		}
+		return result;		
+	}
+	/**
+	 * for each element: element = Math.pow(element,power)
+	 */
+	public DenseMatrix sqrt() {
+		DenseMatrix result = new DenseMatrix(rows,cols);
+		int capacity = rows * cols;
+		for( int i = 0; i < capacity; i++ ) {
+			result.values[i] = Math.sqrt( values[i] );
 		}
 		return result;		
 	}
@@ -890,6 +908,15 @@ public class DenseMatrix {
 			S = s;
 			V = v;
 		}
+	}
+	public DenseMatrix sortRows(DenseMatrix keyColumns ) {
+		return DenseSorter.sortRows(this, keyColumns);
+	}
+	public DenseMatrix sortCols(DenseMatrix keyColumns ) {
+		return DenseSorter.sortCols(this, keyColumns);
+	}
+	public DenseMatrix sumOverRows(DenseMatrix keyColumns ) {
+		return DenseAggregator.sumOverRows(this, keyColumns);
 	}
 	/**
 	 * Calculates singular value decomposition on this
