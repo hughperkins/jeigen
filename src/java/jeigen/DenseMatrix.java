@@ -8,6 +8,8 @@ package jeigen;
 
 import java.util.Random;
 
+import jeigen.statistics.Statistics;
+
 /**
  * A dense matrix. This is faster than SparseMatrixLil for fully dense matrices.
  * SparseMatrixLil will be faster if much of the matrix is zeros.
@@ -125,6 +127,20 @@ public class DenseMatrix {
 			int srcrow = (int)indexes.get(i,0);
 			for( int c = 0; c < cols; c++ ) {
 				result.set(i,c,get(srcrow,c));
+			}
+		}
+		return result;
+	}
+	public DenseMatrix cols(DenseMatrix indexes ){
+		if( indexes.cols != 1 ) {
+			throw new RuntimeException("indexes should have one column, but had " + indexes.cols + " columns");
+		}
+		int rows = this.rows;
+		DenseMatrix result = new DenseMatrix(rows,indexes.rows);
+		for( int i = 0; i < indexes.rows; i++ ) {
+			int srccol = (int)indexes.get(i,0);
+			for( int r = 0; r < rows; r++ ) {
+				result.set(r,i,get(r,srccol));
 			}
 		}
 		return result;
@@ -317,6 +333,18 @@ public class DenseMatrix {
 			return sumOverRows();
 		}
 		return sumOverCols();
+	}
+	public DenseMatrix varOverRows(){
+		return Statistics.varOverRows(this);
+	}
+	public DenseMatrix varOverCols(){
+		return Statistics.varOverCols(this);
+	}
+	public DenseMatrix meanOverRows(){
+		return Statistics.meanOverRows(this);
+	}
+	public DenseMatrix meanOverCols(){
+		return Statistics.meanOverCols(this);
 	}
 	/**
 	 * sum aggregate over rows

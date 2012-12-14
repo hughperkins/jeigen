@@ -499,6 +499,13 @@ public class TestJeigen extends TestCase {
 		System.out.println(B);
 		assertTrue(B.equals(new DenseMatrix("1 9 4; 2 8 5; 2 8 5")));
 	}
+	public void testColsIndexeddense() {
+		DenseMatrix A = new DenseMatrix("1 5 3; 2 8 5; 1 9 4; 2 5 3").t();
+		DenseMatrix indexes = new DenseMatrix("2; 1; 1");
+		DenseMatrix B = A.cols(indexes);
+		System.out.println(B);
+		assertTrue(B.equals(new DenseMatrix("1 9 4; 2 8 5; 2 8 5").t()));
+	}
 	public void testnonzerorows() {
 		DenseMatrix A = new DenseMatrix("1; 2; 0; 3; 5; 0");
 		DenseMatrix B = A.nonZeroRows();
