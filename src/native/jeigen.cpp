@@ -11,6 +11,8 @@ using namespace std;
 
 #include "Eigen/Dense"
 #include "Eigen/Sparse"
+#include "Eigen/Core"
+#include "unsupported/Eigen/MatrixFunctions"
 using namespace Eigen;
 
 /* use Map intead of this method
@@ -189,5 +191,16 @@ void svd_dense( int n, int p, double *in, double *u, double *s, double *v ) {
    }
    matrixToValues( p, m, &(svd.matrixV()), v );
 }
+void jeigen_exp( int n, double *in, double *result ) {
+   Map<MatrixXd> In(in, n, n );
+   Map<MatrixXd> Result(result,n,n);      
+   Result = In.exp();
 }
+void jeigen_log(int n, double *in, double *result ) {
+   Map<MatrixXd> In(in, n, n );
+   Map<MatrixXd> Result(result,n,n);      
+   Result = In.log();
+}
+
+} // extern "C"
 

@@ -37,6 +37,8 @@ class JeigenJna {
 		public static native void dense_sparse_multiply( int rows, int middle, int cols, double []afirst, int twohandle, double []aresult );
 		
 		public static native void svd_dense( int numrows, int numcols, double []in, double []u, double []s, double []v );
+        public static native void jeigen_exp( int n, double[] in, double[] result );
+        public static native void jeigen_log( int n, double[] in, double[] result );
 		
 		public static native void ldlt_solve( int arow, int acols, int bcols, double []avalues, double []bvalues, double []xvalues );
 		public static native void fullpivhouseholderqr_solve( int arow, int acols, int bcols, double []avalues, double []bvalues, double []xvalues );

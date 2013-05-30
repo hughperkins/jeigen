@@ -915,6 +915,22 @@ public class DenseMatrix {
 				values, b.values, result.values );
 		return result;		
 	}
+    public DenseMatrix exp() {
+		if( this.cols != this.rows ) {
+			throw new RuntimeException("exp matrix size error: must be square matrix");
+		}
+        DenseMatrix result = new DenseMatrix(this.cols,this.cols);
+        JeigenJna.Jeigen.jeigen_exp(rows,values,result.values);
+        return result;
+    }
+    public DenseMatrix log() {
+		if( this.cols != this.rows ) {
+			throw new RuntimeException("log matrix size error: must be square matrix");
+		}
+        DenseMatrix result = new DenseMatrix(this.cols,this.cols);
+        JeigenJna.Jeigen.jeigen_log(rows,values,result.values);
+        return result;
+    }
 	/**
 	 * Stores result of singular value decomposition
 	 */

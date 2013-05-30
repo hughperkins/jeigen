@@ -30,5 +30,10 @@ extern "C" {
 
    // does thin svd, returning u,s,v
    void svd_dense( int numrows, int numcols, double *in, double *u, double *s, double *v );
+
+   // from unsupported
+   void jeigen_exp( int n, double *in, double *result );
+   void jeigen_log( int n, double *in, double *result );
+
 }
 
