@@ -190,6 +190,16 @@ Svd
     SvdResult result = dm1.svd();  // uses Jacobi, and returns thin U and V
     // result contains U, S and V matrices
 
+Unsupported
+===========
+
+(This is called 'unsupported', because these functions are from the 'unsupported'
+Eigen modules)
+
+    DenseMatrix dm1;
+    DenseMatrix result1 = dm1.mexp(); // matrix exponential
+    DenseMatrix result2 = dm1.mlog(); // matrix logarithm
+
 Overhead of using java/jna?
 ===========================
 

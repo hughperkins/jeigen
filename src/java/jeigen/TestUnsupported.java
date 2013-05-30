@@ -18,7 +18,7 @@ public class TestUnsupported extends TestCase {
 		DenseMatrix A = new DenseMatrix(new double[][]{{0,-Math.PI/4, 0},
 				                                         {Math.PI/4,0,0},
 				                                         {0,0,0}});
-        DenseMatrix exp = A.exp();
+        DenseMatrix exp = A.mexp();
         DenseMatrix Ccorrect = new DenseMatrix(new double[][]{{0.707107,-0.707107,0},
 				                                                {0.707107,0.707107,0},
 				                                                {0,0,1}});
@@ -29,7 +29,7 @@ public class TestUnsupported extends TestCase {
 		DenseMatrix A = new DenseMatrix(new double[][]{{Math.sqrt(2)/2,-Math.sqrt(2)/2,0},
 				                                         {Math.sqrt(2)/2,Math.sqrt(2)/2,0},
 				                                         {0,0,1}});
-        DenseMatrix log = A.log();
+        DenseMatrix log = A.mlog();
         DenseMatrix Ccorrect = new DenseMatrix(new double[][]{{0,-Math.PI/4, 0},
 				                                         {Math.PI/4,0,0},
 				                                         {0,0,0}});

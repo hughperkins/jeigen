@@ -915,7 +915,7 @@ public class DenseMatrix {
 				values, b.values, result.values );
 		return result;		
 	}
-    public DenseMatrix exp() {
+    public DenseMatrix mexp() {
 		if( this.cols != this.rows ) {
 			throw new RuntimeException("exp matrix size error: must be square matrix");
 		}
@@ -923,7 +923,7 @@ public class DenseMatrix {
         JeigenJna.Jeigen.jeigen_exp(rows,values,result.values);
         return result;
     }
-    public DenseMatrix log() {
+    public DenseMatrix mlog() {
 		if( this.cols != this.rows ) {
 			throw new RuntimeException("log matrix size error: must be square matrix");
 		}
