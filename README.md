@@ -258,7 +258,6 @@ Wrapping additional functions
 =============================
 
 If you want to add additional functions, here's the procedure:
-   Map<MatrixXd> In(in, n, n );
 
 1. Find the appropriate function in Eigen, and find out how to call it.
 1. Add a method to jeigen.cpp and jeigen.h, that wraps this function
