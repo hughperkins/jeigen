@@ -266,7 +266,7 @@ If you want to add additional functions, here's the procedure:
    - result matrices also arrive as a parameter of type double *
 1. In the jeigen.cpp method, use 'Map<MatrixXd> AnEigenMatrix(doublearray, rows, cols );' 
 to convert the matrix represented by the double array 'doublearray' into an Eigen
-matrix called 'AnEigenMatrix'.
+matrix, here called 'AnEigenMatrix'.
    - do this for each of the incoming matrices, and for any results matrices
 1. Make sure this compiles ok
 1. Add a method to JeigenJna.java, with the exact same name and parameter names as
@@ -275,9 +275,9 @@ the method you just added to jeigen.cpp/.h
 this bit is java
 1. Add a method to DenseMatrix.cpp, with an appropriate, concise name (see names above for 
 examples, and/or check with me), which:
-   - creates any result DenseMatrices, using new DenseMatrix(desiredrows,desiredcols);
+   - creates any result DenseMatrices, using 'new DenseMatrix(desiredrows,desiredcols)';
    - calls the JeigenJna method you created just now, using '.values' on each matrix, to obtain
-     an array of doubles
+     the underlying array of doubles
    - note that after passing the result matrix as a parameter, you don't need to do any additional
      work to get the result of the call into this matrix
 1. And that's it...  Check it compiles, ideally write a test case in TestJeigen.java, or 
@@ -289,7 +289,7 @@ is asymptotically O(n^3), where n is the size of the matrix, then implementing
 it in C++/Eigen will be 
 faster.  If it's O(n^2), then implementing it in native Java might be better.  For example:
 - applying the same operation to all values of a matrix is implemented in native Java
-- multiplying two matrices is implemented using wrapper C++/Eigen
+- multiplying two matrices is implemented using wrapped C++/Eigen
 
 License
 =======
