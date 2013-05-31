@@ -268,6 +268,8 @@ If you want to add additional functions, here's the procedure:
 to convert the matrix represented by the double array 'doublearray' into an Eigen
 matrix, here called 'AnEigenMatrix'.
    - do this for each of the incoming matrices, and for any results matrices
+1. Then call the Eigen method, and ... that's it.  You don't need to do anything
+with the result matrix, since it's already mapped to the function results parameter
 1. Make sure this compiles ok
 1. Add a method to JeigenJna.java, with the exact same name and parameter names as
 the method you just added to jeigen.cpp/.h
