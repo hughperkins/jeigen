@@ -254,6 +254,44 @@ N*N matrices are:
     N = 100: 35%
     N = 1000: 9%
 
+Wrapping additional functions
+=============================
+
+If you want to add additional functions, here's the procedure:
+   Map<MatrixXd> In(in, n, n );
+
+1. Find the appropriate function in Eigen, and find out how to call it.
+1. Add a method to jeigen.cpp and jeigen.h, that wraps this function
+   - matrices arrives as arrays of double (double *)
+   - you also need one or two integer parameters to describe the size of the array
+   - result matrices also arrive as a parameter of type double *
+1. In the jeigen.cpp method, use 'Map<MatrixXd> AnEigenMatrix(doublearray, rows, cols );' 
+to convert the matrix represented by the double array 'doublearray' into an Eigen
+matrix called 'AnEigenMatrix'.
+   - do this for each of the incoming matrices, and for any results matrices
+1. Make sure this compiles ok
+1. Add a method to JeigenJna.java, with the exact same name and parameter names as
+the method you just added to jeigen.cpp/.h
+   - any double arrays ('double *') from jeigen.cpp/.h need to be written as 'double[]' here, since
+this bit is java
+1. Add a method to DenseMatrix.cpp, with an appropriate, concise name (see names above for 
+examples, and/or check with me), which:
+   - creates any result DenseMatrices, using new DenseMatrix(desiredrows,desiredcols);
+   - calls the JeigenJna method you created just now, using '.values' on each matrix, to obtain
+     an array of doubles
+   - note that after passing the result matrix as a parameter, you don't need to do any additional
+     work to get the result of the call into this matrix
+1. And that's it...  Check it compiles, ideally write a test case in TestJeigen.java, or 
+TestUnsupported.java
+
+Note that some methods might be better implemented in native Java, because of the 
+time required to copy data across to the C++ side.  Basically, if a method 
+is asymptotically O(n^3), where n is the size of the matrix, then implementing
+it in C++/Eigen will be 
+faster.  If it's O(n^2), then implementing it in native Java might be better.  For example:
+- applying the same operation to all values of a matrix is implemented in native Java
+- multiplying two matrices is implemented using wrapper C++/Eigen
+
 License
 =======
 
