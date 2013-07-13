@@ -293,6 +293,11 @@ faster.  If it's O(n^2), then implementing it in native Java might be better.  F
 - applying the same operation to all values of a matrix is implemented in native Java
 - multiplying two matrices is implemented using wrapped C++/Eigen
 
+Build Server
+============
+
+A build server is available at https://hughperkins.atlassian.net/builds/browse/JEIGEN-JEIGEN , from which you can download at least the .jar file.
+
 License
 =======
 
