@@ -38,6 +38,7 @@
             <classpath>
                 <pathelement location="jar/Jeigen.jar" />
                 <pathelement path="thirdparty/jna.jar"/>
+                <pathelement path="thirdparty/junit-4.10.jar"/>
             </classpath>
               <formatter type="plain"/>
             <sysproperty key="java.library.path" value="build/native" />
