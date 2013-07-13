@@ -40,7 +40,7 @@
                 <pathelement path="thirdparty/jna.jar"/>
                 <pathelement path="thirdparty/junit-4.10.jar"/>
             </classpath>
-              <formatter type="plain"/>
+              <formatter type="xml"/>
             <sysproperty key="java.library.path" value="build/native" />
              <test name="jeigen.TestJeigen"/>
         </junit>
