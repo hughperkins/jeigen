@@ -17,6 +17,8 @@ import junit.framework.TestCase;
  * Unit tests
  */
 public class TestJeigen extends TestCase {
+    static int thousandconstant = 1000; // set to 1000 for prod tests, set to 10 for testing the tests
+    static int largematrixsize = 4000; // set to 8000 for prod tests, set to 10 for testing the tests
 	public void testOne() {
 		DenseMatrix A = ones(3, 3);
 		System.out.println(A);
@@ -68,7 +70,7 @@ public class TestJeigen extends TestCase {
 	}
 	public void testDenseSparseMmul() {
 		int K = 60;
-		int N = 1000;
+		int N = thousandconstant;
 		DenseMatrix A = DenseMatrix.rand(K, N);
 		SparseMatrixLil B = SparseMatrixLil.rand(N, K);
 		Timer timer = new Timer();
@@ -79,7 +81,7 @@ public class TestJeigen extends TestCase {
 	}
 	public void testSparseDenseMmul() {
 		int K = 60;
-		int N = 1000;
+		int N = thousandconstant;
 		SparseMatrixLil A = SparseMatrixLil.rand(K, N);
 		DenseMatrix B = DenseMatrix.rand(N, K);
 		Timer timer = new Timer();
@@ -97,7 +99,7 @@ public class TestJeigen extends TestCase {
 	}
 	public void testThreeSparse() {
 		int K = 60;
-		int N = 1000;
+		int N = thousandconstant;
 		SparseMatrixLil A = SparseMatrixLil.rand(N, K);
 		SparseMatrixLil B = SparseMatrixLil.rand(K, N);
 //		System.out.println(A.toDense());
@@ -113,7 +115,7 @@ public class TestJeigen extends TestCase {
 		assertTrue(C.equals(CDense));
 
 		K = 400;
-		N = 1000;
+		N = thousandconstant;
 		A = SparseMatrixLil.rand(N, K);
 		B = SparseMatrixLil.rand(K, N);
 //		System.out.println(A.toDense());
@@ -129,7 +131,7 @@ public class TestJeigen extends TestCase {
 		assertTrue(C.equals(CDense));
 	}
 	public void testldltsolve() {
-		int K = 1000;
+		int K = thousandconstant;
 		DenseMatrix A_ = rand(K, K);
 		DenseMatrix A = A_.t().mmul(A_);
 		DenseMatrix B = rand(K, K);
@@ -139,7 +141,7 @@ public class TestJeigen extends TestCase {
 		assertTrue( A.mmul(X).equals(B) );
 	}
 	public void testfullpivhouseholderqrsolve() {
-		int K = 1000;
+		int K = thousandconstant;
 		DenseMatrix A = rand(K, K);
 		DenseMatrix B = rand(K, K);
 		Timer timer = new Timer();
@@ -152,7 +154,7 @@ public class TestJeigen extends TestCase {
 		SvdResult result = A.svd();
 		assertEquals(A, result.U.mmul(diag(result.S)).mmul(result.V.t()));
 		Timer timer = new Timer();
-		A = rand(500,1000);
+		A = rand(500,thousandconstant);
 		timer.printTimeCheckMilliseconds();
 		result = A.svd();
 		timer.printTimeCheckMilliseconds();
@@ -273,9 +275,10 @@ public class TestJeigen extends TestCase {
 	}
 	public void xtestSortViaNative() {
 		SparseMatrixLil B = spzeros(2,2);
+        System.out.println("xtestSortViaNative");
 		
-		int R = 1000;
-		int C = 8000;
+		int R = thousandconstant;
+		int C = largematrixsize;
 		SparseMatrixLil A = sprand(R,C);
 		System.out.println("created A");
 		B = A.add(0); // make copy
@@ -318,9 +321,10 @@ public class TestJeigen extends TestCase {
 		System.out.println("checed equal to At");		
 	}
 	public void testSortBigMatrixFast() { // you will need to add option -Xmx1400m to run this
+        System.out.println("testSortBigMatrixFast");
 		SparseMatrixLil B = spzeros(2,2);
 		
-		SparseMatrixLil A = sprand(1000,8000);
+		SparseMatrixLil A = sprand(1000,largematrixsize);
 		System.out.println("created A");
 		B = A.add(0); // make copy
 		System.out.println("created B");
@@ -363,7 +367,7 @@ public class TestJeigen extends TestCase {
 	}
 	public void testSortBigMatrixInplace() { // you will need to add option -Xmx1400m to run this
 		SparseMatrixLil B;
-		SparseMatrixLil A = sprand(1000,8000);
+		SparseMatrixLil A = sprand(thousandconstant,largematrixsize);
 		System.out.println("size: " + A.getSize() );
 		System.out.println("created A");
 		B = A.add(0); // make copy
@@ -409,7 +413,7 @@ public class TestJeigen extends TestCase {
 		SparseMatrixLil A = sprand(10,10);
 		SparseMatrixLil B = A.toCCS().toLil();
 		assertTrue(A.equals(B));
-		A = sprand(1000,1000);
+		A = sprand(thousandconstant,thousandconstant);
 		B = A.toCCS().toLil();
 		assertTrue(A.equals(B));
 		A = A.t();
