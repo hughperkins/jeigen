@@ -17,8 +17,8 @@ import junit.framework.TestCase;
  * Unit tests
  */
 public class TestJeigen extends TestCase {
-    static int thousandconstant = 1000; // set to 1000 for prod tests, set to 10 for testing the tests
-    static int largematrixsize = 4000; // set to 8000 for prod tests, set to 10 for testing the tests
+    static int thousandconstant = 100; // set to 1000 for prod tests, set to 10 for testing the tests
+    static int largematrixsize = 400; // set to 8000 for prod tests, set to 10 for testing the tests
 	public void testOne() {
 		DenseMatrix A = ones(3, 3);
 		System.out.println(A);
