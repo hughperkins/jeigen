@@ -1,54 +1,18 @@
 <project default="jar">
+    <property name="generator" value="Unix Makefiles" />
+    <property name="cmake_home" value="/usr" />
+
   <path id="project.class.path">
     <pathelement path="${java.class.path}/"/>
     <pathelement path="thirdparty/junit-4.10.jar"/>
     <pathelement path="thirdparty/jna.jar"/>
   </path>
 
-<!--
-  <taskdef name="cmake" 
-    classname="org.iainhull.ant.CmakeBuilder" classpath="thirdparty/cmakeant.jar " />
--->
-	<target name="getos">
-    	<echo message="${os.family}" />
-    	<echo message="${os.name}" />
-    	<condition property="iswindows">
-    		<os family="windows" />
-    	</condition>
-    	<condition property="isunix">
-    		<os family="unix" />
-    	</condition>
-	</target>
-	
-   <target name="cmake-linux" depends="getos" if="isunix">
-      <mkdir dir="build/native"/>
-        <exec executable="cmake" dir="build/native">
-            <arg line="-D CMAKE_BUILD_TYPE:STRING=Release ../../src/native" />
-        </exec>
-    </target>
-  
-   <target name="cmake-windows" depends="getos" if="iswindows">
-        <property environment="env"/>
-      <mkdir dir="build/native"/>
-        <exec executable="${CMAKE_HOME}\bin\cmake" dir="build/native" searchpath="true" vmlauncher="true">
-            <arg line="-G 'Visual Studio 10' -D CMAKE_BUILD_TYPE:STRING=Release ../../src/native" />
-        </exec>        
-    </target>
-  
-   <target name="compile" depends="cmake-linux,cmake-windows">
-<!--
-     <cmake srcdir="src/native"
-         bindir="build/native"
-         buildtype="Release" > 
-           <generator name="Visual Studio 8 2005" platform="windows" />
-           <generator name="Unix Makefiles" platform="SunOS" buildargs="-j 4">
-               <variable name="CMAKE_C_COMPILER" type="FILEPATH" value="/opt/SUNWspro/bin/cc" />
-               <variable name="CMAKE_CXX_COMPILER" type="FILEPATH" value="/opt/SUNWspro/bin/CC" />
-           </generator>
-           <generator name="Unix Makefiles" />
-           <readvar name="CMAKE_CXX_COMPILER" property="cxxCompilerPath" />
-     </cmake>
--->
+   <target name="compile" >
+        <taskdef name="cmake" classname="CMake" classpath="thirdparty/cmake-for-ant.jar" />
+        <mkdir dir="build/native" />
+        <cmake cmakehome="${cmake_home}" releasetype="Release" generator="${generator}" 
+             srcdir="src/native" builddir="build/native" />
       <mkdir dir="build/classes"/>
       <javac srcdir="src/java" destdir="build/classes"  debug="true" >
            <classpath refid="project.class.path" />
@@ -57,11 +21,13 @@
           <fileset dir="src/java" />
       </copy>
    </target>
+
    <target name="jar" depends="compile">
       <mkdir dir="jar"/>
       <jar destfile="jar/Jeigen.jar" basedir="build/classes">
       </jar>
    </target>
+
     <target name="test" depends="jar">
        <junit printsummary="on" fork="on" haltonerror="on" haltonfailure="on" showoutput="withOutAndErr" >
             <classpath>
@@ -73,6 +39,11 @@
             <sysproperty key="java.library.path" value="build/native" />
              <test name="jeigen.TestJeigen"/>
         </junit>
+    </target>
+
+    <target name="clean" >
+        <delete dir="build" />
+        <delete dir="jar" />
     </target>
 </project>
 
