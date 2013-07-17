@@ -24,8 +24,8 @@ Example usage, to multiply two matrices:
     DenseMatrix C = A.mmul(B); // mmul is matrix multiplication
     System.out.println(C); // displays C formatted appropriately
 
-How to build
-============
+How to build, linux
+===================
 
 Pre-requisites
 --------------
@@ -33,7 +33,7 @@ Pre-requisites
 - git
 - ant
 - cmake
-- a c++ compiler, eg "g++" on linux, or Visual Studio C++ Express on Windows
+- g++
 
 Procedure
 ---------
@@ -43,7 +43,34 @@ Procedure
 3. ant
 
 Jeigen.jar will be created in the "jar" directory, and libjeigen.so 
-(or jeigen.dll) will be created in the build/native directory.
+will be created in the build/native directory.
+
+How to build, Windows
+=====================
+
+Pre-requisites
+--------------
+
+- have installed git
+- have installed ant
+- have installed cmake
+- have installed Visual Studio C++ Express 2010
+
+Procedure
+---------
+
+1. git clone git://github.com/hughperkins/jeigen.git
+2. cd jeigen
+3. set PATH=%PATH%;c:\apache-ant\bin
+ * set to appropriate path for your ant installation
+4. C:\Program Files\Microsoft Visual Studio 10.0\VC\vcvarsall.bat
+ * Use appropriate path for your system
+5. ant -DCMAKE_HOME="c:\program files\Cmake-2.8.2"
+ * set to appropriate path for your cmake installation
+ * if anything goes wrong, you can delete the entire 'build' directory, and try again from the beginning, if you want
+
+Jeigen.jar will be created in the "jar" directory, and libjeigen.dll 
+will be created in the build/native directory.
 
 How to link to Jeigen
 =====================

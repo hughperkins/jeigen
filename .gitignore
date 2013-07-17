@@ -2,7 +2,7 @@
 *.so
 *.dll
 
-# bamboo files
+# junit output files
 TEST-*
 
 # Package Files #
