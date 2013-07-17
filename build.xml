@@ -12,7 +12,7 @@
         <taskdef name="cmake" classname="CMake" classpath="thirdparty/cmake-for-ant.jar" />
         <mkdir dir="build/native" />
         <cmake cmakehome="${cmake_home}" releasetype="Release" generator="${generator}" 
-             srcdir="src/native" builddir="build/native" />
+             srcdir="src/native" builddir="build/native" artifactdirproperty="cmakeoutdir" />
       <mkdir dir="build/classes"/>
       <javac srcdir="src/java" destdir="build/classes"  debug="true" >
            <classpath refid="project.class.path" />
@@ -36,7 +36,7 @@
                 <pathelement path="thirdparty/junit-4.10.jar"/>
             </classpath>
               <formatter type="xml"/>
-            <sysproperty key="java.library.path" value="build/native" />
+            <sysproperty key="java.library.path" value="${cmakeoutdir}" />
              <test name="jeigen.TestJeigen"/>
         </junit>
     </target>
