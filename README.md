@@ -325,6 +325,13 @@ Build Server
 
 A build server is available at https://hughperkins.atlassian.net/builds/browse/JEIGEN-JEIGEN , from which you can download at least the .jar file.
 
+Third-party libraries used
+==========================
+
+The build process uses cmake-for-ant, https://github.com/hughperkins/cmake-for-ant .
+
+Unit tests use junit 4.
+
 License
 =======
 
