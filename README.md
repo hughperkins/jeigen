@@ -53,8 +53,8 @@ Pre-requisites
 
 - have installed git
 - have installed ant
-- have installed cmake
-- have installed Visual Studio C++ Express 2010 or Visual Studio C++ Express 2012
+- have installed cmake, at least version 2.8.11.2
+- have installed Visual Studio C++ Express 2012
 
 Procedure
 ---------
@@ -63,14 +63,16 @@ Procedure
 2. cd jeigen
 3. set PATH=%PATH%;c:\apache-ant\bin
  * set to appropriate path for your ant installation
-4. C:\Program Files\Microsoft Visual Studio 10.0\VC\vcvarsall.bat
- * Use appropriate path for your Visual Studio installation
-5. ant -DCMAKE_HOME="c:\program files\Cmake-2.8.2" -Dgenerator="Visual Studio 10"
+4. ant -DCMAKE_HOME="c:\program files (x86)\Cmake 2.8" -Dgenerator="Visual Studio 11 Win64"
  * set to appropriate path for your cmake installation
- * use -Dgenerator="Visual Studio 11" if you are using Visual Studio 2012
+ * if you're using 32-bit Windows, please remove " Win64" from end of generator name
 
-Jeigen.jar will be created in the "jar" directory, and libjeigen.dll 
-will be created in the build/native directory.
+Jeigen.jar will be created in the "jar" directory, and jeigen.dll 
+will be created in the build\native directory.
+
+Make sure to be consistent with 32-bit versus 64-bit throughout.  For example, if you use a 32-bit jdk, then you need to use a 32-bit C++ compiler, and visa versa.
+If you try to mix and match 32-bit and 64-bit, by accident, then this will result in failure to load jeigen.dll at runtime.  Conversely, if jeigen.dll fails
+to load, then double-check that you're using a 32-bit tool-chain throughout, or a 64-bit tool-chain throughout.
 
 How to link to Jeigen
 =====================

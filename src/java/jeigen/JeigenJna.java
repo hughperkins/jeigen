@@ -7,6 +7,7 @@
 package jeigen;
 
 import com.sun.jna.Native;
+import java.io.*;
 
 /**
  *  the jna link from java to the native Eigen library
@@ -16,7 +17,11 @@ class JeigenJna {
 		public static final void addToJnaPath(String newpath ) throws Exception {
 			String oldLibraryPath = System.getProperty( "jna.library.path");
 //			System.out.println("adding " + newpath);
-			System.setProperty( "jna.library.path", oldLibraryPath + ":" + newpath );
+            if( oldLibraryPath != null ) {
+				System.setProperty( "jna.library.path", oldLibraryPath + File.pathSeparator + newpath );
+			} else {
+				System.setProperty( "jna.library.path", newpath );
+			}
 		}
 		static {
 			try{

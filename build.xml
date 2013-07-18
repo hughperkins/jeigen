@@ -5,7 +5,7 @@
   <path id="project.class.path">
     <pathelement path="${java.class.path}/"/>
     <pathelement path="thirdparty/junit-4.10.jar"/>
-    <pathelement path="thirdparty/jna.jar"/>
+    <pathelement path="thirdparty/jna-4.0.0.jar"/>
   </path>
 
    <target name="compile" >
@@ -29,14 +29,16 @@
    </target>
 
     <target name="test" depends="jar">
+	   <echo message="cmakeoutdir: ${cmakeoutdir}" />
        <junit printsummary="on" fork="on" haltonerror="on" haltonfailure="on" showoutput="withOutAndErr" >
             <classpath>
                 <pathelement location="jar/Jeigen.jar" />
-                <pathelement path="thirdparty/jna.jar"/>
+                <pathelement path="thirdparty/jna-4.0.0.jar"/>
                 <pathelement path="thirdparty/junit-4.10.jar"/>
             </classpath>
               <formatter type="xml"/>
             <sysproperty key="java.library.path" value="${cmakeoutdir}" />
+			<sysproperty key="jna.debug_load" value="true" />
              <test name="jeigen.TestJeigen"/>
         </junit>
     </target>

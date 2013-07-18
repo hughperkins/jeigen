@@ -52,12 +52,12 @@ SparseMatrix<double> *getSparseMatrix_(int handle ) {
 }
 
 extern "C" {
-void init() {
+DllExport void init() {
    for( int i = 0; i < RESULTS_SIZE; i++ ) {
       data[i] = 0;
    }
 }
-int allocateSparseMatrix( int numEntries, int numRows, int numCols, int *rows, int *cols, double *values ) {
+DllExport int allocateSparseMatrix( int numEntries, int numRows, int numCols, int *rows, int *cols, double *values ) {
    SparseMatrix<double> *pmat = new SparseMatrix<double>(numRows, numCols);
    pmat->reserve(numEntries);
    typedef Eigen::Triplet<double> T;
@@ -68,15 +68,15 @@ int allocateSparseMatrix( int numEntries, int numRows, int numCols, int *rows, i
    pmat->setFromTriplets(tripletList.begin(), tripletList.end() );
    return storeData_(pmat);
 }
-void getSparseMatrixStats( int handle, int* stats ) { // rows, cols, nonzero
+DllExport void getSparseMatrixStats( int handle, int* stats ) { // rows, cols, nonzero
    stats[0] = getSparseMatrix_(handle)->rows();
    stats[1] = getSparseMatrix_(handle)->cols();
    stats[2] = getSparseMatrix_(handle)->nonZeros();
 }
-int getSparseMatrixNumEntries( int handle ) {
+DllExport int getSparseMatrixNumEntries( int handle ) {
    return getSparseMatrix_(handle)->nonZeros();
 }
-void getSparseMatrix( int handle, int *rows, int *cols, double *values ) {
+DllExport void getSparseMatrix( int handle, int *rows, int *cols, double *values ) {
    SparseMatrix<double> *pmat = getSparseMatrix_(handle);
    int numEntries = pmat->nonZeros();
    int i = 0;
@@ -89,7 +89,7 @@ void getSparseMatrix( int handle, int *rows, int *cols, double *values ) {
       }
   }
 }
-void freeSparseMatrix( int handle ) {
+DllExport void freeSparseMatrix( int handle ) {
    if( handle < 0 || handle >= RESULTS_SIZE ) {
       throw std::runtime_error("handle out of range");
    }
@@ -97,7 +97,7 @@ void freeSparseMatrix( int handle ) {
    data[handle] = 0;
 }
 // dummy operation to measure end to end latency
-void dense_dummy_op1( int rows, int cols, double *afirst, double *aresult ) {
+DllExport void dense_dummy_op1( int rows, int cols, double *afirst, double *aresult ) {
    Map<MatrixXd> first(afirst,rows,cols);
    Map<MatrixXd> result(aresult,rows,cols);
    //valuesToMatrix( rows, cols, afirst, &first );
@@ -105,7 +105,7 @@ void dense_dummy_op1( int rows, int cols, double *afirst, double *aresult ) {
 //   matrixToValues( rows, cols, &result, aresult );
 }
 // dummy operation to measure end to end latency
-void dense_dummy_op2( int rows, int middle, int cols, double *afirst, double *asecond, double *aresult ) {
+DllExport void dense_dummy_op2( int rows, int middle, int cols, double *afirst, double *asecond, double *aresult ) {
 //   MatrixXd first(rows,middle);
  //  valuesToMatrix( rows, middle, afirst, &first );
   // MatrixXd second(middle,cols);
@@ -116,7 +116,7 @@ void dense_dummy_op2( int rows, int middle, int cols, double *afirst, double *as
    //MatrixXd result(rows,cols);
    //matrixToValues( rows, cols, &result, aresult );
 }
-void dense_multiply( int rows, int middle, int cols, double *afirst, double *asecond, double *aresult ) {
+DllExport void dense_multiply( int rows, int middle, int cols, double *afirst, double *asecond, double *aresult ) {
    //MatrixXd first(rows,middle);
    //valuesToMatrix( rows, middle, afirst, &first );
    //MatrixXd second(middle,cols);
@@ -127,13 +127,13 @@ void dense_multiply( int rows, int middle, int cols, double *afirst, double *ase
    result = first * second;
 //   matrixToValues( rows, cols, &result, aresult );
 }
-int sparse_multiply( int rows, int middle, int cols,
+DllExport int sparse_multiply( int rows, int middle, int cols,
    int onehandle, int twohandle ) {
    SparseMatrix<double> *presult = new SparseMatrix<double>(rows,cols);
    *presult = (*getSparseMatrix_(onehandle)) * (*getSparseMatrix_(twohandle));
    return storeData_(presult);
 }
-int sparse_dummy_op2( int rows, int middle, int cols,
+DllExport int sparse_dummy_op2( int rows, int middle, int cols,
    int onehandle, int twohandle, int numResultColumns ) {
    SparseMatrix<double> *presult = new SparseMatrix<double>(rows,cols);
    presult->reserve(numResultColumns*rows);
@@ -148,21 +148,21 @@ int sparse_dummy_op2( int rows, int middle, int cols,
 //   *presult = (*getSparseMatrix_(onehandle)) * (*getSparseMatrix_(twohandle));
    return storeData_(presult);
 }
-void sparse_dense_multiply( int rows, int middle, int cols, int onehandle, double *asecond, double *aresult ) {
+DllExport void sparse_dense_multiply( int rows, int middle, int cols, int onehandle, double *asecond, double *aresult ) {
    Map<MatrixXd> second(asecond,middle,cols);
    //valuesToMatrix( middle, cols, asecond, &second );
    Map<MatrixXd> result(aresult,rows,cols);
    result = (*getSparseMatrix_(onehandle)) * second;
 //   matrixToValues( rows, cols, &result, aresult );
 }
-void dense_sparse_multiply( int rows, int middle, int cols, double *afirst, int twohandle, double *aresult ) {
+DllExport void dense_sparse_multiply( int rows, int middle, int cols, double *afirst, int twohandle, double *aresult ) {
    Map<MatrixXd> first(afirst, rows,middle);
 //   valuesToMatrix( rows, middle, afirst, &first );
    Map<MatrixXd> result(aresult,rows,cols);
    result =  first * (*getSparseMatrix_(twohandle));
    //matrixToValues( rows, cols, &result, aresult );
 }
-void ldlt_solve( int arows, int acols, int bcols, double *avalues, double *bvalues, double *xvalues ) {
+DllExport void ldlt_solve( int arows, int acols, int bcols, double *avalues, double *bvalues, double *xvalues ) {
    Map<MatrixXd> A(avalues,arows, acols);
    //valuesToMatrix( arows, acols, avalues, &A );
    Map<MatrixXd> b(bvalues, acols, bcols);
@@ -171,7 +171,7 @@ void ldlt_solve( int arows, int acols, int bcols, double *avalues, double *bvalu
    result = A.ldlt().solve(b);
    //matrixToValues( acols, bcols, &result, xvalues );   
 }
-void fullpivhouseholderqr_solve( int arows, int acols, int bcols, double *avalues, double *bvalues, double *xvalues ) {
+DllExport void fullpivhouseholderqr_solve( int arows, int acols, int bcols, double *avalues, double *bvalues, double *xvalues ) {
    Map<MatrixXd> A(avalues, arows, acols);
    //valuesToMatrix( arows, acols, avalues, &A );
    Map<MatrixXd> b(bvalues, acols, bcols);
@@ -180,7 +180,7 @@ void fullpivhouseholderqr_solve( int arows, int acols, int bcols, double *avalue
    result = A.fullPivHouseholderQr().solve(b);
    //matrixToValues( acols, bcols, &result, xvalues );   
 }
-void svd_dense( int n, int p, double *in, double *u, double *s, double *v ) {
+DllExport void svd_dense( int n, int p, double *in, double *u, double *s, double *v ) {
    int m = min( n,p);
    Map<MatrixXd> In(in, n, p );
    //valuesToMatrix(n,p, in, &In );
@@ -191,12 +191,12 @@ void svd_dense( int n, int p, double *in, double *u, double *s, double *v ) {
    }
    matrixToValues( p, m, &(svd.matrixV()), v );
 }
-void jeigen_exp( int n, double *in, double *result ) {
+DllExport void jeigen_exp( int n, double *in, double *result ) {
    Map<MatrixXd> In(in, n, n );
    Map<MatrixXd> Result(result,n,n);      
    Result = In.exp();
 }
-void jeigen_log(int n, double *in, double *result ) {
+DllExport void jeigen_log(int n, double *in, double *result ) {
    Map<MatrixXd> In(in, n, n );
    Map<MatrixXd> Result(result,n,n);      
    Result = In.log();
