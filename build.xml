@@ -71,7 +71,7 @@
               <formatter type="xml"/>
             <sysproperty key="java.library.path" value="${cmakeoutdir}" />
 			<sysproperty key="jna.debug_load" value="true" />
-             <test name="jeigen.TestJeigen"/>
+             <test name="jeigen.TestJeigen" todir="${build.dir}"/>
         </junit>
     </target>
 
