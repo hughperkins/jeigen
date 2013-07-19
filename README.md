@@ -69,7 +69,7 @@ Procedure
  * if you're using Visual Studio 2010, please change generator name to "Visual Studio 10 Win64"
 
 Jeigen.jar will be created in the "jar" directory, and jeigen.dll 
-will be created in the build\native directory.
+will be created in the build\native\release directory.
 
 Make sure to be consistent with 32-bit versus 64-bit throughout.  If you use a 32-bit jdk, then you need to use a 32-bit C++ compiler, and visa versa.
 If you try to mix and match 32-bit and 64-bit, by accident, then this will result in failure to load jeigen.dll at runtime.  Conversely, if jeigen.dll fails
