@@ -31,6 +31,7 @@ Pre-requisites
 --------------
 
 - git
+- jdk 1.6 or more recent
 - ant
 - cmake
 - g++
@@ -42,8 +43,8 @@ Procedure
 2. cd jeigen
 3. ant
 
-Jeigen.jar will be created in the "jar" directory, and libjeigen.so 
-will be created in the build/native directory.
+According to whether you use a 64-bit jvm or a 32-bit jvm, the files will be created in 'build/linux-32' or 'build/linux-64'. Jeigen.jar will be created directly in this directory, and libjeigen.so 
+will be created in the 'native' subdirectory.
 
 How to build, Windows
 =====================
@@ -52,6 +53,7 @@ Pre-requisites
 --------------
 
 - have installed git
+- have a jdk available, at least 1.6
 - have installed ant
 - have installed cmake, at least version 2.8.11.2
 - have installed Visual Studio C++ Express 2012
@@ -65,31 +67,24 @@ Procedure
  * set to appropriate path for your ant installation
 4. ant -DCMAKE_HOME="c:\program files (x86)\Cmake 2.8" -Dgenerator="Visual Studio 11 Win64"
  * set to appropriate path for your cmake installation
- * if you're using 32-bit Java JDK, please remove " Win64" from end of generator name
  * if you're using Visual Studio 2010, please change generator name to "Visual Studio 10 Win64"
+ * if you're using 32-bit Java JDK, please remove " Win64" from end of generator name
 
-Jeigen.jar will be created in the "jar" directory, and jeigen.dll 
-will be created in the build\native\release directory.
-
-Make sure to be consistent with 32-bit versus 64-bit throughout.  If you use a 32-bit jdk, then you need to use a 32-bit C++ compiler, and visa versa.
-If you try to mix and match 32-bit and 64-bit, by accident, then this will result in failure to load jeigen.dll at runtime.  Conversely, if jeigen.dll fails
-to load, then double-check that you're using a 32-bit tool-chain throughout, or a 64-bit tool-chain throughout.
+According to whether you use a 64-bit jvm or a 32-bit jvm, the files will be created in 'build\win-32' or 'build\win-64'. Jeigen.jar will be created directly in this directory, and jeigen.dll 
+will be created in the 'native\Release' subdirectory.
 
 How to link to Jeigen
 =====================
 
-In Eclipse, add a user library, and add the 'jar/Jeigen.jar' jar to the 
+In Eclipse, add a user library, and add the 'Jeigen.jar' jar to the 
 library.  Then expand the library entry for 'jeigen', select 'Native
-library location', then click 'Edit', and browse to the build/native
-directory.
+library location', then click 'Edit', and browse to the directory containing libjeigen.so or jeigen.dll.
 
 (If you are not using Eclipse, then add:
    -Djava.library.path=/path/to/jeigen/build/native/directory
 ... to the java vm arguments)
 
-You will also need the jna.jar file.  This is often platform-dependent,
-eg /usr/share/java/jna.jar .  There is a copy in the 'thirdparty'
-directory.
+You will also need the jna-4.0.0.jar file, which you can find in the 'thirdparty' directory.
 
 Commands to create new matrices
 ===============================
