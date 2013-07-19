@@ -318,10 +318,14 @@ faster.  If it's O(n^2), then implementing it in native Java might be better.  F
 - applying the same operation to all values of a matrix is implemented in native Java
 - multiplying two matrices is implemented using wrapped C++/Eigen
 
-Build Server
-============
+Download
+========
 
-A build server is available at https://hughperkins.atlassian.net/builds/browse/JEIGEN-JEIGEN , from which you can download at least the .jar file.
+The jar files and native dll/so can be downloaded from http://bamboo.hughperkins.com/jeigen . You need
+any Jeigen.jar file (platform-independent), the jna-4.0.0.jar file (platform-independent), and
+the appropriate libjeigen.so or jeigen.dll file.
+
+These are built using the Bamboo build server at https://hughperkins.atlassian.net/builds/browse/JEIGEN-JEIGEN .
 
 Third-party libraries used
 ==========================
