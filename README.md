@@ -65,7 +65,7 @@ Procedure
 2. cd jeigen
 3. set PATH=%PATH%;c:\apache-ant\bin
  * set to appropriate path for your ant installation
-4. ant -DCMAKE_HOME="c:\program files (x86)\Cmake 2.8" -Dgenerator="Visual Studio 11 Win64"
+4. ant -Dcmake_home="c:\program files (x86)\Cmake" -Dgenerator="Visual Studio 11 Win64"
  * set to appropriate path for your cmake installation
  * if you're using Visual Studio 2010, please change generator name to "Visual Studio 10 Win64"
  * if you're using 32-bit Java JDK, please remove " Win64" from end of generator name
