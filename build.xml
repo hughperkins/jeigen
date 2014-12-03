@@ -1,6 +1,6 @@
 <project default="jar">
     <property name="generator" value="Unix Makefiles" />
-    <property name="cmake_home" value="/usr" />
+    <property name="cmake_home" value="/usr/local" />
 
   <path id="project.class.path">
     <pathelement path="${java.class.path}/"/>
@@ -45,7 +45,7 @@
    <target name="compile" depends="getinfo">
         <taskdef name="cmake" classname="CMake" classpath="thirdparty/cmake-for-ant.jar" />
         <mkdir dir="${build.dir}/native" />
-        <cmake cmakehome="${cmake_home}" releasetype="Release" generator="${generator}" 
+        <cmake cmakehome="${cmake_home}" releasetype="Release" generator="${generator}"
              srcdir="src/native" builddir="${build.dir}/native" artifactdirproperty="cmakeoutdir" />
       <mkdir dir="${build.dir}/classes"/>
       <javac srcdir="src/java" destdir="${build.dir}/classes"  debug="true" includeantruntime="false" >
