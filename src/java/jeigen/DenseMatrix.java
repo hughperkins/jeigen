@@ -543,6 +543,12 @@ public class DenseMatrix {
 		return values[rows * col + row];
 	}
 	/**
+	 * gets all values of matrix
+	 */
+	public final double[] getValues() {
+		return values;
+	}
+	/**
 	 * for each element: element = - element
 	 */
 	public DenseMatrix neg(){
