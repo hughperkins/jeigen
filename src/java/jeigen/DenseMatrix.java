@@ -218,9 +218,9 @@ public class DenseMatrix {
 		}
 		return result;
 	}
-	/**
-	 * select specific rows and columns
-	 */
+    /**
+     * select specific rows and columns
+     */
     public DenseMatrix select(int[] rowIndices, int[] colIndices) {
         for (int i=0; i<rowIndices.length; i++) {
             if (rowIndices[i] < 0 || rowIndices[i] >= rows) {
@@ -238,6 +238,44 @@ public class DenseMatrix {
         for (int i=0; i<rowIndices.length; i++){
             for (int j=0; j<colIndices.length; j++){
                 result.set(i, j, this.get(rowIndices[i], colIndices[j]));
+            }
+        }
+        return result;
+    }
+
+    /**
+     * select specific rows
+     */
+    public DenseMatrix selectRows(int[] rowIndices) {
+        for (int i=0; i<rowIndices.length; i++) {
+            if (rowIndices[i] < 0 || rowIndices[i] >= rows) {
+                throw new RuntimeException("rowIndex must be in [0, " + rows + ")");
+            }
+        }
+
+        DenseMatrix result = new DenseMatrix(rowIndices.length, cols);
+        for (int i=0; i<rowIndices.length; i++){
+            for (int j=0; j<cols; j++){
+                result.set(i, j, this.get(rowIndices[i], j));
+            }
+        }
+        return result;
+    }
+
+    /**
+     * select specific columns
+     */
+    public DenseMatrix selectCols(int[] colIndices) {
+        for (int i=0; i<colIndices.length; i++) {
+            if (colIndices[i] < 0 || colIndices[i] >= cols) {
+                throw new RuntimeException("colIndex must be in [0, " + cols + ")");
+            }
+        }
+
+        DenseMatrix result = new DenseMatrix(rows, colIndices.length);
+        for (int i=0; i<rows; i++){
+            for (int j=0; j<colIndices.length; j++){
+                result.set(i, j, this.get(i, colIndices[j]));
             }
         }
         return result;
