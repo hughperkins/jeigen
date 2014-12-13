@@ -1,7 +1,7 @@
 // Copyright Hugh Perkins 2012, hughperkins -at- gmail
 //
-// This Source Code Form is subject to the terms of the Mozilla Public License, 
-// v. 2.0. If a copy of the MPL was not distributed with this file, You can 
+// This Source Code Form is subject to the terms of the Mozilla Public License,
+// v. 2.0. If a copy of the MPL was not distributed with this file, You can
 // obtain one at http://mozilla.org/MPL/2.0/.
 
 package jeigen;
@@ -115,7 +115,7 @@ public class DenseMatrix {
 	 * indexes
 	 * indexes should be a single column
 	 * indexes may contain duplicates
-	 * not terribly efficient right now... 
+	 * not terribly efficient right now...
 	 */
 	public DenseMatrix rows(DenseMatrix indexes ){
 		if( indexes.cols != 1 ) {
@@ -203,10 +203,10 @@ public class DenseMatrix {
 			throw new RuntimeException("endcol must not exceed cols " + endcolexclusive + " vs " + cols );
 		}
 		if( startrow < 0 ) {
-			throw new RuntimeException("startrow must be at least 0, but was  " + startrow );			
+			throw new RuntimeException("startrow must be at least 0, but was  " + startrow );
 		}
 		if( startcol < 0 ) {
-			throw new RuntimeException("startcol must be at least 0, but was  " + startcol );			
+			throw new RuntimeException("startcol must be at least 0, but was  " + startcol );
 		}
 		DenseMatrix result = new DenseMatrix(resultrows,resultcols);
 		for( int c = 0; c < resultcols; c++ ) {
@@ -218,6 +218,69 @@ public class DenseMatrix {
 		}
 		return result;
 	}
+    /**
+     * select specific rows and columns
+     */
+    public DenseMatrix select(int[] rowIndices, int[] colIndices) {
+        for (int i=0; i<rowIndices.length; i++) {
+            if (rowIndices[i] < 0 || rowIndices[i] >= rows) {
+                throw new RuntimeException("rowIndex must be in [0, " + rows + ")");
+            }
+        }
+
+        for (int i=0; i<colIndices.length; i++) {
+            if (colIndices[i] < 0 || colIndices[i] >= cols) {
+                throw new RuntimeException("colIndex must be in [0, " + cols + ")");
+            }
+        }
+
+        DenseMatrix result = new DenseMatrix(rowIndices.length, colIndices.length);
+        for (int i=0; i<rowIndices.length; i++){
+            for (int j=0; j<colIndices.length; j++){
+                result.set(i, j, this.get(rowIndices[i], colIndices[j]));
+            }
+        }
+        return result;
+    }
+
+    /**
+     * select specific rows
+     */
+    public DenseMatrix selectRows(int[] rowIndices) {
+        for (int i=0; i<rowIndices.length; i++) {
+            if (rowIndices[i] < 0 || rowIndices[i] >= rows) {
+                throw new RuntimeException("rowIndex must be in [0, " + rows + ")");
+            }
+        }
+
+        DenseMatrix result = new DenseMatrix(rowIndices.length, cols);
+        for (int i=0; i<rowIndices.length; i++){
+            for (int j=0; j<cols; j++){
+                result.set(i, j, this.get(rowIndices[i], j));
+            }
+        }
+        return result;
+    }
+
+    /**
+     * select specific columns
+     */
+    public DenseMatrix selectCols(int[] colIndices) {
+        for (int i=0; i<colIndices.length; i++) {
+            if (colIndices[i] < 0 || colIndices[i] >= cols) {
+                throw new RuntimeException("colIndex must be in [0, " + cols + ")");
+            }
+        }
+
+        DenseMatrix result = new DenseMatrix(rows, colIndices.length);
+        for (int i=0; i<rows; i++){
+            for (int j=0; j<colIndices.length; j++){
+                result.set(i, j, this.get(i, colIndices[j]));
+            }
+        }
+        return result;
+    }
+
 	/**
 	 * concatenate two to right of this matrix
 	 */
@@ -279,7 +342,7 @@ public class DenseMatrix {
 				i++;
 			}
 		}
-		return result;		
+		return result;
 	}
 	/**
 	 * return rows*cols dense matrix of zeros
@@ -372,7 +435,7 @@ public class DenseMatrix {
 				sum += get(r,c);
 			}
 			result.set(r,0,sum);
-		}			
+		}
 		return result;
 	}
 	public DenseMatrix maxOverRows() {
@@ -480,6 +543,12 @@ public class DenseMatrix {
 		return values[rows * col + row];
 	}
 	/**
+	 * gets all values of matrix
+	 */
+	public final double[] getValues() {
+		return values;
+	}
+	/**
 	 * for each element: element = - element
 	 */
 	public DenseMatrix neg(){
@@ -488,7 +557,7 @@ public class DenseMatrix {
 		for( int i = 0; i < capacity; i++ ) {
 			result.values[i] = - values[i];
 		}
-		return result;		
+		return result;
 	}
 	/**
 	 * for each element: element = 1 / element
@@ -499,7 +568,7 @@ public class DenseMatrix {
 		for( int i = 0; i < capacity; i++ ) {
 			result.values[i] = 1 / values[i];
 		}
-		return result;		
+		return result;
 	}
 	/**
 	 * for each element: element = abs( element )
@@ -510,7 +579,7 @@ public class DenseMatrix {
 		for( int i = 0; i < capacity; i++ ) {
 			result.values[i] = Math.abs(values[i]);
 		}
-		return result;		
+		return result;
 	}
 	/**
 	 * for each element: element = element * scalar
@@ -521,7 +590,7 @@ public class DenseMatrix {
 		for( int i = 0; i < capacity; i++ ) {
 			result.values[i] = values[i] * scalar;
 		}
-		return result;		
+		return result;
 	}
 	/**
 	 * for each element: element = Math.pow(element,power)
@@ -532,7 +601,7 @@ public class DenseMatrix {
 		for( int i = 0; i < capacity; i++ ) {
 			result.values[i] = Math.pow( values[i], power );
 		}
-		return result;		
+		return result;
 	}
 	/**
 	 * for each element: element = Math.pow(element,power)
@@ -543,7 +612,7 @@ public class DenseMatrix {
 		for( int i = 0; i < capacity; i++ ) {
 			result.values[i] = Math.sqrt( values[i] );
 		}
-		return result;		
+		return result;
 	}
 	/**
 	 * for each element: element = element / scalar
@@ -554,7 +623,7 @@ public class DenseMatrix {
 		for( int i = 0; i < capacity; i++ ) {
 			result.values[i] = values[i] / scalar;
 		}
-		return result;		
+		return result;
 	}
 	/**
 	 * for each element: element = element + scalar
@@ -565,7 +634,7 @@ public class DenseMatrix {
 		for( int i = 0; i < capacity; i++ ) {
 			result.values[i] = values[i] + scalar;
 		}
-		return result;		
+		return result;
 	}
 	/**
 	 * for each element: element = element - scalar
@@ -576,7 +645,7 @@ public class DenseMatrix {
 		for( int i = 0; i < capacity; i++ ) {
 			result.values[i] = values[i] - scalar;
 		}
-		return result;		
+		return result;
 	}
 	/**
 	 * for each element: element[result] = element[this] * element[second]
@@ -590,7 +659,7 @@ public class DenseMatrix {
 		for( int i = 0; i < capacity; i++ ) {
 			result.values[i] = values[i] * second.values[i];
 		}
-		return result;		
+		return result;
 	}
 	/**
 	 * for each element: element[result] = element[this] / element[second]
@@ -604,7 +673,7 @@ public class DenseMatrix {
 		for( int i = 0; i < capacity; i++ ) {
 			result.values[i] = values[i] / second.values[i];
 		}
-		return result;		
+		return result;
 	}
 	/**
 	 * for each element: element[result] = element[this] + element[second]
@@ -618,7 +687,7 @@ public class DenseMatrix {
 		for( int i = 0; i < capacity; i++ ) {
 			result.values[i] = values[i] + second.values[i];
 		}
-		return result;		
+		return result;
 	}
 	/**
 	 * for each element: element[result] = element[this] - element[second]
@@ -632,7 +701,7 @@ public class DenseMatrix {
 		for( int i = 0; i < capacity; i++ ) {
 			result.values[i] = values[i] - second.values[i];
 		}
-		return result;		
+		return result;
 	}
 	/**
 	 * checks whether the sizes and values of this and osecond are the same
@@ -873,7 +942,7 @@ public class DenseMatrix {
 	 * returns matrix with number of rows and columns of this
 	 */
 	public DenseMatrix shape() {
-		return new DenseMatrix(new double[][]{{rows,cols}}); 
+		return new DenseMatrix(new double[][]{{rows,cols}});
 	}
 	public String toString() {
 		StringBuilder stringBuilder = new StringBuilder();
@@ -900,7 +969,7 @@ public class DenseMatrix {
 		DenseMatrix result = new DenseMatrix(this.cols, b.cols);
 		JeigenJna.Jeigen.ldlt_solve(rows, cols, b.cols,
 				values, b.values, result.values );
-		return result;		
+		return result;
 	}
 	/**
 	 * Solves this * result = b, and returns result
@@ -913,7 +982,7 @@ public class DenseMatrix {
 		DenseMatrix result = new DenseMatrix(this.cols, b.cols);
 		JeigenJna.Jeigen.fullpivhouseholderqr_solve(rows, cols, b.cols,
 				values, b.values, result.values );
-		return result;		
+		return result;
 	}
     public DenseMatrix mexp() {
 		if( this.cols != this.rows ) {
@@ -996,7 +1065,7 @@ public class DenseMatrix {
 		result.reserve(notZero);
 		for( int c = 0; c < cols; c++ ) {
 			for( int r = 0; r < rows; r++ ) {
-				double value = values[rows * c + r]; 
+				double value = values[rows * c + r];
 				if( value != 0 ) {
 					result.append(r,c,value);
 				}
