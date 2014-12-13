@@ -204,7 +204,7 @@ Solvers
 
     // to solve dm1.mmul(result) = dm2:
     DenseMatrix result = dm1.ldltSolve(dm2); // using ldlt, dm1 must be positive or
-                                             // negative definite; fast
+                                             // negative semi-definite; fast
     DenseMatrix result = dm1.fullPivHouseholderQRSolve(dm2); // no conditions on 
                                                          // dm1, but slower
 
