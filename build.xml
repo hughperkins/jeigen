@@ -1,6 +1,5 @@
 <project default="jar">
     <property name="generator" value="Unix Makefiles" />
-    <property name="cmake_home" value="/usr/local" />
 
   <path id="project.class.path">
     <pathelement path="${java.class.path}/"/>
@@ -8,8 +7,12 @@
     <pathelement path="thirdparty/jna-4.0.0.jar"/>
   </path>
 
-    <!-- sets ${build-dir} = win-32 win-64 linux-32 or linux-64 -->
     <target name="getinfo">
+        <!-- hunt for cmake home;  please feel free to extend this for Windows -->
+        <available file="/usr/local/bin/cmake" type="file" property="cmake_home" value="/usr/local" />
+        <available file="/usr/bin/cmake" type="file" property="cmake_home" value="/usr" />
+
+        <!-- sets ${build-dir} = win-32 win-64 linux-32 or linux-64 -->
         <condition property="jvm.word.size" value="32" ><os arch="i386" /></condition>
         <condition property="jvm.word.size" value="32" ><os arch="x86" /></condition>
         <property name="jvm.word.size" value="64" />
