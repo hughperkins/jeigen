@@ -96,10 +96,20 @@ public class DenseMatrix {
 			cols = 0;
 			return;
 		}
-		cols = lines[0].trim().split(" ").length;
+        String firstline = lines[0];
+        String newmodifiedline = firstline.replace("  "," ").trim();
+        while( !newmodifiedline.equals( firstline ) ) {
+            firstline = newmodifiedline;
+            newmodifiedline = firstline.replace("  "," ").trim();
+        }
+		cols = firstline.split(" ").length;
 		values = new double[rows*cols];
 		for( String line : lines ) {
-			line = line.trim();
+            newmodifiedline = line.replace("  "," ").trim();
+            while( !newmodifiedline.equals( line ) ) {
+                line = newmodifiedline;
+                newmodifiedline = line.replace("  "," ").trim();
+            }
 			String[] splitline = line.split(" ");
 			if( splitline.length != cols ) {
 				throw new RuntimeException("Unequal sized rows in " + valuesstring );
@@ -109,6 +119,15 @@ public class DenseMatrix {
 			}
 			row++;
 		}
+	}
+	public DenseMatrix(DenseMatrix src ) {
+        this.rows = src.rows;
+        this.cols = src.cols;
+		values = new double[rows*cols];
+        int numElements = this.rows * this.cols;
+        for( int i = 0; i < numElements; i++ ) {
+            this.values[i] = src.values[i];
+        }
 	}
 	/**
 	 * returns new DenseMatrix containing the rows indexed by
@@ -369,6 +388,21 @@ public class DenseMatrix {
 		DenseMatrix result = new DenseMatrix(size,size);
 		for( int i = 0; i < size; i++ ) {
 			result.values[size * i + i] = 1;
+		}
+		return result;
+	}
+	/**
+	 * returns matrix with this matrix along the diagonal
+	 * this matrix should have a single column
+	 */
+	public DenseMatrix diag() {
+		if( cols != 1 ) {
+			throw new RuntimeException("diag needs a matrix with one column exactly");
+		}
+		int size = rows;
+		DenseMatrix result = new DenseMatrix(size,size);
+		for( int i = 0; i < size; i++ ) {
+			result.set(i,i, get(i, 0));
 		}
 		return result;
 	}
@@ -984,6 +1018,45 @@ public class DenseMatrix {
 				values, b.values, result.values );
 		return result;
 	}
+    public static class EigenResult {
+        public DenseMatrixComplex values; // will be n * 1 matrix, where n * n 
+                                          // is size of the vectors matrix
+        public DenseMatrixComplex vectors;
+        public EigenResult( DenseMatrixComplex values, DenseMatrixComplex vectors ) {
+            this.values = values;
+            this.vectors = vectors;
+        }
+    }
+    public EigenResult eig() {
+		if( this.cols != this.rows ) {
+			throw new RuntimeException("eig matrix size error: must be square matrix");
+		}
+        DenseMatrix eigenValuesReal = new DenseMatrix(this.rows, 1 );
+        DenseMatrix eigenValuesImag = new DenseMatrix(this.rows, 1 );
+        DenseMatrix eigenVectorsReal = new DenseMatrix(this.cols,this.cols);
+        DenseMatrix eigenVectorsImag = new DenseMatrix(this.cols,this.cols);
+        JeigenJna.Jeigen.jeigen_eig( rows, values, eigenValuesReal.values, eigenValuesImag.values,
+             eigenVectorsReal.values, eigenVectorsImag.values );
+        return new EigenResult( new DenseMatrixComplex( eigenValuesReal, eigenValuesImag ),
+           new DenseMatrixComplex( eigenVectorsReal, eigenVectorsImag ) );
+    }
+    public static class PseudoEigenResult {
+        public DenseMatrix values;
+        public DenseMatrix vectors;
+        public PseudoEigenResult( DenseMatrix eigenValues, DenseMatrix eigenVectors ) {
+            this.values = eigenValues;
+            this.vectors = eigenVectors;
+        }
+    }
+    public PseudoEigenResult eigp() {
+		if( this.cols != this.rows ) {
+			throw new RuntimeException("eig matrix size error: must be square matrix");
+		}
+        DenseMatrix eigenValues = new DenseMatrix(this.rows, this.cols );
+        DenseMatrix eigenVectors = new DenseMatrix(this.cols,this.cols);
+        JeigenJna.Jeigen.jeigen_eigp( rows, values, eigenValues.values, eigenVectors.values );
+        return new PseudoEigenResult( eigenValues, eigenVectors );
+    }
     public DenseMatrix mexp() {
 		if( this.cols != this.rows ) {
 			throw new RuntimeException("exp matrix size error: must be square matrix");

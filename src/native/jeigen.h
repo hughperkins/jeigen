@@ -26,6 +26,11 @@ extern "C" {
    DllExport void dense_sparse_multiply( int rows, int middle, int cols, double *first, int twoHandle, double *result );
    DllExport int sparse_multiply( int rows, int middle, int cols, int oneHandle, int twoHandle );
 
+   // use a rows*1 vector for the values real and imaginary parts
+   // use a rows*rows matrix for the vectors real and imaginary parts
+   DllExport void jeigen_eig( int rows, double* in, double* values_real, double *values_imag, double* vectors_real, double *vectors_imag );
+   DllExport void jeigen_eigp( int rows, double* in, double* eigenValues, double* eigenVectors );
+
    DllExport void ldlt_solve( int arow, int acols, int bcols, double *avalues, double *bvalues, double *xvalues );
    DllExport void fullpivhouseholderqr_solve( int arow, int acols, int bcols, double *avalues, double *bvalues, double *xvalues );
 

@@ -74,7 +74,11 @@
               <formatter type="xml"/>
             <sysproperty key="java.library.path" value="${cmakeoutdir}" />
 			<sysproperty key="jna.debug_load" value="true" />
+             <test name="jeigen.TestEigenvalues" todir="${build.dir}"/>
              <test name="jeigen.TestJeigen" todir="${build.dir}"/>
+             <test name="jeigen.TestDenseAggregator" todir="${build.dir}"/>
+             <test name="jeigen.TestUnsupported" todir="${build.dir}"/>
+             <test name="jeigen.TestDenseSorter" todir="${build.dir}"/>
         </junit>
     </target>
 

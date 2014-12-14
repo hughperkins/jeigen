@@ -208,6 +208,42 @@ Solvers
     DenseMatrix result = dm1.fullPivHouseholderQRSolve(dm2); // no conditions on 
                                                          // dm1, but slower
 
+Eigenvalues
+===========
+
+    // added on Dec 2014, new, so let me know if any issues
+    // Since it might return complex results, created DenseMatrixComplex 
+    // to handle this
+    DenseMatrix dm1; // should be square
+    EigenResult eig = dm1.eig();
+    DenseMatrixComplex values = eig.values; // single column, with each complex
+                                            // per row
+                                            // might be complex
+    DenseMatrixComplex vectors = eig.vectors; // one column per vector, maybe
+                                              // complex
+    // if you want to avoid complexes, you can use the pseudo-eigenvector
+    // decomposition
+    PseudoEigenResult peig = dm1.peig();
+    DenseMatrix values = peig.values;
+    DenseMatrix vectors = peig.vectors;
+
+DenseMatrixComplex
+==================
+
+    // Created for use with eigenvalue decomposition, above.
+    // DenseMatrixComplex basically contains two DenseMatrices, one for the 
+    // real part, and one for the imaginary part
+    DenseMatrixComplex dmc1 = new DenseMatrixComplex( numrows, numcols );
+    // create from a string of complex pairs, each row separated by ';':
+    DenseMatrixComplex dmc1 = new DenseMatrixComplex( "(1,-1) (2,0); (-1,3) (4,-1)" );
+    DenseMatrix realPart = dmc.real();
+    DenseMatrix imagPart = dmc.imag();
+    double aRealValue = realPart.getReal(2,3); // get real value at row 2 col 3
+    double anImaginaryValue = realPart.getImag(2,3); // get imaginary value
+    dmc3 = dmc1.sub(dmc2) // can subtract
+    dmc3 = dmc1.abs() // per-element abs, ie sqrt(real^2+imag^2), for each 
+                      // element
+
 Svd
 ===
 

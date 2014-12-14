@@ -12,6 +12,7 @@ using namespace std;
 #include "Eigen/Dense"
 #include "Eigen/Sparse"
 #include "Eigen/Core"
+#include "Eigen/Eigenvalues"
 #include "unsupported/Eigen/MatrixFunctions"
 using namespace Eigen;
 
@@ -190,6 +191,36 @@ DllExport void svd_dense( int n, int p, double *in, double *u, double *s, double
       s[i] = svd.singularValues()(i);
    }
    matrixToValues( p, m, &(svd.matrixV()), v );
+}
+DllExport void jeigen_eig( int n, double* in, double* values_real, double *values_imag, double* vectors_real, double *vectors_imag ) {
+   Map<MatrixXd> In( in, n, n );
+   EigenSolver<MatrixXd> eigenSolve( In );
+   VectorXcd EigenValues = eigenSolve.eigenvalues();
+   MatrixXcd EigenVectors = eigenSolve.eigenvectors();
+   int i = 0;
+   for ( int r = 0; r < n; r++ ) { 
+      values_real[i] = EigenValues(r).real();
+      values_imag[i] = EigenValues(r).imag();
+      i++;
+   }
+   i = 0;
+   for( int c = 0; c < n; c++ ) {
+      for ( int r = 0; r < n; r++ ) { 
+         vectors_real[i] = EigenVectors(r,c).real();
+         vectors_imag[i] = EigenVectors(r,c).imag();
+         i++;
+      }
+   }
+}
+DllExport void jeigen_eigp( int n, double* in, double* eigenValues, double* eigenVectors ) {
+   Map<MatrixXd> In( in, n, n );
+   //Map<MatrixXd> EigenValues( eigenValues, n, n );
+   //Map<MatrixXd> EigenVectors( eigenVectors, n, n );
+   EigenSolver<MatrixXd> eigenSolve( In );
+   MatrixXd EigenValues = eigenSolve.pseudoEigenvalueMatrix();
+   MatrixXd EigenVectors = eigenSolve.pseudoEigenvectors();
+   matrixToValues( n, n, &(EigenValues), eigenValues );
+   matrixToValues( n, n, &(EigenVectors), eigenVectors );
 }
 DllExport void jeigen_exp( int n, double *in, double *result ) {
    Map<MatrixXd> In(in, n, n );

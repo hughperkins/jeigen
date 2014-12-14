@@ -45,6 +45,11 @@ class JeigenJna {
         public static native void jeigen_exp( int n, double[] in, double[] result );
         public static native void jeigen_log( int n, double[] in, double[] result );
 		
+        // Eigenvectors, experimental...
+        public static native void jeigen_eig( int rows, double[] in, double[] values_real, double[] values_imag,
+            double[] vectors_real, double[] vectors_imag );
+        public static native void jeigen_eigp( int rows, double[] in, double[] eigenValues, double[] eigenVectors );
+
 		public static native void ldlt_solve( int arow, int acols, int bcols, double []avalues, double []bvalues, double []xvalues );
 		public static native void fullpivhouseholderqr_solve( int arow, int acols, int bcols, double []avalues, double []bvalues, double []xvalues );
 
