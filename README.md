@@ -240,8 +240,8 @@ DenseMatrixComplex
     DenseMatrixComplex dmc1 = new DenseMatrixComplex( "(1,-1) (2,0); (-1,3) (4,-1)" );
     DenseMatrix realPart = dmc.real();
     DenseMatrix imagPart = dmc.imag();
-    double aRealValue = realPart.getReal(2,3); // get real value at row 2 col 3
-    double anImaginaryValue = realPart.getImag(2,3); // get imaginary value
+    double aRealValue = dmc1.getReal(2,3); // get real value at row 2 col 3
+    double anImaginaryValue = dmc1.getImag(2,3); // get imaginary value
     dmc3 = dmc1.sub(dmc2) // can subtract
     dmc3 = dmc1.abs() // per-element abs, ie sqrt(real^2+imag^2), for each 
                       // element
