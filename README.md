@@ -359,9 +359,9 @@ faster.  If it's O(n^2), then implementing it in native Java might be better.  F
 Third-party libraries used
 ==========================
 
-The build process uses cmake-for-ant, https://github.com/hughperkins/cmake-for-ant .
-
-Unit tests use junit 4.
+- The build process uses cmake-for-ant, https://github.com/hughperkins/cmake-for-ant .
+- Unit tests use junit 4.
+- And of course Eigen :-)  http://eigen.tuxfamily.org
 
 License
 =======
