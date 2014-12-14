@@ -3,24 +3,9 @@
 //
 // Copyright (C) 2009 Gael Guennebaud <g.gael@free.fr>
 //
-// Eigen is free software; you can redistribute it and/or
-// modify it under the terms of the GNU Lesser General Public
-// License as published by the Free Software Foundation; either
-// version 3 of the License, or (at your option) any later version.
-//
-// Alternatively, you can redistribute it and/or
-// modify it under the terms of the GNU General Public License as
-// published by the Free Software Foundation; either version 2 of
-// the License, or (at your option) any later version.
-//
-// Eigen is distributed in the hope that it will be useful, but WITHOUT ANY
-// WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-// FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License or the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU Lesser General Public
-// License and a copy of the GNU General Public License along with
-// Eigen. If not, see <http://www.gnu.org/licenses/>.
+// This Source Code Form is subject to the terms of the Mozilla
+// Public License v. 2.0. If a copy of the MPL was not distributed
+// with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #include "main.h"
 #include <unsupported/Eigen/AutoDiff>
@@ -142,46 +127,47 @@ template<typename Func> void forward_jacobian(const Func& f)
     VERIFY_IS_APPROX(j, jref);
 }
 
+
+// TODO also check actual derivatives!
 void test_autodiff_scalar()
 {
-  std::cerr << foo<float>(1,2) << "\n";
+  Vector2f p = Vector2f::Random();
   typedef AutoDiffScalar<Vector2f> AD;
-  AD ax(1,Vector2f::UnitX());
-  AD ay(2,Vector2f::UnitY());
+  AD ax(p.x(),Vector2f::UnitX());
+  AD ay(p.y(),Vector2f::UnitY());
   AD res = foo<AD>(ax,ay);
-  std::cerr << res.value() << " <> "
-            << res.derivatives().transpose() << "\n\n";
+  VERIFY_IS_APPROX(res.value(), foo(p.x(),p.y()));
 }
 
+// TODO also check actual derivatives!
 void test_autodiff_vector()
 {
-  std::cerr << foo<Vector2f>(Vector2f(1,2)) << "\n";
+  Vector2f p = Vector2f::Random();
   typedef AutoDiffScalar<Vector2f> AD;
   typedef Matrix<AD,2,1> VectorAD;
-  VectorAD p(AD(1),AD(-1));
-  p.x().derivatives() = Vector2f::UnitX();
-  p.y().derivatives() = Vector2f::UnitY();
+  VectorAD ap = p.cast<AD>();
+  ap.x().derivatives() = Vector2f::UnitX();
+  ap.y().derivatives() = Vector2f::UnitY();
   
-  AD res = foo<VectorAD>(p);
-  std::cerr << res.value() << " <> "
-            << res.derivatives().transpose() << "\n\n";
+  AD res = foo<VectorAD>(ap);
+  VERIFY_IS_APPROX(res.value(), foo(p));
 }
 
 void test_autodiff_jacobian()
 {
-  for(int i = 0; i < g_repeat; i++) {
-    CALL_SUBTEST(( forward_jacobian(TestFunc1<double,2,2>()) ));
-    CALL_SUBTEST(( forward_jacobian(TestFunc1<double,2,3>()) ));
-    CALL_SUBTEST(( forward_jacobian(TestFunc1<double,3,2>()) ));
-    CALL_SUBTEST(( forward_jacobian(TestFunc1<double,3,3>()) ));
-    CALL_SUBTEST(( forward_jacobian(TestFunc1<double>(3,3)) ));
-  }
+  CALL_SUBTEST(( forward_jacobian(TestFunc1<double,2,2>()) ));
+  CALL_SUBTEST(( forward_jacobian(TestFunc1<double,2,3>()) ));
+  CALL_SUBTEST(( forward_jacobian(TestFunc1<double,3,2>()) ));
+  CALL_SUBTEST(( forward_jacobian(TestFunc1<double,3,3>()) ));
+  CALL_SUBTEST(( forward_jacobian(TestFunc1<double>(3,3)) ));
 }
 
 void test_autodiff()
 {
-    test_autodiff_scalar();
-    test_autodiff_vector();
-//     test_autodiff_jacobian();
+  for(int i = 0; i < g_repeat; i++) {
+    CALL_SUBTEST_1( test_autodiff_scalar() );
+    CALL_SUBTEST_2( test_autodiff_vector() );
+    CALL_SUBTEST_3( test_autodiff_jacobian() );
+  }
 }
 
