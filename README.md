@@ -225,9 +225,9 @@ Eigenvalues
     // decomposition
     // but the eigenvalues are now returned as a square matrix, which
     // might not be diagonal
-    PseudoEigenResult peig = dm1.peig();
-    DenseMatrix values = peig.values;
-    DenseMatrix vectors = peig.vectors;
+    PseudoEigenResult res = dm1.peig();
+    DenseMatrix values = res.values;
+    DenseMatrix vectors = res.vectors;
 
 DenseMatrixComplex
 ==================

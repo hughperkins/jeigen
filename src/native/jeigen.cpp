@@ -212,7 +212,7 @@ DllExport void jeigen_eig( int n, double* in, double* values_real, double *value
       }
    }
 }
-DllExport void jeigen_eigp( int n, double* in, double* eigenValues, double* eigenVectors ) {
+DllExport void jeigen_peig( int n, double* in, double* eigenValues, double* eigenVectors ) {
    Map<MatrixXd> In( in, n, n );
    //Map<MatrixXd> EigenValues( eigenValues, n, n );
    //Map<MatrixXd> EigenVectors( eigenVectors, n, n );

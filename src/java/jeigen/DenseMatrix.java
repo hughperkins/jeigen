@@ -1048,13 +1048,13 @@ public class DenseMatrix {
             this.vectors = eigenVectors;
         }
     }
-    public PseudoEigenResult eigp() {
+    public PseudoEigenResult peig() {
 		if( this.cols != this.rows ) {
 			throw new RuntimeException("eig matrix size error: must be square matrix");
 		}
         DenseMatrix eigenValues = new DenseMatrix(this.rows, this.cols );
         DenseMatrix eigenVectors = new DenseMatrix(this.cols,this.cols);
-        JeigenJna.Jeigen.jeigen_eigp( rows, values, eigenValues.values, eigenVectors.values );
+        JeigenJna.Jeigen.jeigen_peig( rows, values, eigenValues.values, eigenVectors.values );
         return new PseudoEigenResult( eigenValues, eigenVectors );
     }
     public DenseMatrix mexp() {

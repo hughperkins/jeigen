@@ -98,7 +98,7 @@ public class TestEigenvalues extends TestCase {
  { 0.597,   0.108  , 0.832 , -0.514 , -0.782  ,-0.408},
 {  0.823, -0.0452 ,  0.271 , -0.726 ,  0.998 ,  0.275},
 { -0.605,   0.258 ,  0.435 ,  0.608 , -0.563,  0.0486}});
-        DenseMatrix.PseudoEigenResult eigenResult = A.eigp();
+        DenseMatrix.PseudoEigenResult eigenResult = A.peig();
         System.out.println( eigenResult.values );
         System.out.println( eigenResult.vectors );
         DenseMatrix valuesCorrect = new DenseMatrix(new double[][]{
