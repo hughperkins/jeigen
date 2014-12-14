@@ -243,8 +243,8 @@ DenseMatrixComplex
     double aRealValue = dmc1.getReal(2,3); // get real value at row 2 col 3
     double anImaginaryValue = dmc1.getImag(2,3); // get imaginary value
     dmc3 = dmc1.sub(dmc2) // can subtract
-    dmc3 = dmc1.abs() // per-element abs, ie sqrt(real^2+imag^2), for each 
-                      // element
+    dm1 = dmc1.abs() // per-element abs, ie sqrt(real^2+imag^2), for each 
+                      // element.  Returns a non-complex DenseMatrix
 
 Svd
 ===
