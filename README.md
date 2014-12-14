@@ -211,18 +211,20 @@ Solvers
 Eigenvalues
 ===========
 
-    // added on Dec 2014, new, so let me know if any issues
+    // Added on Dec 2014, new, so let me know if any issues.
     // Since it might return complex results, created DenseMatrixComplex 
     // to handle this
     DenseMatrix dm1; // should be square
     EigenResult eig = dm1.eig();
-    DenseMatrixComplex values = eig.values; // single column, with each complex
+    DenseMatrixComplex values = eig.values; // single column, with each value
                                             // per row
                                             // might be complex
     DenseMatrixComplex vectors = eig.vectors; // one column per vector, maybe
                                               // complex
     // if you want to avoid complexes, you can use the pseudo-eigenvector
     // decomposition
+    // but the eigenvalues are now returned as a square matrix, which
+    // might not be diagonal
     PseudoEigenResult peig = dm1.peig();
     DenseMatrix values = peig.values;
     DenseMatrix vectors = peig.vectors;
