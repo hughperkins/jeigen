@@ -85,5 +85,18 @@
     <target name="clean" >
         <delete dir="build" />
     </target>
+
+    <target name="package" depends="getinfo">
+        <zip destfile="build/jeigen-${build.dir.os}-${jvm.word.size}.zip" basedir="build/${build.dir.os}-${jvm.word.size}"
+            includes="*.jar,native/*.so,native/*.dll" />
+    </target>
+
+    <target name="publish" depends="getinfo" > <!-- just for my use really, to make publishing binaries easy :-) -->
+<!--        <exec failonerror="true" command="scp-vpc1-upload.sh ${build.dir}/* ~/jeigen/${build.dir}" /> -->
+        <exec failonerror="true" executable="scp-vpc1-upload.sh">
+             <arg value="${build.dir}/*"/>
+             <arg value="~/jeigen/${build.dir}" /> 
+        </exec>
+    </target>
 </project>
 
