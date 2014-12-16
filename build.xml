@@ -57,6 +57,9 @@
       <copy todir="${build.dir}/classes" >
           <fileset dir="src/java" />
       </copy>
+      <copy todir="${build.dir}" >
+          <fileset file="thirdparty/jna-4.0.0.jar" />
+      </copy>
    </target>
 
    <target name="jar" depends="compile">
@@ -86,7 +89,7 @@
         <delete dir="build" />
     </target>
 
-    <target name="package" depends="getinfo">
+    <target name="package" depends="jar">
         <zip destfile="build/jeigen-${build.dir.os}-${jvm.word.size}.zip" basedir="build/${build.dir.os}-${jvm.word.size}"
             includes="*.jar,native/*.so,native/*.dll" />
     </target>
