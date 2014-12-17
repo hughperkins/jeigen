@@ -56,6 +56,8 @@
       </javac>
       <copy todir="${build.dir}/classes" >
           <fileset dir="src/java" />
+          <fileset file="${build.dir}/native/*.so" />
+          <fileset file="${build.dir}/native/*.dll" />
       </copy>
       <copy todir="${build.dir}" >
           <fileset file="thirdparty/jna-4.0.0.jar" />
@@ -71,11 +73,11 @@
        <junit printsummary="on" fork="on" haltonerror="on" haltonfailure="on" showoutput="withOutAndErr" >
             <classpath>
                 <pathelement location="${build.dir}/Jeigen.jar" />
-                <pathelement path="thirdparty/jna-4.0.0.jar"/>
+                <pathelement path="${build.dir}/jna-4.0.0.jar"/>
                 <pathelement path="thirdparty/junit-4.10.jar"/>
             </classpath>
               <formatter type="xml"/>
-            <sysproperty key="java.library.path" value="${cmakeoutdir}" />
+            <sysproperty key="java.library.path" value="${build.dir}/native" />
 			<sysproperty key="jna.debug_load" value="true" />
              <test name="jeigen.TestEigenvalues" todir="${build.dir}"/>
              <test name="jeigen.TestJeigen" todir="${build.dir}"/>

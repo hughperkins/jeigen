@@ -14,9 +14,16 @@ import java.io.*;
  */
 class JeigenJna {
 	public static class Jeigen {
+        public static final ClassLoader getClassLoader() {
+            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+
+            if (classLoader == null) {
+                classLoader = Class.class.getClassLoader();
+            }
+            return classLoader;
+        }
 		public static final void addToJnaPath(String newpath ) throws Exception {
 			String oldLibraryPath = System.getProperty( "jna.library.path");
-//			System.out.println("adding " + newpath);
             if( oldLibraryPath != null ) {
 				System.setProperty( "jna.library.path", oldLibraryPath + File.pathSeparator + newpath );
 			} else {
@@ -25,7 +32,20 @@ class JeigenJna {
 		}
 		static {
 			try{
-				addToJnaPath(System.getProperty("java.library.path"));
+                String userDirectory = System.getProperty("user.home");
+                String nativeDirectory = userDirectory + File.separator + ".jeigen" + File.separator + "native";
+                new File( nativeDirectory ).mkdirs();
+                ClassLoader classLoader = getClassLoader();
+                String nativefilename = "libjeigen.so";
+                if( OsHelper.isWindows() ) {
+                    nativefilename = "libjeigen.dll";
+                }
+                InputStream inputStream = classLoader.getResourceAsStream(nativefilename);
+                OutputStream outputStream = new FileOutputStream( nativeDirectory + File.separator + nativefilename );
+                FileHelper.copyBetweenStreams( inputStream, outputStream );
+                inputStream.close();
+                outputStream.close();
+				addToJnaPath( nativeDirectory );
 			} catch(Exception e ) {
 				e.printStackTrace();
 				System.exit(1);
