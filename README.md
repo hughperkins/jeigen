@@ -18,9 +18,15 @@ commands such as 'zeros', 'ones', 'eye' and 'diag'.
 Download
 ========
 
-The jar files can be downloaded from http://hughperkins.com/jeigen  You will need:
-- http://hughperkins.com/jeigen/Jeigen-win-linux-32-64.jar , which will work on both linux and Windows, 32-bit and 64-bit
-- http://hughperkins.com/jeigen/jna-4.0.0.jar
+You will need:
+- [Jeigen-win-linux-32-64.jar](http://hughperkins.com/jeigen/Jeigen-win-linux-32-64.jar)
+- [jna-4.0.0.jar](http://hughperkins.com/jeigen/jna-4.0.0.jar)
+
+These were built and tested on:
+- Ubuntu 14.04 32-bit
+- Ubuntu 14.04 64-bit
+- Windows Server 2003 R2 64-bit, using Visual Studio 2013, and 32-bit Sun jvm
+- Windows Server 2003 R2 64-bit, using Visual Studio 2013, and 64-bit Sun jvm
 
 Example usage, to multiply two matrices:
 ========================================
@@ -293,6 +299,9 @@ Procedure
 3. ant
 
 According to whether you use a 64-bit jvm or a 32-bit jvm, the files will be created in 'build/linux-32' or 'build/linux-64'.
+You will need to add the following to your class-path:
+- Jeigen-linux-32.jar , or Jeigen-linux-64.jar
+- jna-4.0.0.jar
 
 How to build, Windows
 =====================
@@ -320,6 +329,10 @@ Procedure
  * if you're using 32-bit Java JDK, please remove " Win64" from end of generator name
 
 According to whether you use a 64-bit jvm or a 32-bit jvm, the files will be created in 'build\win-32' or 'build\win-64'.
+
+You will need to add the following to your class-path:
+- Jeigen-win-32.jar , or Jeigen-win-64.jar
+- jna-4.0.0.jar
 
 Wrapping additional functions
 =============================
@@ -363,8 +376,9 @@ faster.  If it's O(n^2), then implementing it in native Java might be better.  F
 Third-party libraries used
 ==========================
 
-- The build process uses cmake-for-ant, https://github.com/hughperkins/cmake-for-ant .
-- Unit tests use junit 4.
+- JNA https://github.com/twall/jna (LGPL license)
+- The build process uses cmake-for-ant, https://github.com/hughperkins/cmake-for-ant 
+- Unit tests use junit 4
 - And of course Eigen :-)  http://eigen.tuxfamily.org
 
 License
