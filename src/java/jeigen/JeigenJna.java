@@ -38,7 +38,7 @@ class JeigenJna {
                 ClassLoader classLoader = getClassLoader();
                 String nativefilename = "libjeigen.so";
                 if( OsHelper.isWindows() ) {
-                    nativefilename = "libjeigen.dll";
+                    nativefilename = "jeigen.dll";
                 }
                 InputStream inputStream = classLoader.getResourceAsStream(nativefilename);
                 OutputStream outputStream = new FileOutputStream( nativeDirectory + File.separator + nativefilename );
