@@ -19,8 +19,8 @@ Download
 ========
 
 The jar files can be downloaded from http://hughperkins.com/jeigen  You will need:
-- Jeigen-win-linux-32-64.jar , which will work on both linux and Windows, 32-bit and 64-bit
-- jna-4.0.0.jar
+- http://hughperkins.com/jeigen/Jeigen-win-linux-32-64.jar , which will work on both linux and Windows, 32-bit and 64-bit
+- http://hughperkins.com/jeigen/jna-4.0.0.jar
 
 Example usage, to multiply two matrices:
 ========================================
