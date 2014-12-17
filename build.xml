@@ -84,7 +84,7 @@
 
     <target name="clean" >
         <delete dir="build" />
-        <delete dir="${user.home}.jeigen" />
+        <delete dir="${user.home}/.jeigen" />
     </target>
 
     <target name="package" depends="jar">
