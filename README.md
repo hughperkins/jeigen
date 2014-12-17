@@ -354,7 +354,7 @@ faster.  If it's O(n^2), then implementing it in native Java might be better.  F
 Download
 ========
 
-The jar files and native dll/so can be downloaded from http://hughperkins.com/jeigen . Download
+The jar files can be downloaded from http://hughperkins.com/jeigen . Download
 the appropriate .zip file for your platform, and unzip it
 - you will need to add the appropriate jeigen-[platform].jar to your classpath, and also
 jna-4.0.0.jar
