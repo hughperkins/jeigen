@@ -58,19 +58,19 @@
    </target>
 
    <target name="jar" depends="compile">
-      <jar destfile="${build.dir}/Jeigen.jar" basedir="${build.dir}/classes" />
+      <jar destfile="${build.dir}/Jeigen-${build.dir.os}-${jvm.word.size}.jar" basedir="${build.dir}/classes" />
    </target>
 
     <target name="test" depends="jar">
 	   <echo message="cmakeoutdir: ${cmakeoutdir}" />
        <junit printsummary="on" fork="on" haltonerror="on" haltonfailure="on" showoutput="withOutAndErr" >
             <classpath>
-                <pathelement location="${build.dir}/Jeigen.jar" />
+                <pathelement location="${build.dir}/Jeigen-${build.dir.os}-${jvm.word.size}.jar" />
                 <pathelement path="${build.dir}/jna-4.0.0.jar"/>
                 <pathelement path="thirdparty/junit-4.10.jar"/>
             </classpath>
               <formatter type="xml"/>
-            <sysproperty key="java.library.path" value="${cmakeoutdir}" />
+<!--            <sysproperty key="java.library.path" value="${cmakeoutdir}" /> -->
 			<sysproperty key="jna.debug_load" value="true" />
              <test name="jeigen.TestEigenvalues" todir="${build.dir}"/>
              <test name="jeigen.TestJeigen" todir="${build.dir}"/>
@@ -82,6 +82,7 @@
 
     <target name="clean" >
         <delete dir="build" />
+        <echo>user directory: ${user.home}</echo>
     </target>
 
     <target name="package" depends="jar">
