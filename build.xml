@@ -49,8 +49,8 @@
       </javac>
       <copy todir="${build.dir}/classes" >
           <fileset dir="src/java" />
-          <fileset file="${build.dir}/native/*.so" />
-          <fileset file="${build.dir}/native/*.dll" />
+          <fileset file="${cmakeoutdir}/*.so" />
+          <fileset file="${cmakeoutdir}/*.dll" />
       </copy>
       <copy todir="${build.dir}" >
           <fileset file="thirdparty/jna-4.0.0.jar" />
@@ -70,7 +70,7 @@
                 <pathelement path="thirdparty/junit-4.10.jar"/>
             </classpath>
               <formatter type="xml"/>
-            <sysproperty key="java.library.path" value="${build.dir}/native" />
+            <sysproperty key="java.library.path" value="${cmakeoutdir}" />
 			<sysproperty key="jna.debug_load" value="true" />
              <test name="jeigen.TestEigenvalues" todir="${build.dir}"/>
              <test name="jeigen.TestJeigen" todir="${build.dir}"/>
@@ -86,7 +86,7 @@
 
     <target name="package" depends="jar">
         <zip destfile="build/jeigen-${build.dir.os}-${jvm.word.size}.zip" basedir="build/${build.dir.os}-${jvm.word.size}"
-            includes="*.jar,native/*.so,native/*.dll" />
+            includes="*.jar,${cmakeoutdir}/*.so,${cmakeoutdir}/*.dll" />
     </target>
 
     <target name="publish" depends="getinfo" > <!-- just for my use really, to make publishing binaries easy :-) -->
