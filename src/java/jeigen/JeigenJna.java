@@ -40,11 +40,13 @@ class JeigenJna {
                 if( OsHelper.isWindows() ) {
                     nativefilename = "jeigen-win-" + OsHelper.jvmBits() + ".dll";
                 }
-                InputStream inputStream = classLoader.getResourceAsStream(nativefilename);
-                OutputStream outputStream = new FileOutputStream( nativeDirectory + File.separator + nativefilename );
-                FileHelper.copyBetweenStreams( inputStream, outputStream );
-                inputStream.close();
-                outputStream.close();
+                if( !new File( nativeDirectory + File.separator + nativefilename ).exists() ) {
+                    InputStream inputStream = classLoader.getResourceAsStream(nativefilename);
+                    OutputStream outputStream = new FileOutputStream( nativeDirectory + File.separator + nativefilename );
+                    FileHelper.copyBetweenStreams( inputStream, outputStream );
+                    inputStream.close();
+                    outputStream.close();
+                }
 				addToJnaPath( nativeDirectory );
     			Native.register(nativefilename.replace("lib","").replace(".dll","").replace(".so","") );
 			} catch(Exception e ) {
