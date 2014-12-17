@@ -380,6 +380,7 @@ News
 setting of the jna.library.path variable, so dont need to set this variable oneself
   - Rebuilt on win64, win32, linux64, linux32, and uploaded to new downloads location
 at http://hughperkins.com/jeigen
+  - Created one single jar file, containing all native shared objects
 - 14th Dec 2014 Added eigenvector decomposition, and complex matrices
 
 
