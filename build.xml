@@ -82,7 +82,7 @@
 
     <target name="clean" >
         <delete dir="build" />
-        <echo>user directory: ${user.home}</echo>
+        <delete dir="${user.home}.jeigen" />
     </target>
 
     <target name="package" depends="jar">
