@@ -129,7 +129,7 @@
       <jar destfile="build/Jeigen-win-linux-32-64.jar" basedir="${onefat.staging.dir}" />
     </target>
 
-    <target name="test-onefat" depends="package-onefat,getinfo" >
+    <target name="test-onefat" depends="getinfo" >
         <mkdir dir="build/test-onefat" />
       <javac srcdir="." destdir="build/test-onefat"  debug="true" includeantruntime="false" includes="TestSimple.java" 
            classpath="build/Jeigen-win-linux-32-64.jar" />
