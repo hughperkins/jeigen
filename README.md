@@ -43,8 +43,7 @@ Procedure
 2. cd jeigen
 3. ant
 
-According to whether you use a 64-bit jvm or a 32-bit jvm, the files will be created in 'build/linux-32' or 'build/linux-64'. Jeigen.jar will be created directly in this directory, and libjeigen.so 
-will be created in the 'native' subdirectory.
+According to whether you use a 64-bit jvm or a 32-bit jvm, the files will be created in 'build/linux-32' or 'build/linux-64'.
 
 How to build, Windows
 =====================
@@ -55,8 +54,8 @@ Pre-requisites
 - have installed git
 - have a jdk available, at least 1.6
 - have installed ant
-- have installed cmake, at least version 2.8.11.2
-- have installed Visual Studio C++ Express 2012
+- have installed cmake, version 3.x
+- have installed Visual Studio C++ Express 2013
 
 Procedure
 ---------
@@ -65,26 +64,22 @@ Procedure
 2. cd jeigen
 3. set PATH=%PATH%;c:\apache-ant\bin
  * set to appropriate path for your ant installation
-4. ant -Dcmake_home="c:\program files (x86)\Cmake" -Dgenerator="Visual Studio 11 Win64"
+4. ant -Dcmake_home="c:\program files (x86)\Cmake" -Dgenerator="Visual Studio 12 2013 Win64"
  * set to appropriate path for your cmake installation
- * if you're using Visual Studio 2010, please change generator name to "Visual Studio 10 Win64"
+ * if you're using Visual Studio 2010, please change generator name to "Visual Studio 10 2010 Win64"
+ * if you're using Visual Studio 2012, please change generator name to "Visual Studio 11 2012 Win64"
  * if you're using 32-bit Java JDK, please remove " Win64" from end of generator name
 
-According to whether you use a 64-bit jvm or a 32-bit jvm, the files will be created in 'build\win-32' or 'build\win-64'. Jeigen.jar will be created directly in this directory, and jeigen.dll 
-will be created in the 'native\Release' subdirectory.
+According to whether you use a 64-bit jvm or a 32-bit jvm, the files will be created in 'build\win-32' or 'build\win-64'.
 
 How to link to Jeigen
 =====================
 
-In Eclipse, add a user library, and add the 'Jeigen.jar' jar to the 
-library.  Then expand the library entry for 'jeigen', select 'Native
-library location', then click 'Edit', and browse to the directory containing libjeigen.so or jeigen.dll.
+In Eclipse, add a user library, and add the 'Jeigen-[buildtype].jar' jar to the 
+library.  You will also need the jna-4.0.0.jar file.
 
-(If you are not using Eclipse, then add:
-   -Djava.library.path=/path/to/jeigen/build/native/directory
-... to the java vm arguments)
-
-You will also need the jna-4.0.0.jar file, which you can find in the 'thirdparty' directory.
+Note that Jeigen-[buildtype].jar contains a native .dll or .so, which will be 
+decompressed into the folder '.jeigen' in your home-directory, at runtime.
 
 Commands to create new matrices
 ===============================
@@ -359,9 +354,10 @@ faster.  If it's O(n^2), then implementing it in native Java might be better.  F
 Download
 ========
 
-The jar files and native dll/so can be downloaded from https://hughperkins.atlassian.net/builds/browse/JEIGEN-JEIGEN-82 . You need
-any Jeigen.jar file (platform-independent), the jna-4.0.0.jar file (platform-independent), and
-the appropriate libjeigen.so or jeigen.dll file.
+The jar files and native dll/so can be downloaded from http://hughperkins.com/jeigen . Download
+the appropriate .zip file for your platform, and unzip it
+- you will need to add the appropriate jeigen-[platform].jar to your classpath, and also
+jna-4.0.0.jar
 
 Third-party libraries used
 ==========================
@@ -374,4 +370,15 @@ License
 =======
 
 Jeigen is available under MPL v2 license, http://mozilla.org/MPL/2.0/
+
+News
+====
+
+- 17th Dec 2014:
+-- Added native library inside the jar, with automatic extraction, and 
+setting of the jna.library.path variable, so dont need to set this variable oneself
+-- Rebuilt on win64, win32, linux64, linux32, and uploaded to new downloads location
+at http://hughperkins.com/jeigen
+- 14th Dec 2014 Added eigenvector decomposition, and complex matrices
+
 
