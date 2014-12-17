@@ -15,6 +15,13 @@ The matrix classes are :
 You can import statically Shortcuts.*, in order to have easy access to 
 commands such as 'zeros', 'ones', 'eye' and 'diag'.
 
+Download
+========
+
+The jar files can be downloaded from http://hughperkins.com/jeigen  You will need:
+- Jeigen-win-linux-32-64.jar , which will work on both linux and Windows, 32-bit and 64-bit
+- jna-4.0.0.jar
+
 Example usage, to multiply two matrices:
 ========================================
 
@@ -24,62 +31,15 @@ Example usage, to multiply two matrices:
     DenseMatrix C = A.mmul(B); // mmul is matrix multiplication
     System.out.println(C); // displays C formatted appropriately
 
-How to build, linux
-===================
-
-Pre-requisites
---------------
-
-- git
-- jdk 1.6 or more recent
-- ant
-- cmake
-- g++
-
-Procedure
----------
-
-1. git clone git://github.com/hughperkins/jeigen.git
-2. cd jeigen
-3. ant
-
-According to whether you use a 64-bit jvm or a 32-bit jvm, the files will be created in 'build/linux-32' or 'build/linux-64'.
-
-How to build, Windows
-=====================
-
-Pre-requisites
---------------
-
-- have installed git
-- have a jdk available, at least 1.6
-- have installed ant
-- have installed cmake, version 3.x
-- have installed Visual Studio C++ Express 2013
-
-Procedure
----------
-
-1. git clone git://github.com/hughperkins/jeigen.git
-2. cd jeigen
-3. set PATH=%PATH%;c:\apache-ant\bin
- * set to appropriate path for your ant installation
-4. ant -Dcmake_home="c:\program files (x86)\Cmake" -Dgenerator="Visual Studio 12 2013 Win64"
- * set to appropriate path for your cmake installation
- * if you're using Visual Studio 2010, please change generator name to "Visual Studio 10 2010 Win64"
- * if you're using Visual Studio 2012, please change generator name to "Visual Studio 11 2012 Win64"
- * if you're using 32-bit Java JDK, please remove " Win64" from end of generator name
-
-According to whether you use a 64-bit jvm or a 32-bit jvm, the files will be created in 'build\win-32' or 'build\win-64'.
-
 How to link to Jeigen
 =====================
 
-In Eclipse, add a user library, and add the 'Jeigen-[buildtype].jar' jar to the 
-library.  You will also need the jna-4.0.0.jar file.
+You will need to add the following jars to the classpath:
+- Jeigen-win-linux-32-64.jar
+- jna-4.0.0.jar
 
-Note that Jeigen-[buildtype].jar contains a native .dll or .so, which will be 
-decompressed into the folder '.jeigen' in your home-directory, at runtime.
+Jeigen-win-linux-32-64.jar contains the native .dll or .so, for all these
+platforms, which will be decompressed into the '.jeigen' folder, in your home-directory, at runtime.
 
 Commands to create new matrices
 ===============================
@@ -312,6 +272,55 @@ N*N matrices are:
     N = 100: 35%
     N = 1000: 9%
 
+
+How to build, linux
+===================
+
+Pre-requisites
+--------------
+
+- git
+- jdk 1.6 or more recent
+- ant
+- cmake
+- g++
+
+Procedure
+---------
+
+1. git clone git://github.com/hughperkins/jeigen.git
+2. cd jeigen
+3. ant
+
+According to whether you use a 64-bit jvm or a 32-bit jvm, the files will be created in 'build/linux-32' or 'build/linux-64'.
+
+How to build, Windows
+=====================
+
+Pre-requisites
+--------------
+
+- have installed git
+- have a jdk available, at least 1.6
+- have installed ant
+- have installed cmake, version 3.x
+- have installed Visual Studio C++ Express 2013
+
+Procedure
+---------
+
+1. git clone git://github.com/hughperkins/jeigen.git
+2. cd jeigen
+3. set PATH=%PATH%;c:\apache-ant\bin
+ * set to appropriate path for your ant installation
+4. ant -Dcmake_home="c:\program files (x86)\Cmake" -Dgenerator="Visual Studio 12 2013 Win64"
+ * set to appropriate path for your cmake installation
+ * if you're using Visual Studio 2010, please change generator name to "Visual Studio 10 2010 Win64"
+ * if you're using Visual Studio 2012, please change generator name to "Visual Studio 11 2012 Win64"
+ * if you're using 32-bit Java JDK, please remove " Win64" from end of generator name
+
+According to whether you use a 64-bit jvm or a 32-bit jvm, the files will be created in 'build\win-32' or 'build\win-64'.
+
 Wrapping additional functions
 =============================
 
@@ -350,14 +359,6 @@ it in C++/Eigen will be
 faster.  If it's O(n^2), then implementing it in native Java might be better.  For example:
 - applying the same operation to all values of a matrix is implemented in native Java
 - multiplying two matrices is implemented using wrapped C++/Eigen
-
-Download
-========
-
-The jar files can be downloaded from http://hughperkins.com/jeigen . Download
-the appropriate .zip file for your platform, and unzip it
-- you will need to add the appropriate jeigen-[platform].jar to your classpath, and also
-jna-4.0.0.jar
 
 Third-party libraries used
 ==========================
