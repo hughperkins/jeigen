@@ -36,9 +36,9 @@ class JeigenJna {
                 String nativeDirectory = userDirectory + File.separator + ".jeigen" + File.separator + "native";
                 new File( nativeDirectory ).mkdirs();
                 ClassLoader classLoader = getClassLoader();
-                String nativefilename = "libjeigen.so";
+                String nativefilename = "libjeigen-linux-" + OsHelper.jvmBits() + ".so";
                 if( OsHelper.isWindows() ) {
-                    nativefilename = "jeigen.dll";
+                    nativefilename = "jeigen-windows-" + OsHelper.jvmBits() + ".dll";
                 }
                 InputStream inputStream = classLoader.getResourceAsStream(nativefilename);
                 OutputStream outputStream = new FileOutputStream( nativeDirectory + File.separator + nativefilename );
@@ -46,11 +46,12 @@ class JeigenJna {
                 inputStream.close();
                 outputStream.close();
 				addToJnaPath( nativeDirectory );
+    			Native.register(nativefilename.replace("lib","").replace(".dll","").replace(".so","") );
 			} catch(Exception e ) {
 				e.printStackTrace();
 				System.exit(1);
 			}
-			Native.register("jeigen");
+//			Native.register("jeigen");
 		}
 		
 		public static native void init();

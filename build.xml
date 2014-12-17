@@ -49,9 +49,11 @@
       </javac>
       <copy todir="${build.dir}/classes" >
           <fileset dir="src/java" />
-          <fileset file="${cmakeoutdir}/*.so" />
-          <fileset file="${cmakeoutdir}/*.dll" />
+<!--          <fileset file="${cmakeoutdir}/*.so" />
+          <fileset file="${cmakeoutdir}/*.dll" />-->
       </copy>
+      <copy tofile="${build.dir}/classes/jeigen-${build.dir.os}-${jvm.word.size}.dll" failonerror="false" quiet="true" file="${cmakeoutdir}/jeigen.dll" overwrite="true" />
+      <copy tofile="${build.dir}/classes/libjeigen-${build.dir.os}-${jvm.word.size}.so" failonerror="false" quiet="true" file="${cmakeoutdir}/libjeigen.so" overwrite="true" />
       <copy todir="${build.dir}" >
           <fileset file="thirdparty/jna-4.0.0.jar" />
       </copy>
