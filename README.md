@@ -375,9 +375,9 @@ News
 ====
 
 - 17th Dec 2014:
--- Added native library inside the jar, with automatic extraction, and 
+  - Added native library inside the jar, with automatic extraction, and 
 setting of the jna.library.path variable, so dont need to set this variable oneself
--- Rebuilt on win64, win32, linux64, linux32, and uploaded to new downloads location
+  - Rebuilt on win64, win32, linux64, linux32, and uploaded to new downloads location
 at http://hughperkins.com/jeigen
 - 14th Dec 2014 Added eigenvector decomposition, and complex matrices
 
