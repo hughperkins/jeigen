@@ -84,6 +84,15 @@ public class SparseMatrixLil {
 	public double getValue(int i ) {
 		return values[i];
 	}
+	public int[] getRowIdxs() {
+		return rowIdx;
+	}
+	public int[] getColIdxs() {
+		return colIdx;
+	}
+	public double[] getValues() {
+		return values;
+	}
 	public int getSize() {
 		return size;
 	}
