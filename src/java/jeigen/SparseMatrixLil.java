@@ -532,11 +532,15 @@ public class SparseMatrixLil {
 	}
 	public String toString() {
 		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("SparseMatrixLil, " + rows + " * " + cols + ":\n");
-		int count = size; for( int i = 0; i < count; i++ ) {
+		stringBuilder.append("SparseMatrixLil, " + rows + " * " + cols + ", size = " + size + " :\n");
+		int count = (size > 100) ? 100 : size;
+		for( int i = 0; i < count; i++ ) {
 			int row = rowIdx[i]; int col = colIdx[i]; double value = values[i];
 			stringBuilder.append("( " + row + ", " + col + ", " + value + " )\n");
-		}		
+		}
+		if (size > 100) {
+			stringBuilder.append("...\n");
+		}
 		return stringBuilder.toString();
 	}
 	public DenseMatrix shape() {

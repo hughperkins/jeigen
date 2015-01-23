@@ -948,12 +948,33 @@ public class DenseMatrix {
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append("DenseMatrix, " + rows + " * " + cols + ":\n");
 		stringBuilder.append("\n");
-		for( int r = 0; r < rows; r++ ) {
-			for( int c = 0; c < cols; c++ ) {
-				stringBuilder.append(get(r,c));
-				stringBuilder.append(" ");
+		if (rows * cols <= 1000) {
+			for( int r = 0; r < rows; r++ ) {
+				for( int c = 0; c < cols; c++ ) {
+					stringBuilder.append(String.format("%8.5f ", get(r,c)));
+				}
+				stringBuilder.append("\n");
 			}
-			stringBuilder.append("\n");
+		}
+		else {
+			int rMax = ( rows > 100 ) ? 7 : rows;
+			int cMax = ( cols > 100 ) ? 7 : cols;
+			for (int i = 0; i < rMax; i++) {
+				int r = ( rows > 100 && i > 3) ? rows - i - 1 : i;
+				if (rows > 100 && i == 3) {
+					stringBuilder.append("...\n");
+				}
+				for ( int j = 0; j < cMax; j++) {
+					int c = ( cols > 100 && j > 3) ? cols - j - 1 : j;
+					if (cols > 100 &&  j == 3 ) {
+						stringBuilder.append("... ");
+					}
+					else {
+						stringBuilder.append(String.format("%8.5f ", get(r,c)));
+					}
+				}
+				stringBuilder.append("\n");
+			}
 		}
 		stringBuilder.append("\n");
 		return stringBuilder.toString();
