@@ -294,9 +294,11 @@ Pre-requisites
 Procedure
 ---------
 
-1. git clone git://github.com/hughperkins/jeigen.git
-2. cd jeigen
-3. ant
+```bash
+git clone git://github.com/hughperkins/jeigen.git
+cd jeigen
+ant
+```
 
 According to whether you use a 64-bit jvm or a 32-bit jvm, the files will be created in 'build/linux-32' or 'build/linux-64'.
 You will need to add the following to your class-path:
@@ -333,6 +335,23 @@ According to whether you use a 64-bit jvm or a 32-bit jvm, the files will be cre
 You will need to add the following to your class-path:
 - Jeigen-win-32.jar , or Jeigen-win-64.jar
 - jna-4.0.0.jar
+
+How to run unit-tests
+=====================
+
+After following the build instructions, do:
+```
+ant test
+```
+
+Possible issues, and possible solutions
+=======================================
+
+## 'java.lang.UnsatisfiedLinkError: Can't obtain updateLastError method for class com.sun.jna.Native'
+
+* See [https://github.com/twall/jna/issues/281](https://github.com/twall/jna/issues/281)
+  * Adding `-Djna.nosys=true` to the java command-line seems to work ok
+  * You can have a look at an example, by looking at the `test` target in [build.xml](build.xml)
 
 Wrapping additional functions
 =============================
