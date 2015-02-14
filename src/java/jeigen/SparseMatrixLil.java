@@ -84,13 +84,22 @@ public class SparseMatrixLil {
 	public double getValue(int i ) {
 		return values[i];
 	}
-	public int[] getRowIdxs() {
+	public int[] getRowIdxs() { // note: this returns a ref to the underlying row idxs, so
+                                // changing the returned value will change the matrix
+                                // I haven't decided if this is a good idea or not yet,
+                                // but running with the flow for now :-)
 		return rowIdx;
 	}
-	public int[] getColIdxs() {
+	public int[] getColIdxs() { // note: this returns a ref to the underlying col idxs, so
+                                // changing the returned value will change the matrix
+                                // I haven't decided if this is a good idea or not yet,
+                                // but running with the flow for now :-)
 		return colIdx;
 	}
-	public double[] getValues() {
+	public double[] getValues() { // note: this returns a ref to the underlying values, so
+                                // changing the returned value will change the matrix
+                                // I haven't decided if this is a good idea or not yet,
+                                // but running with the flow for now :-)
 		return values;
 	}
 	public int getSize() {
