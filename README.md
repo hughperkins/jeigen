@@ -33,7 +33,7 @@
     - [Procedure](#procedure-1)
   - [Running unit-tests](#running-unit-tests)
   - [Possible issues, and possible solutions](#possible-issues-and-possible-solutions)
-  - ['java.lang.UnsatisfiedLinkError: Can't obtain updateLastError method for class com.sun.jna.Native'](#javalangunsatisfiedlinkerror-cant-obtain-updatelasterror-method-for-class-comsunjnanative)
+    - ['java.lang.UnsatisfiedLinkError: Can't obtain updateLastError method for class com.sun.jna.Native'](#javalangunsatisfiedlinkerror-cant-obtain-updatelasterror-method-for-class-comsunjnanative)
 - [Development](#development)
   - [Wrapping additional functions](#wrapping-additional-functions)
 - [Third-party libraries used](#third-party-libraries-used)
@@ -365,7 +365,7 @@ ant test
 
 ## Possible issues, and possible solutions
 
-## 'java.lang.UnsatisfiedLinkError: Can't obtain updateLastError method for class com.sun.jna.Native'
+### 'java.lang.UnsatisfiedLinkError: Can't obtain updateLastError method for class com.sun.jna.Native'
 
 * See [https://github.com/twall/jna/issues/281](https://github.com/twall/jna/issues/281)
   * Adding `-Djna.nosys=true` to the java command-line seems to work ok
