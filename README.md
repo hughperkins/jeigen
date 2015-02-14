@@ -3,43 +3,46 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [Jeigen](#jeigen)
-- [Download](#download)
 - [Example usage, to multiply two matrices:](#example-usage-to-multiply-two-matrices)
-- [How to link to Jeigen](#how-to-link-to-jeigen)
-- [Commands to create new matrices](#commands-to-create-new-matrices)
-- [Update matrices](#update-matrices)
-- [Matrix Operators](#matrix-operators)
-- [Per-element operators:](#per-element-operators)
-- [Aggregation operators](#aggregation-operators)
-- [Scalar operators](#scalar-operators)
-- [Slicing](#slicing)
-- [Operators in Shortcuts:](#operators-in-shortcuts)
-- [Solvers](#solvers)
-- [Eigenvalues](#eigenvalues)
-- [DenseMatrixComplex](#densematrixcomplex)
-- [Svd](#svd)
-- [Unsupported](#unsupported)
-- [Overhead of using java/jna?](#overhead-of-using-javajna)
+- [Getting Jeigen](#getting-jeigen)
+  - [Download](#download)
+  - [Linking to Jeigen](#linking-to-jeigen)
+- [Jeigen API](#jeigen-api)
+  - [Commands to create new matrices](#commands-to-create-new-matrices)
+  - [Update matrices](#update-matrices)
+  - [Matrix Operators](#matrix-operators)
+  - [Per-element operators:](#per-element-operators)
+  - [Aggregation operators](#aggregation-operators)
+  - [Scalar operators](#scalar-operators)
+  - [Slicing](#slicing)
+  - [Operators in Shortcuts:](#operators-in-shortcuts)
+  - [Solvers](#solvers)
+  - [Eigenvalues](#eigenvalues)
+  - [DenseMatrixComplex](#densematrixcomplex)
+  - [Svd](#svd)
+  - [Matrix exponential, matrix logarithm](#matrix-exponential-matrix-logarithm)
+- [Performance: overhead of using java/jna?](#performance-overhead-of-using-javajna)
   - [Dense](#dense)
   - [Sparse](#sparse)
-- [How to build, linux](#how-to-build-linux)
-  - [Pre-requisites](#pre-requisites)
-  - [Procedure](#procedure)
-- [How to build, Windows](#how-to-build-windows)
-  - [Pre-requisites](#pre-requisites-1)
-  - [Procedure](#procedure-1)
-- [How to run unit-tests](#how-to-run-unit-tests)
-- [Possible issues, and possible solutions](#possible-issues-and-possible-solutions)
+- [Building](#building)
+  - [How to build, linux](#how-to-build-linux)
+    - [Pre-requisites](#pre-requisites)
+    - [Procedure](#procedure)
+  - [How to build, Windows](#how-to-build-windows)
+    - [Pre-requisites](#pre-requisites-1)
+    - [Procedure](#procedure-1)
+  - [Running unit-tests](#running-unit-tests)
+  - [Possible issues, and possible solutions](#possible-issues-and-possible-solutions)
   - ['java.lang.UnsatisfiedLinkError: Can't obtain updateLastError method for class com.sun.jna.Native'](#javalangunsatisfiedlinkerror-cant-obtain-updatelasterror-method-for-class-comsunjnanative)
-- [Wrapping additional functions](#wrapping-additional-functions)
+- [Development](#development)
+  - [Wrapping additional functions](#wrapping-additional-functions)
 - [Third-party libraries used](#third-party-libraries-used)
 - [License](#license)
 - [News](#news)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-Jeigen
-======
+# Jeigen
 
 Jeigen provides a wrapper around the high-performance C++ matrix library "Eigen".
 
@@ -55,8 +58,17 @@ The matrix classes are :
 You can import statically Shortcuts.*, in order to have easy access to 
 commands such as 'zeros', 'ones', 'eye' and 'diag'.
 
-Download
-========
+# Example usage, to multiply two matrices:
+
+    DenseMatrix A = new DenseMatrix("1 2; 3 5; 7 9"); // matrix with 3 rows and 2 columns with values
+                                                      // {{1,2},{3,5},{7,9}}
+    DenseMatrix B = new DenseMatrix(new double[][]{{4,3},{3,7}}); // matrix with 2 rows and 2 columns
+    DenseMatrix C = A.mmul(B); // mmul is matrix multiplication
+    System.out.println(C); // displays C formatted appropriately
+
+# Getting Jeigen
+
+## Download
 
 You will need:
 - [Jeigen-win-linux-32-64.jar](http://hughperkins.com/jeigen/Jeigen-win-linux-32-64.jar)
@@ -68,17 +80,7 @@ These were built and tested on:
 - Windows Server 2003 R2 64-bit, using Visual Studio 2013, and 32-bit Sun jvm
 - Windows Server 2003 R2 64-bit, using Visual Studio 2013, and 64-bit Sun jvm
 
-Example usage, to multiply two matrices:
-========================================
-
-    DenseMatrix A = new DenseMatrix("1 2; 3 5; 7 9"); // matrix with 3 rows and 2 columns with values
-                                                      // {{1,2},{3,5},{7,9}}
-    DenseMatrix B = new DenseMatrix(new double[][]{{4,3},{3,7}}); // matrix with 2 rows and 2 columns
-    DenseMatrix C = A.mmul(B); // mmul is matrix multiplication
-    System.out.println(C); // displays C formatted appropriately
-
-How to link to Jeigen
-=====================
+## Linking to Jeigen
 
 You will need to add the following jars to the classpath:
 - Jeigen-win-linux-32-64.jar
@@ -87,8 +89,9 @@ You will need to add the following jars to the classpath:
 Jeigen-win-linux-32-64.jar contains the native .dll or .so, for all these
 platforms, which will be decompressed into the '.jeigen' folder, in your home-directory, at runtime.
 
-Commands to create new matrices
-===============================
+# Jeigen API
+
+## Commands to create new matrices
 
     import static jeigen.Shortcuts.*;
 
@@ -110,16 +113,14 @@ Commands to create new matrices
                              // numbers
     sm1 = speye(5); // creates a 5*5 identity matrix, sparse
 
-Update matrices
-===============
+## Update matrices
 
     dm1.set( 3,4,5.0); // sets element at row 3, column 4 to 5.0
     dm1.get( 3,4 ); // gets element at row 3, column 4
     
     sm1.append( 2, 3, 5.0 ); // adds value 5.0 at row 2, column 3
 
-Matrix Operators
-================
+## Matrix Operators
 
     dm1.mmul(dm1);  // matrix multiply, dense by dense
     dm1.mmul(sm1);  // matrix multiply, dense by sparse
@@ -129,8 +130,7 @@ Matrix Operators
     dm1 = dm1.t(); // matrix transpose, dense
     sm1 = sm1.t(); // matrix transpose, sparse
 
-Per-element operators:
-======================
+## Per-element operators:
 
     dm1 = dm1.neg();  // element = - element
     dm1 = dm1.recpr();   // element = 1 / element 
@@ -154,8 +154,7 @@ Per-element operators:
     dm1 = dm1.lt(dm2); // element1 &lt; element2
     dm1 = dm1.gt(dm2); // element1 &gt; element2
 
-Aggregation operators
-=====================
+## Aggregation operators
 
 These work for both sparse and dense matrices.
 
@@ -168,15 +167,13 @@ These work for both sparse and dense matrices.
     dm1 = dm1.minOverCols();
     dm1 = dm1.maxOverCols();
 
-Scalar operators
-================
+## Scalar operators
 
 Work for both dense and sparse.
 
     double value = dm1.s();  // returns dm1.get(0,0);
 
-Slicing
-=======
+## Slicing
 
 Slices are by-value.  They work for both dense and sparse matrices.
 
@@ -189,16 +186,14 @@ Slices are by-value.  They work for both dense and sparse matrices.
     dm1 = dm1.concatRight(dm2); // concatenate [ dm1 dm2 ]
     dm1 = dm1.concatDown(dm2); // concatenate [ dm1; dm2 ]
 
-Operators in Shortcuts:
-========================
+## Operators in Shortcuts:
 
     import static jeigen.Shortcuts.*;
 
     DenseMatrix dm1;
     dm1 = abs(dm1);  // element = abs(element)
 
-Solvers
-=======
+## Solvers
 
     DenseMatrix dm1;
     DenseMatrix dm2;
@@ -209,8 +204,7 @@ Solvers
     DenseMatrix result = dm1.fullPivHouseholderQRSolve(dm2); // no conditions on 
                                                          // dm1, but slower
 
-Eigenvalues
-===========
+## Eigenvalues
 
     // Added on Dec 2014, new, so let me know if any issues.
     // Since it might return complex results, created DenseMatrixComplex 
@@ -230,8 +224,7 @@ Eigenvalues
     DenseMatrix values = res.values;
     DenseMatrix vectors = res.vectors;
 
-DenseMatrixComplex
-==================
+## DenseMatrixComplex
 
     // Created for use with eigenvalue decomposition, above.
     // DenseMatrixComplex basically contains two DenseMatrices, one for the 
@@ -247,28 +240,21 @@ DenseMatrixComplex
     dm1 = dmc1.abs() // per-element abs, ie sqrt(real^2+imag^2), for each 
                       // element.  Returns a non-complex DenseMatrix
 
-Svd
-===
+## Svd
 
     DenseMatrix dm1;
     SvdResult result = dm1.svd();  // uses Jacobi, and returns thin U and V
     // result contains U, S and V matrices
 
-Unsupported
-===========
-
-(This is called 'unsupported', because these functions are from the 'unsupported'
-Eigen modules)
+## Matrix exponential, matrix logarithm
 
     DenseMatrix dm1;
     DenseMatrix result1 = dm1.mexp(); // matrix exponential
     DenseMatrix result2 = dm1.mlog(); // matrix logarithm
 
-Overhead of using java/jna?
-===========================
+# Performance: overhead of using java/jna?
 
-Dense
------
+## Dense
 
 You can use the 'dummy_mmul' method of DenseMatrix to measure the overhead. 
 It makes a call, with two matrices, right through to the native layer, doing
@@ -298,8 +284,7 @@ For N*N matrices, the empirical percent overhead is about:
     N = 100: 14%
     N = 1000: 4%
 
-Sparse
-------
+## Sparse
 
 For sparse matrices, a corresponding test method is:
 cut
@@ -318,12 +303,11 @@ N*N matrices are:
     N = 100: 35%
     N = 1000: 9%
 
+# Building
 
-How to build, linux
-===================
+## How to build, linux
 
-Pre-requisites
---------------
+### Pre-requisites
 
 - git
 - jdk 1.6 or more recent
@@ -331,8 +315,7 @@ Pre-requisites
 - cmake
 - g++
 
-Procedure
----------
+### Procedure
 
 ```bash
 git clone git://github.com/hughperkins/jeigen.git
@@ -345,11 +328,9 @@ You will need to add the following to your class-path:
 - Jeigen-linux-32.jar , or Jeigen-linux-64.jar
 - jna-4.0.0.jar
 
-How to build, Windows
-=====================
+## How to build, Windows
 
-Pre-requisites
---------------
+### Pre-requisites
 
 - have installed git
 - have a jdk available, at least 1.6
@@ -357,8 +338,7 @@ Pre-requisites
 - have installed cmake, version 3.x
 - have installed Visual Studio C++ Express 2013
 
-Procedure
----------
+### Procedure
 
 1. git clone git://github.com/hughperkins/jeigen.git
 2. cd jeigen
@@ -376,16 +356,14 @@ You will need to add the following to your class-path:
 - Jeigen-win-32.jar , or Jeigen-win-64.jar
 - jna-4.0.0.jar
 
-How to run unit-tests
-=====================
+## Running unit-tests
 
 After following the build instructions, do:
 ```
 ant test
 ```
 
-Possible issues, and possible solutions
-=======================================
+## Possible issues, and possible solutions
 
 ## 'java.lang.UnsatisfiedLinkError: Can't obtain updateLastError method for class com.sun.jna.Native'
 
@@ -393,8 +371,9 @@ Possible issues, and possible solutions
   * Adding `-Djna.nosys=true` to the java command-line seems to work ok
   * You can have a look at an example, by looking at the `test` target in [build.xml](build.xml)
 
-Wrapping additional functions
-=============================
+# Development
+
+## Wrapping additional functions
 
 If you want to add additional functions, here's the procedure:
 
@@ -432,22 +411,22 @@ faster.  If it's O(n^2), then implementing it in native Java might be better.  F
 - applying the same operation to all values of a matrix is implemented in native Java
 - multiplying two matrices is implemented using wrapped C++/Eigen
 
-Third-party libraries used
-==========================
+# Third-party libraries used
 
 - JNA https://github.com/twall/jna (LGPL license)
 - The build process uses cmake-for-ant, https://github.com/hughperkins/cmake-for-ant 
 - Unit tests use junit 4
 - And of course Eigen :-)  http://eigen.tuxfamily.org
 
-License
-=======
+# License
 
 Jeigen is available under MPL v2 license, http://mozilla.org/MPL/2.0/
 
-News
-====
+# News
 
+- 14th Feb 2015:
+  - merged from Frograms branch
+  - investigated and documented fix for 'can't obtain lastUpdateError' jna linking issue
 - 17th Dec 2014:
   - Added native library inside the jar, with automatic extraction, and 
 setting of the jna.library.path variable, so dont need to set this variable oneself
