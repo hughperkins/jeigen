@@ -1,3 +1,43 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Jeigen](#jeigen)
+- [Download](#download)
+- [Example usage, to multiply two matrices:](#example-usage-to-multiply-two-matrices)
+- [How to link to Jeigen](#how-to-link-to-jeigen)
+- [Commands to create new matrices](#commands-to-create-new-matrices)
+- [Update matrices](#update-matrices)
+- [Matrix Operators](#matrix-operators)
+- [Per-element operators:](#per-element-operators)
+- [Aggregation operators](#aggregation-operators)
+- [Scalar operators](#scalar-operators)
+- [Slicing](#slicing)
+- [Operators in Shortcuts:](#operators-in-shortcuts)
+- [Solvers](#solvers)
+- [Eigenvalues](#eigenvalues)
+- [DenseMatrixComplex](#densematrixcomplex)
+- [Svd](#svd)
+- [Unsupported](#unsupported)
+- [Overhead of using java/jna?](#overhead-of-using-javajna)
+  - [Dense](#dense)
+  - [Sparse](#sparse)
+- [How to build, linux](#how-to-build-linux)
+  - [Pre-requisites](#pre-requisites)
+  - [Procedure](#procedure)
+- [How to build, Windows](#how-to-build-windows)
+  - [Pre-requisites](#pre-requisites-1)
+  - [Procedure](#procedure-1)
+- [How to run unit-tests](#how-to-run-unit-tests)
+- [Possible issues, and possible solutions](#possible-issues-and-possible-solutions)
+  - ['java.lang.UnsatisfiedLinkError: Can't obtain updateLastError method for class com.sun.jna.Native'](#javalangunsatisfiedlinkerror-cant-obtain-updatelasterror-method-for-class-comsunjnanative)
+- [Wrapping additional functions](#wrapping-additional-functions)
+- [Third-party libraries used](#third-party-libraries-used)
+- [License](#license)
+- [News](#news)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 Jeigen
 ======
 
