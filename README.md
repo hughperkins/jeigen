@@ -326,7 +326,7 @@ ant
 According to whether you use a 64-bit jvm or a 32-bit jvm, the files will be created in 'build/linux-32' or 'build/linux-64'.
 You will need to add the following to your class-path:
 - Jeigen-linux-32.jar , or Jeigen-linux-64.jar
-- jna-4.0.0.jar
+- jna-4.1.0.jar
 
 ## How to build, Windows
 
@@ -354,7 +354,7 @@ According to whether you use a 64-bit jvm or a 32-bit jvm, the files will be cre
 
 You will need to add the following to your class-path:
 - Jeigen-win-32.jar , or Jeigen-win-64.jar
-- jna-4.0.0.jar
+- jna-4.1.0.jar
 
 ## Running unit-tests
 
