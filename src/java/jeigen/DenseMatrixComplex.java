@@ -3,7 +3,7 @@ package jeigen;
 // This was created for use with getting eigenvalues
 // but there's no reason why we couldn't generalize it with additional operations
 // which similarly just wrap the underlying DenseMatrix operations
-class DenseMatrixComplex {
+public class DenseMatrixComplex {
     DenseMatrix real;
     DenseMatrix imag;
     public DenseMatrixComplex( DenseMatrix real, DenseMatrix imag ) {
