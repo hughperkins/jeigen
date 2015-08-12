@@ -33,7 +33,7 @@ class JeigenJna {
 		static {
 			try{
                 String userDirectory = System.getProperty("user.home");
-                String nativeDirectory = userDirectory + File.separator + ".jeigen" + File.separator + "native";
+                String nativeDirectory = userDirectory + File.separator + ".jeigen" + File.separator + "native2";
                 new File( nativeDirectory ).mkdirs();
                 ClassLoader classLoader = getClassLoader();
                 String nativefilename = "libjeigen-linux-" + OsHelper.jvmBits() + ".so";
