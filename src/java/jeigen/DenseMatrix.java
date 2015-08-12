@@ -96,20 +96,20 @@ public class DenseMatrix {
 			cols = 0;
 			return;
 		}
-        String firstline = lines[0];
-        String newmodifiedline = firstline.replace("  "," ").trim();
-        while( !newmodifiedline.equals( firstline ) ) {
-            firstline = newmodifiedline;
-            newmodifiedline = firstline.replace("  "," ").trim();
-        }
+		String firstline = lines[0];
+		String newmodifiedline = firstline.replace("  "," ").trim();
+		while( !newmodifiedline.equals( firstline ) ) {
+			firstline = newmodifiedline;
+			newmodifiedline = firstline.replace("  "," ").trim();
+		}
 		cols = firstline.split(" ").length;
 		values = new double[rows*cols];
 		for( String line : lines ) {
-            newmodifiedline = line.replace("  "," ").trim();
-            while( !newmodifiedline.equals( line ) ) {
-                line = newmodifiedline;
-                newmodifiedline = line.replace("  "," ").trim();
-            }
+			newmodifiedline = line.replace("  "," ").trim();
+			while( !newmodifiedline.equals( line ) ) {
+				line = newmodifiedline;
+				newmodifiedline = line.replace("  "," ").trim();
+			}
 			String[] splitline = line.split(" ");
 			if( splitline.length != cols ) {
 				throw new RuntimeException("Unequal sized rows in " + valuesstring );
@@ -121,13 +121,13 @@ public class DenseMatrix {
 		}
 	}
 	public DenseMatrix(DenseMatrix src ) {
-        this.rows = src.rows;
-        this.cols = src.cols;
+		this.rows = src.rows;
+		this.cols = src.cols;
 		values = new double[rows*cols];
-        int numElements = this.rows * this.cols;
-        for( int i = 0; i < numElements; i++ ) {
-            this.values[i] = src.values[i];
-        }
+		int numElements = this.rows * this.cols;
+		for( int i = 0; i < numElements; i++ ) {
+			this.values[i] = src.values[i];
+		}
 	}
 	/**
 	 * returns new DenseMatrix containing the rows indexed by
@@ -237,68 +237,68 @@ public class DenseMatrix {
 		}
 		return result;
 	}
-    /**
-     * select specific rows and columns
-     */
-    public DenseMatrix select(int[] rowIndices, int[] colIndices) {
-        for (int i=0; i<rowIndices.length; i++) {
-            if (rowIndices[i] < 0 || rowIndices[i] >= rows) {
-                throw new RuntimeException("rowIndex must be in [0, " + rows + ")");
-            }
-        }
+	/**
+	 * select specific rows and columns
+	 */
+	public DenseMatrix select(int[] rowIndices, int[] colIndices) {
+		for (int i=0; i<rowIndices.length; i++) {
+			if (rowIndices[i] < 0 || rowIndices[i] >= rows) {
+				throw new RuntimeException("rowIndex must be in [0, " + rows + ")");
+			}
+		}
 
-        for (int i=0; i<colIndices.length; i++) {
-            if (colIndices[i] < 0 || colIndices[i] >= cols) {
-                throw new RuntimeException("colIndex must be in [0, " + cols + ")");
-            }
-        }
+		for (int i=0; i<colIndices.length; i++) {
+			if (colIndices[i] < 0 || colIndices[i] >= cols) {
+				throw new RuntimeException("colIndex must be in [0, " + cols + ")");
+			}
+		}
 
-        DenseMatrix result = new DenseMatrix(rowIndices.length, colIndices.length);
-        for (int i=0; i<rowIndices.length; i++){
-            for (int j=0; j<colIndices.length; j++){
-                result.set(i, j, this.get(rowIndices[i], colIndices[j]));
-            }
-        }
-        return result;
-    }
+		DenseMatrix result = new DenseMatrix(rowIndices.length, colIndices.length);
+		for (int i=0; i<rowIndices.length; i++){
+			for (int j=0; j<colIndices.length; j++){
+				result.set(i, j, this.get(rowIndices[i], colIndices[j]));
+			}
+		}
+		return result;
+	}
 
-    /**
-     * select specific rows
-     */
-    public DenseMatrix selectRows(int[] rowIndices) {
-        for (int i=0; i<rowIndices.length; i++) {
-            if (rowIndices[i] < 0 || rowIndices[i] >= rows) {
-                throw new RuntimeException("rowIndex must be in [0, " + rows + ")");
-            }
-        }
+	/**
+	 * select specific rows
+	 */
+	public DenseMatrix selectRows(int[] rowIndices) {
+		for (int i=0; i<rowIndices.length; i++) {
+			if (rowIndices[i] < 0 || rowIndices[i] >= rows) {
+				throw new RuntimeException("rowIndex must be in [0, " + rows + ")");
+			}
+		}
 
-        DenseMatrix result = new DenseMatrix(rowIndices.length, cols);
-        for (int i=0; i<rowIndices.length; i++){
-            for (int j=0; j<cols; j++){
-                result.set(i, j, this.get(rowIndices[i], j));
-            }
-        }
-        return result;
-    }
+		DenseMatrix result = new DenseMatrix(rowIndices.length, cols);
+		for (int i=0; i<rowIndices.length; i++){
+			for (int j=0; j<cols; j++){
+				result.set(i, j, this.get(rowIndices[i], j));
+			}
+		}
+		return result;
+	}
 
-    /**
-     * select specific columns
-     */
-    public DenseMatrix selectCols(int[] colIndices) {
-        for (int i=0; i<colIndices.length; i++) {
-            if (colIndices[i] < 0 || colIndices[i] >= cols) {
-                throw new RuntimeException("colIndex must be in [0, " + cols + ")");
-            }
-        }
+	/**
+	 * select specific columns
+	 */
+	public DenseMatrix selectCols(int[] colIndices) {
+		for (int i=0; i<colIndices.length; i++) {
+			if (colIndices[i] < 0 || colIndices[i] >= cols) {
+				throw new RuntimeException("colIndex must be in [0, " + cols + ")");
+			}
+		}
 
-        DenseMatrix result = new DenseMatrix(rows, colIndices.length);
-        for (int i=0; i<rows; i++){
-            for (int j=0; j<colIndices.length; j++){
-                result.set(i, j, this.get(i, colIndices[j]));
-            }
-        }
-        return result;
-    }
+		DenseMatrix result = new DenseMatrix(rows, colIndices.length);
+		for (int i=0; i<rows; i++){
+			for (int j=0; j<colIndices.length; j++){
+				result.set(i, j, this.get(i, colIndices[j]));
+			}
+		}
+		return result;
+	}
 
 	/**
 	 * concatenate two to right of this matrix
@@ -1018,7 +1018,7 @@ public class DenseMatrix {
 	 * ldlt is fast, needs this to be positive or negative definite
 	 */
 	public DenseMatrix ldltSolve(DenseMatrix b ) {
-		if( this.cols != b.rows ) {
+		if( this.rows != b.rows ) {
 			throw new RuntimeException("ldltsolve matrix size mismatch " + shape() + " vs " + b.shape());
 		}
 		DenseMatrix result = new DenseMatrix(this.cols, b.cols);
@@ -1031,7 +1031,7 @@ public class DenseMatrix {
 	 * Relatively slow, but accurate, and no conditions on this
 	 */
 	public DenseMatrix fullPivHouseholderQRSolve(DenseMatrix b ) {
-		if( this.cols != b.rows ) {
+		if( this.rows != b.rows ) {
 			throw new RuntimeException("ldltsolve matrix size mismatch " + shape() + " vs " + b.shape());
 		}
 		DenseMatrix result = new DenseMatrix(this.cols, b.cols);
@@ -1039,61 +1039,61 @@ public class DenseMatrix {
 				values, b.values, result.values );
 		return result;
 	}
-    public static class EigenResult {
-        public DenseMatrixComplex values; // will be n * 1 matrix, where n * n 
-                                          // is size of the vectors matrix
-        public DenseMatrixComplex vectors;
-        public EigenResult( DenseMatrixComplex values, DenseMatrixComplex vectors ) {
-            this.values = values;
-            this.vectors = vectors;
-        }
-    }
-    public EigenResult eig() {
+	public static class EigenResult {
+		public DenseMatrixComplex values; // will be n * 1 matrix, where n * n 
+										  // is size of the vectors matrix
+		public DenseMatrixComplex vectors;
+		public EigenResult( DenseMatrixComplex values, DenseMatrixComplex vectors ) {
+			this.values = values;
+			this.vectors = vectors;
+		}
+	}
+	public EigenResult eig() {
 		if( this.cols != this.rows ) {
 			throw new RuntimeException("eig matrix size error: must be square matrix");
 		}
-        DenseMatrix eigenValuesReal = new DenseMatrix(this.rows, 1 );
-        DenseMatrix eigenValuesImag = new DenseMatrix(this.rows, 1 );
-        DenseMatrix eigenVectorsReal = new DenseMatrix(this.cols,this.cols);
-        DenseMatrix eigenVectorsImag = new DenseMatrix(this.cols,this.cols);
-        JeigenJna.Jeigen.jeigen_eig( rows, values, eigenValuesReal.values, eigenValuesImag.values,
-             eigenVectorsReal.values, eigenVectorsImag.values );
-        return new EigenResult( new DenseMatrixComplex( eigenValuesReal, eigenValuesImag ),
-           new DenseMatrixComplex( eigenVectorsReal, eigenVectorsImag ) );
-    }
-    public static class PseudoEigenResult {
-        public DenseMatrix values;
-        public DenseMatrix vectors;
-        public PseudoEigenResult( DenseMatrix eigenValues, DenseMatrix eigenVectors ) {
-            this.values = eigenValues;
-            this.vectors = eigenVectors;
-        }
-    }
-    public PseudoEigenResult peig() {
+		DenseMatrix eigenValuesReal = new DenseMatrix(this.rows, 1 );
+		DenseMatrix eigenValuesImag = new DenseMatrix(this.rows, 1 );
+		DenseMatrix eigenVectorsReal = new DenseMatrix(this.cols,this.cols);
+		DenseMatrix eigenVectorsImag = new DenseMatrix(this.cols,this.cols);
+		JeigenJna.Jeigen.jeigen_eig( rows, values, eigenValuesReal.values, eigenValuesImag.values,
+			 eigenVectorsReal.values, eigenVectorsImag.values );
+		return new EigenResult( new DenseMatrixComplex( eigenValuesReal, eigenValuesImag ),
+		   new DenseMatrixComplex( eigenVectorsReal, eigenVectorsImag ) );
+	}
+	public static class PseudoEigenResult {
+		public DenseMatrix values;
+		public DenseMatrix vectors;
+		public PseudoEigenResult( DenseMatrix eigenValues, DenseMatrix eigenVectors ) {
+			this.values = eigenValues;
+			this.vectors = eigenVectors;
+		}
+	}
+	public PseudoEigenResult peig() {
 		if( this.cols != this.rows ) {
 			throw new RuntimeException("eig matrix size error: must be square matrix");
 		}
-        DenseMatrix eigenValues = new DenseMatrix(this.rows, this.cols );
-        DenseMatrix eigenVectors = new DenseMatrix(this.cols,this.cols);
-        JeigenJna.Jeigen.jeigen_peig( rows, values, eigenValues.values, eigenVectors.values );
-        return new PseudoEigenResult( eigenValues, eigenVectors );
-    }
-    public DenseMatrix mexp() {
+		DenseMatrix eigenValues = new DenseMatrix(this.rows, this.cols );
+		DenseMatrix eigenVectors = new DenseMatrix(this.cols,this.cols);
+		JeigenJna.Jeigen.jeigen_peig( rows, values, eigenValues.values, eigenVectors.values );
+		return new PseudoEigenResult( eigenValues, eigenVectors );
+	}
+	public DenseMatrix mexp() {
 		if( this.cols != this.rows ) {
 			throw new RuntimeException("exp matrix size error: must be square matrix");
 		}
-        DenseMatrix result = new DenseMatrix(this.cols,this.cols);
-        JeigenJna.Jeigen.jeigen_exp(rows,values,result.values);
-        return result;
-    }
-    public DenseMatrix mlog() {
+		DenseMatrix result = new DenseMatrix(this.cols,this.cols);
+		JeigenJna.Jeigen.jeigen_exp(rows,values,result.values);
+		return result;
+	}
+	public DenseMatrix mlog() {
 		if( this.cols != this.rows ) {
 			throw new RuntimeException("log matrix size error: must be square matrix");
 		}
-        DenseMatrix result = new DenseMatrix(this.cols,this.cols);
-        JeigenJna.Jeigen.jeigen_log(rows,values,result.values);
-        return result;
-    }
+		DenseMatrix result = new DenseMatrix(this.cols,this.cols);
+		JeigenJna.Jeigen.jeigen_log(rows,values,result.values);
+		return result;
+	}
 	/**
 	 * Stores result of singular value decomposition
 	 */

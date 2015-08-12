@@ -142,12 +142,14 @@ public class TestJeigen extends TestCase {
 	}
 	public void testfullpivhouseholderqrsolve() {
 		int K = thousandconstant;
-		DenseMatrix A = rand(K, K);
-		DenseMatrix B = rand(K, K);
+		DenseMatrix A = rand(K, K / 2);
+		DenseMatrix B = rand(K, K / 3);
 		Timer timer = new Timer();
 		DenseMatrix X = A.fullPivHouseholderQRSolve(B);
 		timer.printTimeCheckMilliseconds();
-		assertTrue( A.mmul(X).equals(B) );
+		DenseMatrix AX = A.mmul(X);
+		double diff = AX.sub(B).abs().sum().s();
+		assertTrue( diff < 0.01 * K * K / 3 );
 	}
 	public void testSvd() {
 		DenseMatrix A = rand(5,8);
