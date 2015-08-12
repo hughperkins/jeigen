@@ -427,7 +427,6 @@ Jeigen is available under MPL v2 license, http://mozilla.org/MPL/2.0/
 - 12th Aug 2015:
   - upgraded to Eigen 3.2.5
   - fixed QR solver to work with non-square matrices
-  - note that you might need to do `rm -R ~/.jeigen` (or `rmdir /s /q %USERPROFILE\.jeigen` on Windows) after rebuilding
 - 14th Feb 2015:
   - merged from Frograms branch
   - investigated and documented fix for 'can't obtain lastUpdateError' jna linking issue
