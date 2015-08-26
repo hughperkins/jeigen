@@ -1,26 +1,11 @@
 // This file is part of Eigen, a lightweight C++ template library
-// for linear algebra. Eigen itself is part of the KDE project.
+// for linear algebra.
 //
 // Copyright (C) 2009 Mark Borgerding mark a borgerding net
 //
-// Eigen is free software; you can redistribute it and/or
-// modify it under the terms of the GNU Lesser General Public
-// License as published by the Free Software Foundation; either
-// version 3 of the License, or (at your option) any later version.
-//
-// Alternatively, you can redistribute it and/or
-// modify it under the terms of the GNU General Public License as
-// published by the Free Software Foundation; either version 2 of
-// the License, or (at your option) any later version.
-//
-// Eigen is distributed in the hope that it will be useful, but WITHOUT ANY
-// WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-// FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License or the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU Lesser General Public
-// License and a copy of the GNU General Public License along with
-// Eigen. If not, see <http://www.gnu.org/licenses/>.
+// This Source Code Form is subject to the terms of the Mozilla
+// Public License v. 2.0. If a copy of the MPL was not distributed
+// with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #include "main.h"
 #include <unsupported/Eigen/FFT>
@@ -31,9 +16,6 @@ std::complex<T> RandomCpx() { return std::complex<T>( (T)(rand()/(T)RAND_MAX - .
 using namespace std;
 using namespace Eigen;
 
-float norm(float x) {return x*x;}
-double norm(double x) {return x*x;}
-long double norm(long double x) {return x*x;}
 
 template < typename T>
 complex<long double>  promote(complex<T> x) { return complex<long double>(x.real(),x.imag()); }
@@ -55,11 +37,11 @@ complex<long double>  promote(long double x) { return complex<long double>( x); 
             for (size_t k1=0;k1<(size_t)timebuf.size();++k1) {
                 acc +=  promote( timebuf[k1] ) * exp( complex<long double>(0,k1*phinc) );
             }
-            totalpower += norm(acc);
+            totalpower += numext::abs2(acc);
             complex<long double> x = promote(fftbuf[k0]); 
             complex<long double> dif = acc - x;
-            difpower += norm(dif);
-            //cerr << k0 << "\t" << acc << "\t" <<  x << "\t" << sqrt(norm(dif)) << endl;
+            difpower += numext::abs2(dif);
+            //cerr << k0 << "\t" << acc << "\t" <<  x << "\t" << sqrt(numext::abs2(dif)) << endl;
         }
         cerr << "rmse:" << sqrt(difpower/totalpower) << endl;
         return sqrt(difpower/totalpower);
@@ -72,8 +54,8 @@ complex<long double>  promote(long double x) { return complex<long double>( x); 
         long double difpower=0;
         size_t n = (min)( buf1.size(),buf2.size() );
         for (size_t k=0;k<n;++k) {
-            totalpower += (norm( buf1[k] ) + norm(buf2[k]) )/2.;
-            difpower += norm(buf1[k] - buf2[k]);
+            totalpower += (numext::abs2( buf1[k] ) + numext::abs2(buf2[k]) )/2.;
+            difpower += numext::abs2(buf1[k] - buf2[k]);
         }
         return sqrt(difpower/totalpower);
     }

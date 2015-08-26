@@ -1,14 +1,10 @@
 <project default="jar">
-    <property name="generator" value="Unix Makefiles" />
-    <property name="cmake_home" value="/usr/local" />
-
   <path id="project.class.path">
     <pathelement path="${java.class.path}/"/>
     <pathelement path="thirdparty/junit-4.10.jar"/>
-    <pathelement path="thirdparty/jna-4.0.0.jar"/>
+    <pathelement path="thirdparty/jna-4.1.0.jar"/>
   </path>
 
-    <!-- sets ${build-dir} = win-32 win-64 linux-32 or linux-64 -->
     <target name="getinfo">
         <condition property="jvm.word.size" value="32" ><os arch="i386" /></condition>
         <condition property="jvm.word.size" value="32" ><os arch="x86" /></condition>
@@ -40,6 +36,8 @@
 
         <property name="build.dir" value="build/${build.dir.os}-${jvm.word.size}" />
         <echo message="build.dir ${build.dir}" />
+        <property name="onefat.unzip.dir" value="build/onefat-unzip" />
+        <property name="onefat.staging.dir" value="build/onefat-staging" />
     </target>
 
    <target name="compile" depends="getinfo">
@@ -53,30 +51,104 @@
       </javac>
       <copy todir="${build.dir}/classes" >
           <fileset dir="src/java" />
+<!--          <fileset file="${cmakeoutdir}/*.so" />
+          <fileset file="${cmakeoutdir}/*.dll" />-->
+      </copy>
+      <copy tofile="${build.dir}/classes/jeigen-${build.dir.os}-${jvm.word.size}.dll" failonerror="false" quiet="true" file="${cmakeoutdir}/jeigen.dll" overwrite="true" />
+      <copy tofile="${build.dir}/classes/libjeigen-${build.dir.os}-${jvm.word.size}.so" failonerror="false" quiet="true" file="${cmakeoutdir}/libjeigen.so" overwrite="true" />
+      <copy todir="${build.dir}" >
+          <fileset file="thirdparty/jna-4.1.0.jar" />
       </copy>
    </target>
 
    <target name="jar" depends="compile">
-      <jar destfile="${build.dir}/Jeigen.jar" basedir="${build.dir}/classes" />
+      <jar destfile="${build.dir}/Jeigen-${build.dir.os}-${jvm.word.size}.jar" basedir="${build.dir}/classes" />
    </target>
 
     <target name="test" depends="jar">
 	   <echo message="cmakeoutdir: ${cmakeoutdir}" />
        <junit printsummary="on" fork="on" haltonerror="on" haltonfailure="on" showoutput="withOutAndErr" >
             <classpath>
-                <pathelement location="${build.dir}/Jeigen.jar" />
-                <pathelement path="thirdparty/jna-4.0.0.jar"/>
+                <pathelement location="${build.dir}/Jeigen-${build.dir.os}-${jvm.word.size}.jar" />
+                <pathelement path="${build.dir}/jna-4.1.0.jar"/>
                 <pathelement path="thirdparty/junit-4.10.jar"/>
             </classpath>
               <formatter type="xml"/>
-            <sysproperty key="java.library.path" value="${cmakeoutdir}" />
+<!--            <sysproperty key="java.library.path" value="${cmakeoutdir}" /> -->
 			<sysproperty key="jna.debug_load" value="true" />
+			<sysproperty key="jna.nosys" value="true" />
              <test name="jeigen.TestJeigen" todir="${build.dir}"/>
+             <test name="jeigen.TestEigenvalues" todir="${build.dir}"/>
+             <test name="jeigen.TestDenseAggregator" todir="${build.dir}"/>
+             <test name="jeigen.TestUnsupported" todir="${build.dir}"/>
+             <test name="jeigen.TestDenseSorter" todir="${build.dir}"/>
         </junit>
     </target>
 
     <target name="clean" >
         <delete dir="build" />
+        <delete dir="${user.home}/.jeigen" />
+    </target>
+
+    <target name="package" depends="jar">
+        <zip destfile="build/jeigen-${build.dir.os}-${jvm.word.size}.zip" basedir="build/${build.dir.os}-${jvm.word.size}"
+            includes="*.jar,${cmakeoutdir}/*.so,${cmakeoutdir}/*.dll" />
+    </target>
+
+    <target name="package-onefat" depends="compile,getinfo" >
+         <!-- copy across class files -->
+          <copy todir="${onefat.staging.dir}" >
+              <fileset dir="${build.dir}/classes" />
+          </copy>
+         <!-- extract the zips, to get the jeigen jars -->
+         <unzip src="build/jeigen-linux-32.zip" dest="${onefat.unzip.dir}" >
+             <patternset><include name="Jeigen-linux-32.jar" /></patternset>
+         </unzip>
+         <unzip src="build/jeigen-linux-64.zip" dest="${onefat.unzip.dir}" >
+             <patternset><include name="Jeigen-linux-64.jar" /></patternset>
+         </unzip>
+         <unzip src="build/jeigen-win-32.zip" dest="${onefat.unzip.dir}" >
+             <patternset><include name="Jeigen-win-32.jar" /></patternset>
+         </unzip>
+         <unzip src="build/jeigen-win-64.zip" dest="${onefat.unzip.dir}" >
+             <patternset><include name="Jeigen-win-64.jar" /></patternset>
+         </unzip>
+         <!-- extract the jars, to get the native shared objects -->
+         <unzip src="${onefat.unzip.dir}/Jeigen-linux-32.jar" dest="${onefat.staging.dir}" >
+             <patternset><include name="libjeigen-linux-32.so" /></patternset>
+         </unzip>
+         <unzip src="${onefat.unzip.dir}/Jeigen-linux-64.jar" dest="${onefat.staging.dir}" >
+             <patternset><include name="libjeigen-linux-64.so" /></patternset>
+         </unzip>
+         <unzip src="${onefat.unzip.dir}/Jeigen-win-32.jar" dest="${onefat.staging.dir}" >
+             <patternset><include name="jeigen-win-32.dll" /></patternset>
+         </unzip>
+         <unzip src="${onefat.unzip.dir}/Jeigen-win-64.jar" dest="${onefat.staging.dir}" >
+             <patternset><include name="jeigen-win-64.dll" /></patternset>
+         </unzip>
+          <!-- make the jar :-) -->
+      <jar destfile="build/Jeigen-win-linux-32-64.jar" basedir="${onefat.staging.dir}" />
+    </target>
+
+    <target name="test-onefat" depends="getinfo" >
+        <mkdir dir="build/test-onefat" />
+      <javac srcdir="." destdir="build/test-onefat"  debug="true" includeantruntime="false" includes="TestSimple.java" 
+           classpath="build/Jeigen-win-linux-32-64.jar" />
+      <java classname="TestSimple" fork="true" failonerror="true" >
+          <classpath>
+            <pathelement path="build/test-onefat" />
+            <pathelement location="build/Jeigen-win-linux-32-64.jar" />
+            <pathelement location="thirdparty/jna-4.1.0.jar" />
+          </classpath>
+      </java>
+    </target>
+
+    <target name="publish" depends="getinfo" > <!-- just for my use really, to make publishing binaries easy :-) -->
+<!--        <exec failonerror="true" command="scp-vpc1-upload.sh ${build.dir}/* ~/jeigen/${build.dir}" /> -->
+        <exec failonerror="true" executable="scp-vpc1-upload.sh">
+             <arg value="${build.dir}/*"/>
+             <arg value="~/jeigen/${build.dir}" /> 
+        </exec>
     </target>
 </project>
 

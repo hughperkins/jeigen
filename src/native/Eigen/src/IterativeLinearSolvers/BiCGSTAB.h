@@ -4,24 +4,9 @@
 // Copyright (C) 2011 Gael Guennebaud <gael.guennebaud@inria.fr>
 // Copyright (C) 2012 Désiré Nuentsa-Wakam <desire.nuentsa_wakam@inria.fr>
 //
-// Eigen is free software; you can redistribute it and/or
-// modify it under the terms of the GNU Lesser General Public
-// License as published by the Free Software Foundation; either
-// version 3 of the License, or (at your option) any later version.
-//
-// Alternatively, you can redistribute it and/or
-// modify it under the terms of the GNU General Public License as
-// published by the Free Software Foundation; either version 2 of
-// the License, or (at your option) any later version.
-//
-// Eigen is distributed in the hope that it will be useful, but WITHOUT ANY
-// WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-// FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License or the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU Lesser General Public
-// License and a copy of the GNU General Public License along with
-// Eigen. If not, see <http://www.gnu.org/licenses/>.
+// This Source Code Form is subject to the terms of the Mozilla
+// Public License v. 2.0. If a copy of the MPL was not distributed
+// with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #ifndef EIGEN_BICGSTAB_H
 #define EIGEN_BICGSTAB_H
@@ -58,6 +43,12 @@ bool bicgstab(const MatrixType& mat, const Rhs& rhs, Dest& x,
   VectorType r0 = r;
   
   RealScalar r0_sqnorm = r0.squaredNorm();
+  RealScalar rhs_sqnorm = rhs.squaredNorm();
+  if(rhs_sqnorm == 0)
+  {
+    x.setZero();
+    return true;
+  }
   Scalar rho    = 1;
   Scalar alpha  = 1;
   Scalar w      = 1;
@@ -69,14 +60,24 @@ bool bicgstab(const MatrixType& mat, const Rhs& rhs, Dest& x,
   VectorType s(n), t(n);
 
   RealScalar tol2 = tol*tol;
+  RealScalar eps2 = NumTraits<Scalar>::epsilon()*NumTraits<Scalar>::epsilon();
   int i = 0;
+  int restarts = 0;
 
-  while ( r.squaredNorm()/r0_sqnorm > tol2 && i<maxIters )
+  while ( r.squaredNorm()/rhs_sqnorm > tol2 && i<maxIters )
   {
     Scalar rho_old = rho;
 
     rho = r0.dot(r);
-    if (rho == Scalar(0)) return false; /* New search directions cannot be found */
+    if (abs(rho) < eps2*r0_sqnorm)
+    {
+      // The new residual vector became too orthogonal to the arbitrarily choosen direction r0
+      // Let's restart with a new r0:
+      r0 = r;
+      rho = r0_sqnorm = r.squaredNorm();
+      if(restarts++ == 0)
+        i = 0;
+    }
     Scalar beta = (rho/rho_old) * (alpha / w);
     p = r + beta * (p - w * v);
     
@@ -90,12 +91,16 @@ bool bicgstab(const MatrixType& mat, const Rhs& rhs, Dest& x,
     z = precond.solve(s);
     t.noalias() = mat * z;
 
-    w = t.dot(s) / t.squaredNorm();
+    RealScalar tmp = t.squaredNorm();
+    if(tmp>RealScalar(0))
+      w = t.dot(s) / tmp;
+    else
+      w = Scalar(0);
     x += alpha * y + w * z;
     r = s - w * t;
     ++i;
   }
-  tol_error = sqrt(r.squaredNorm()/r0_sqnorm);
+  tol_error = sqrt(r.squaredNorm()/rhs_sqnorm);
   iters = i;
   return true; 
 }
@@ -137,7 +142,7 @@ struct traits<BiCGSTAB<_MatrixType,_Preconditioner> >
   * SparseMatrix<double> A(n,n);
   * // fill A and b
   * BiCGSTAB<SparseMatrix<double> > solver;
-  * solver(A);
+  * solver.compute(A);
   * x = solver.solve(b);
   * std::cout << "#iterations:     " << solver.iterations() << std::endl;
   * std::cout << "estimated error: " << solver.error()      << std::endl;
@@ -146,20 +151,7 @@ struct traits<BiCGSTAB<_MatrixType,_Preconditioner> >
   * \endcode
   * 
   * By default the iterations start with x=0 as an initial guess of the solution.
-  * One can control the start using the solveWithGuess() method. Here is a step by
-  * step execution example starting with a random guess and printing the evolution
-  * of the estimated error:
-  * * \code
-  * x = VectorXd::Random(n);
-  * solver.setMaxIterations(1);
-  * int i = 0;
-  * do {
-  *   x = solver.solveWithGuess(b,x);
-  *   std::cout << i << " : " << solver.error() << std::endl;
-  *   ++i;
-  * } while (solver.info()!=Success && i<100);
-  * \endcode
-  * Note that such a step by step excution is slightly slower.
+  * One can control the start using the solveWithGuess() method.
   * 
   * \sa class SimplicialCholesky, DiagonalPreconditioner, IdentityPreconditioner
   */
@@ -238,7 +230,8 @@ public:
   template<typename Rhs,typename Dest>
   void _solve(const Rhs& b, Dest& x) const
   {
-    x.setZero();
+//     x.setZero();
+  x = b;
     _solveWithGuess(b,x);
   }
 

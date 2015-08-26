@@ -3,24 +3,9 @@
 //
 // Copyright (C) 2011 Gael Guennebaud <gael.guennebaud@inria.fr>
 //
-// Eigen is free software; you can redistribute it and/or
-// modify it under the terms of the GNU Lesser General Public
-// License as published by the Free Software Foundation; either
-// version 3 of the License, or (at your option) any later version.
-//
-// Alternatively, you can redistribute it and/or
-// modify it under the terms of the GNU General Public License as
-// published by the Free Software Foundation; either version 2 of
-// the License, or (at your option) any later version.
-//
-// Eigen is distributed in the hope that it will be useful, but WITHOUT ANY
-// WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-// FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License or the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU Lesser General Public
-// License and a copy of the GNU General Public License along with
-// Eigen. If not, see <http://www.gnu.org/licenses/>.
+// This Source Code Form is subject to the terms of the Mozilla
+// Public License v. 2.0. If a copy of the MPL was not distributed
+// with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #ifndef EIGEN_CONJUGATE_GRADIENT_H
 #define EIGEN_CONJUGATE_GRADIENT_H
@@ -56,15 +41,29 @@ void conjugate_gradient(const MatrixType& mat, const Rhs& rhs, Dest& x,
   int n = mat.cols();
 
   VectorType residual = rhs - mat * x; //initial residual
-  VectorType p(n);
 
+  RealScalar rhsNorm2 = rhs.squaredNorm();
+  if(rhsNorm2 == 0) 
+  {
+    x.setZero();
+    iters = 0;
+    tol_error = 0;
+    return;
+  }
+  RealScalar threshold = tol*tol*rhsNorm2;
+  RealScalar residualNorm2 = residual.squaredNorm();
+  if (residualNorm2 < threshold)
+  {
+    iters = 0;
+    tol_error = sqrt(residualNorm2 / rhsNorm2);
+    return;
+  }
+  
+  VectorType p(n);
   p = precond.solve(residual);      //initial search direction
 
   VectorType z(n), tmp(n);
-  RealScalar absNew = internal::real(residual.dot(p));  // the square of the absolute value of r scaled by invM
-  RealScalar rhsNorm2 = rhs.squaredNorm();
-  RealScalar residualNorm2 = 0;
-  RealScalar threshold = tol*tol*rhsNorm2;
+  RealScalar absNew = numext::real(residual.dot(p));  // the square of the absolute value of r scaled by invM
   int i = 0;
   while(i < maxIters)
   {
@@ -81,7 +80,7 @@ void conjugate_gradient(const MatrixType& mat, const Rhs& rhs, Dest& x,
     z = precond.solve(residual);          // approximately solve for "A z = residual"
 
     RealScalar absOld = absNew;
-    absNew = internal::real(residual.dot(z));     // update the absolute value of r
+    absNew = numext::real(residual.dot(z));     // update the absolute value of r
     RealScalar beta = absNew / absOld;            // calculate the Gram-Schmidt value used to create the new search direction
     p = z + beta * p;                             // update search direction
     i++;
@@ -113,9 +112,9 @@ struct traits<ConjugateGradient<_MatrixType,_UpLo,_Preconditioner> >
   * This class allows to solve for A.x = b sparse linear problems using a conjugate gradient algorithm.
   * The sparse matrix A must be selfadjoint. The vectors x and b can be either dense or sparse.
   *
-  * \tparam _MatrixType the type of the sparse matrix A, can be a dense or a sparse matrix.
-  * \tparam _UpLo the triangular part that will be used for the computations. It can be Lower
-  *               or Upper. Default is Lower.
+  * \tparam _MatrixType the type of the matrix A, can be a dense or a sparse matrix.
+  * \tparam _UpLo the triangular part that will be used for the computations. It can be Lower,
+  *               Upper, or Lower|Upper in which the full matrix entries will be considered. Default is Lower.
   * \tparam _Preconditioner the type of the preconditioner. Default is DiagonalPreconditioner
   *
   * The maximal number of iterations and tolerance value can be controlled via the setMaxIterations()
@@ -138,20 +137,7 @@ struct traits<ConjugateGradient<_MatrixType,_UpLo,_Preconditioner> >
   * \endcode
   * 
   * By default the iterations start with x=0 as an initial guess of the solution.
-  * One can control the start using the solveWithGuess() method. Here is a step by
-  * step execution example starting with a random guess and printing the evolution
-  * of the estimated error:
-  * * \code
-  * x = VectorXd::Random(n);
-  * cg.setMaxIterations(1);
-  * int i = 0;
-  * do {
-  *   x = cg.solveWithGuess(b,x);
-  *   std::cout << i << " : " << cg.error() << std::endl;
-  *   ++i;
-  * } while (cg.info()!=Success && i<100);
-  * \endcode
-  * Note that such a step by step excution is slightly slower.
+  * One can control the start using the solveWithGuess() method.
   * 
   * \sa class SimplicialCholesky, DiagonalPreconditioner, IdentityPreconditioner
   */
@@ -214,6 +200,10 @@ public:
   template<typename Rhs,typename Dest>
   void _solveWithGuess(const Rhs& b, Dest& x) const
   {
+    typedef typename internal::conditional<UpLo==(Lower|Upper),
+                                           const MatrixType&,
+                                           SparseSelfAdjointView<const MatrixType, UpLo>
+                                          >::type MatrixWrapperType;
     m_iterations = Base::maxIterations();
     m_error = Base::m_tolerance;
 
@@ -223,8 +213,7 @@ public:
       m_error = Base::m_tolerance;
 
       typename Dest::ColXpr xj(x,j);
-      internal::conjugate_gradient(mp_matrix->template selfadjointView<UpLo>(), b.col(j), xj,
-                                   Base::m_preconditioner, m_iterations, m_error);
+      internal::conjugate_gradient(MatrixWrapperType(*mp_matrix), b.col(j), xj, Base::m_preconditioner, m_iterations, m_error);
     }
 
     m_isInitialized = true;
@@ -235,7 +224,7 @@ public:
   template<typename Rhs,typename Dest>
   void _solve(const Rhs& b, Dest& x) const
   {
-    x.setOnes();
+    x.setZero();
     _solveWithGuess(b,x);
   }
 

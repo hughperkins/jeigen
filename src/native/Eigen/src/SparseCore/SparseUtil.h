@@ -3,24 +3,9 @@
 //
 // Copyright (C) 2008 Gael Guennebaud <gael.guennebaud@inria.fr>
 //
-// Eigen is free software; you can redistribute it and/or
-// modify it under the terms of the GNU Lesser General Public
-// License as published by the Free Software Foundation; either
-// version 3 of the License, or (at your option) any later version.
-//
-// Alternatively, you can redistribute it and/or
-// modify it under the terms of the GNU General Public License as
-// published by the Free Software Foundation; either version 2 of
-// the License, or (at your option) any later version.
-//
-// Eigen is distributed in the hope that it will be useful, but WITHOUT ANY
-// WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-// FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License or the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU Lesser General Public
-// License and a copy of the GNU General Public License along with
-// Eigen. If not, see <http://www.gnu.org/licenses/>.
+// This Source Code Form is subject to the terms of the Mozilla
+// Public License v. 2.0. If a copy of the MPL was not distributed
+// with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #ifndef EIGEN_SPARSEUTIL_H
 #define EIGEN_SPARSEUTIL_H
@@ -88,7 +73,6 @@ template<typename _Scalar, int _Flags = 0, typename _Index = int>  class Dynamic
 template<typename _Scalar, int _Flags = 0, typename _Index = int>  class SparseVector;
 template<typename _Scalar, int _Flags = 0, typename _Index = int>  class MappedSparseMatrix;
 
-template<typename MatrixType, int Size>           class SparseInnerVectorSet;
 template<typename MatrixType, int Mode>           class SparseTriangularView;
 template<typename MatrixType, unsigned int UpLo>  class SparseSelfAdjointView;
 template<typename Lhs, typename Rhs>              class SparseDiagonalProduct;
@@ -100,8 +84,10 @@ template<typename Lhs, typename Rhs>        class DenseTimeSparseProduct;
 template<typename Lhs, typename Rhs, bool Transpose> class SparseDenseOuterProduct;
 
 template<typename Lhs, typename Rhs> struct SparseSparseProductReturnType;
-template<typename Lhs, typename Rhs, int InnerSize = internal::traits<Lhs>::ColsAtCompileTime> struct DenseSparseProductReturnType;
-template<typename Lhs, typename Rhs, int InnerSize = internal::traits<Lhs>::ColsAtCompileTime> struct SparseDenseProductReturnType;
+template<typename Lhs, typename Rhs,
+         int InnerSize = EIGEN_SIZE_MIN_PREFER_FIXED(internal::traits<Lhs>::ColsAtCompileTime,internal::traits<Rhs>::RowsAtCompileTime)> struct DenseSparseProductReturnType;         
+template<typename Lhs, typename Rhs,
+         int InnerSize = EIGEN_SIZE_MIN_PREFER_FIXED(internal::traits<Lhs>::ColsAtCompileTime,internal::traits<Rhs>::RowsAtCompileTime)> struct SparseDenseProductReturnType;
 template<typename MatrixType,int UpLo> class SparseSymmetricPermutationProduct;
 
 namespace internal {
@@ -114,23 +100,24 @@ template<typename T> struct eval<T,Sparse>
 
 template<typename T,int Cols> struct sparse_eval<T,1,Cols> {
     typedef typename traits<T>::Scalar _Scalar;
-    enum { _Flags = traits<T>::Flags| RowMajorBit };
+    typedef typename traits<T>::Index _Index;
   public:
-    typedef SparseVector<_Scalar, _Flags> type;
+    typedef SparseVector<_Scalar, RowMajor, _Index> type;
 };
 
 template<typename T,int Rows> struct sparse_eval<T,Rows,1> {
     typedef typename traits<T>::Scalar _Scalar;
-    enum { _Flags = traits<T>::Flags & (~RowMajorBit) };
+    typedef typename traits<T>::Index _Index;
   public:
-    typedef SparseVector<_Scalar, _Flags> type;
+    typedef SparseVector<_Scalar, ColMajor, _Index> type;
 };
 
 template<typename T,int Rows,int Cols> struct sparse_eval {
     typedef typename traits<T>::Scalar _Scalar;
-    enum { _Flags = traits<T>::Flags };
+    typedef typename traits<T>::Index _Index;
+    enum { _Options = ((traits<T>::Flags&RowMajorBit)==RowMajorBit) ? RowMajor : ColMajor };
   public:
-    typedef SparseMatrix<_Scalar, _Flags> type;
+    typedef SparseMatrix<_Scalar, _Options, _Index> type;
 };
 
 template<typename T> struct sparse_eval<T,1,1> {
@@ -142,12 +129,10 @@ template<typename T> struct sparse_eval<T,1,1> {
 template<typename T> struct plain_matrix_type<T,Sparse>
 {
   typedef typename traits<T>::Scalar _Scalar;
-    enum {
-          _Flags = traits<T>::Flags
-    };
-
+  typedef typename traits<T>::Index _Index;
+  enum { _Options = ((traits<T>::Flags&RowMajorBit)==RowMajorBit) ? RowMajor : ColMajor };
   public:
-    typedef SparseMatrix<_Scalar, _Flags> type;
+    typedef SparseMatrix<_Scalar, _Options, _Index> type;
 };
 
 } // end namespace internal
@@ -160,7 +145,7 @@ template<typename T> struct plain_matrix_type<T,Sparse>
   *
   * \sa SparseMatrix::setFromTriplets()
   */
-template<typename Scalar, typename Index=unsigned int>
+template<typename Scalar, typename Index=typename SparseMatrix<Scalar>::Index >
 class Triplet
 {
 public:

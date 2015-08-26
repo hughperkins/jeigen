@@ -1,5 +1,48 @@
-Jeigen
-======
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Jeigen](#jeigen)
+- [Example usage, to multiply two matrices:](#example-usage-to-multiply-two-matrices)
+- [Getting Jeigen](#getting-jeigen)
+  - [Download](#download)
+  - [Linking to Jeigen](#linking-to-jeigen)
+- [Jeigen API](#jeigen-api)
+  - [Commands to create new matrices](#commands-to-create-new-matrices)
+  - [Update matrices](#update-matrices)
+  - [Matrix Operators](#matrix-operators)
+  - [Per-element operators:](#per-element-operators)
+  - [Aggregation operators](#aggregation-operators)
+  - [Scalar operators](#scalar-operators)
+  - [Slicing](#slicing)
+  - [Operators in Shortcuts:](#operators-in-shortcuts)
+  - [Solvers](#solvers)
+  - [Eigenvalues](#eigenvalues)
+  - [DenseMatrixComplex](#densematrixcomplex)
+  - [Svd](#svd)
+  - [Matrix exponential, matrix logarithm](#matrix-exponential-matrix-logarithm)
+- [Performance: overhead of using java/jna?](#performance-overhead-of-using-javajna)
+  - [Dense](#dense)
+  - [Sparse](#sparse)
+- [Building](#building)
+  - [How to build, linux](#how-to-build-linux)
+    - [Pre-requisites](#pre-requisites)
+    - [Procedure](#procedure)
+  - [How to build, Windows](#how-to-build-windows)
+    - [Pre-requisites](#pre-requisites-1)
+    - [Procedure](#procedure-1)
+  - [Running unit-tests](#running-unit-tests)
+  - [Possible issues, and possible solutions](#possible-issues-and-possible-solutions)
+    - ['java.lang.UnsatisfiedLinkError: Can't obtain updateLastError method for class com.sun.jna.Native'](#javalangunsatisfiedlinkerror-cant-obtain-updatelasterror-method-for-class-comsunjnanative)
+- [Development](#development)
+  - [Wrapping additional functions](#wrapping-additional-functions)
+- [Third-party libraries used](#third-party-libraries-used)
+- [License](#license)
+- [News](#news)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+# Jeigen
 
 Jeigen provides a wrapper around the high-performance C++ matrix library "Eigen".
 
@@ -15,8 +58,7 @@ The matrix classes are :
 You can import statically Shortcuts.*, in order to have easy access to 
 commands such as 'zeros', 'ones', 'eye' and 'diag'.
 
-Example usage, to multiply two matrices:
-========================================
+# Example usage, to multiply two matrices:
 
     DenseMatrix A = new DenseMatrix("1 2; 3 5; 7 9"); // matrix with 3 rows and 2 columns with values
                                                       // {{1,2},{3,5},{7,9}}
@@ -24,70 +66,32 @@ Example usage, to multiply two matrices:
     DenseMatrix C = A.mmul(B); // mmul is matrix multiplication
     System.out.println(C); // displays C formatted appropriately
 
-How to build, linux
-===================
+# Getting Jeigen
 
-Pre-requisites
---------------
+## Download
 
-- git
-- jdk 1.6 or more recent
-- ant
-- cmake
-- g++
+You will need:
+- [Jeigen-win-linux-32-64.jar](http://hughperkins.com/jeigen/Jeigen-win-linux-32-64.jar)
+- [jna-4.0.0.jar](http://hughperkins.com/jeigen/jna-4.0.0.jar)
 
-Procedure
----------
+These were built and tested on:
+- Ubuntu 14.04 32-bit
+- Ubuntu 14.04 64-bit
+- Windows Server 2003 R2 64-bit, using Visual Studio 2013, and 32-bit Sun jvm
+- Windows Server 2003 R2 64-bit, using Visual Studio 2013, and 64-bit Sun jvm
 
-1. git clone git://github.com/hughperkins/jeigen.git
-2. cd jeigen
-3. ant
+## Linking to Jeigen
 
-According to whether you use a 64-bit jvm or a 32-bit jvm, the files will be created in 'build/linux-32' or 'build/linux-64'. Jeigen.jar will be created directly in this directory, and libjeigen.so 
-will be created in the 'native' subdirectory.
+You will need to add the following jars to the classpath:
+- Jeigen-win-linux-32-64.jar
+- jna-4.0.0.jar
 
-How to build, Windows
-=====================
+Jeigen-win-linux-32-64.jar contains the native .dll or .so, for all these
+platforms, which will be decompressed into the '.jeigen' folder, in your home-directory, at runtime.
 
-Pre-requisites
---------------
+# Jeigen API
 
-- have installed git
-- have a jdk available, at least 1.6
-- have installed ant
-- have installed cmake, at least version 2.8.11.2
-- have installed Visual Studio C++ Express 2012
-
-Procedure
----------
-
-1. git clone git://github.com/hughperkins/jeigen.git
-2. cd jeigen
-3. set PATH=%PATH%;c:\apache-ant\bin
- * set to appropriate path for your ant installation
-4. ant -DCMAKE_HOME="c:\program files (x86)\Cmake 2.8" -Dgenerator="Visual Studio 11 Win64"
- * set to appropriate path for your cmake installation
- * if you're using Visual Studio 2010, please change generator name to "Visual Studio 10 Win64"
- * if you're using 32-bit Java JDK, please remove " Win64" from end of generator name
-
-According to whether you use a 64-bit jvm or a 32-bit jvm, the files will be created in 'build\win-32' or 'build\win-64'. Jeigen.jar will be created directly in this directory, and jeigen.dll 
-will be created in the 'native\Release' subdirectory.
-
-How to link to Jeigen
-=====================
-
-In Eclipse, add a user library, and add the 'Jeigen.jar' jar to the 
-library.  Then expand the library entry for 'jeigen', select 'Native
-library location', then click 'Edit', and browse to the directory containing libjeigen.so or jeigen.dll.
-
-(If you are not using Eclipse, then add:
-   -Djava.library.path=/path/to/jeigen/build/native/directory
-... to the java vm arguments)
-
-You will also need the jna-4.0.0.jar file, which you can find in the 'thirdparty' directory.
-
-Commands to create new matrices
-===============================
+## Commands to create new matrices
 
     import static jeigen.Shortcuts.*;
 
@@ -109,16 +113,14 @@ Commands to create new matrices
                              // numbers
     sm1 = speye(5); // creates a 5*5 identity matrix, sparse
 
-Update matrices
-===============
+## Update matrices
 
     dm1.set( 3,4,5.0); // sets element at row 3, column 4 to 5.0
     dm1.get( 3,4 ); // gets element at row 3, column 4
     
     sm1.append( 2, 3, 5.0 ); // adds value 5.0 at row 2, column 3
 
-Matrix Operators
-================
+## Matrix Operators
 
     dm1.mmul(dm1);  // matrix multiply, dense by dense
     dm1.mmul(sm1);  // matrix multiply, dense by sparse
@@ -128,8 +130,7 @@ Matrix Operators
     dm1 = dm1.t(); // matrix transpose, dense
     sm1 = sm1.t(); // matrix transpose, sparse
 
-Per-element operators:
-======================
+## Per-element operators:
 
     dm1 = dm1.neg();  // element = - element
     dm1 = dm1.recpr();   // element = 1 / element 
@@ -153,8 +154,7 @@ Per-element operators:
     dm1 = dm1.lt(dm2); // element1 &lt; element2
     dm1 = dm1.gt(dm2); // element1 &gt; element2
 
-Aggregation operators
-=====================
+## Aggregation operators
 
 These work for both sparse and dense matrices.
 
@@ -167,15 +167,13 @@ These work for both sparse and dense matrices.
     dm1 = dm1.minOverCols();
     dm1 = dm1.maxOverCols();
 
-Scalar operators
-================
+## Scalar operators
 
 Work for both dense and sparse.
 
     double value = dm1.s();  // returns dm1.get(0,0);
 
-Slicing
-=======
+## Slicing
 
 Slices are by-value.  They work for both dense and sparse matrices.
 
@@ -188,48 +186,75 @@ Slices are by-value.  They work for both dense and sparse matrices.
     dm1 = dm1.concatRight(dm2); // concatenate [ dm1 dm2 ]
     dm1 = dm1.concatDown(dm2); // concatenate [ dm1; dm2 ]
 
-Operators in Shortcuts:
-========================
+## Operators in Shortcuts:
 
     import static jeigen.Shortcuts.*;
 
     DenseMatrix dm1;
     dm1 = abs(dm1);  // element = abs(element)
 
-Solvers
-=======
+## Solvers
 
     DenseMatrix dm1;
     DenseMatrix dm2;
 
     // to solve dm1.mmul(result) = dm2:
     DenseMatrix result = dm1.ldltSolve(dm2); // using ldlt, dm1 must be positive or
-                                             // negative definite; fast
+                                             // negative semi-definite; fast
     DenseMatrix result = dm1.fullPivHouseholderQRSolve(dm2); // no conditions on 
                                                          // dm1, but slower
 
-Svd
-===
+## Eigenvalues
+
+    // Added on Dec 2014, new, so let me know if any issues.
+    // Since it might return complex results, created DenseMatrixComplex 
+    // to handle this
+    DenseMatrix dm1; // should be square
+    EigenResult eig = dm1.eig();
+    DenseMatrixComplex values = eig.values; // single column, with each value
+                                            // per row
+                                            // might be complex
+    DenseMatrixComplex vectors = eig.vectors; // one column per vector, maybe
+                                              // complex
+    // if you want to avoid complexes, you can use the pseudo-eigenvector
+    // decomposition
+    // but the eigenvalues are now returned as a square matrix, which
+    // might not be diagonal
+    PseudoEigenResult res = dm1.peig();
+    DenseMatrix values = res.values;
+    DenseMatrix vectors = res.vectors;
+
+## DenseMatrixComplex
+
+    // Created for use with eigenvalue decomposition, above.
+    // DenseMatrixComplex basically contains two DenseMatrices, one for the 
+    // real part, and one for the imaginary part
+    DenseMatrixComplex dmc1 = new DenseMatrixComplex( numrows, numcols );
+    // create from a string of complex pairs, each row separated by ';':
+    DenseMatrixComplex dmc1 = new DenseMatrixComplex( "(1,-1) (2,0); (-1,3) (4,-1)" );
+    DenseMatrix realPart = dmc.real();
+    DenseMatrix imagPart = dmc.imag();
+    double aRealValue = dmc1.getReal(2,3); // get real value at row 2 col 3
+    double anImaginaryValue = dmc1.getImag(2,3); // get imaginary value
+    dmc3 = dmc1.sub(dmc2) // can subtract
+    dm1 = dmc1.abs() // per-element abs, ie sqrt(real^2+imag^2), for each 
+                      // element.  Returns a non-complex DenseMatrix
+
+## Svd
 
     DenseMatrix dm1;
     SvdResult result = dm1.svd();  // uses Jacobi, and returns thin U and V
     // result contains U, S and V matrices
 
-Unsupported
-===========
-
-(This is called 'unsupported', because these functions are from the 'unsupported'
-Eigen modules)
+## Matrix exponential, matrix logarithm
 
     DenseMatrix dm1;
     DenseMatrix result1 = dm1.mexp(); // matrix exponential
     DenseMatrix result2 = dm1.mlog(); // matrix logarithm
 
-Overhead of using java/jna?
-===========================
+# Performance: overhead of using java/jna?
 
-Dense
------
+## Dense
 
 You can use the 'dummy_mmul' method of DenseMatrix to measure the overhead. 
 It makes a call, with two matrices, right through to the native layer, doing
@@ -259,8 +284,7 @@ For N*N matrices, the empirical percent overhead is about:
     N = 100: 14%
     N = 1000: 4%
 
-Sparse
-------
+## Sparse
 
 For sparse matrices, a corresponding test method is:
 cut
@@ -279,8 +303,77 @@ N*N matrices are:
     N = 100: 35%
     N = 1000: 9%
 
-Wrapping additional functions
-=============================
+# Building
+
+## How to build, linux
+
+### Pre-requisites
+
+- git
+- jdk 1.6 or more recent
+- ant
+- cmake
+- g++
+
+### Procedure
+
+```bash
+git clone git://github.com/hughperkins/jeigen.git
+cd jeigen
+ant
+```
+
+According to whether you use a 64-bit jvm or a 32-bit jvm, the files will be created in 'build/linux-32' or 'build/linux-64'.
+You will need to add the following to your class-path:
+- Jeigen-linux-32.jar , or Jeigen-linux-64.jar
+- jna-4.1.0.jar
+
+## How to build, Windows
+
+### Pre-requisites
+
+- have installed git
+- have a jdk available, at least 1.6
+- have installed ant
+- have installed cmake, version 3.x
+- have installed Visual Studio C++ Express 2013
+
+### Procedure
+
+1. git clone git://github.com/hughperkins/jeigen.git
+2. cd jeigen
+3. set PATH=%PATH%;c:\apache-ant\bin
+ * set to appropriate path for your ant installation
+4. ant -Dcmake_home="c:\program files (x86)\Cmake" -Dgenerator="Visual Studio 12 2013 Win64"
+ * set to appropriate path for your cmake installation
+ * if you're using Visual Studio 2010, please change generator name to "Visual Studio 10 2010 Win64"
+ * if you're using Visual Studio 2012, please change generator name to "Visual Studio 11 2012 Win64"
+ * if you're using 32-bit Java JDK, please remove " Win64" from end of generator name
+
+According to whether you use a 64-bit jvm or a 32-bit jvm, the files will be created in 'build\win-32' or 'build\win-64'.
+
+You will need to add the following to your class-path:
+- Jeigen-win-32.jar , or Jeigen-win-64.jar
+- jna-4.1.0.jar
+
+## Running unit-tests
+
+After following the build instructions, do:
+```
+ant test
+```
+
+## Possible issues, and possible solutions
+
+### 'java.lang.UnsatisfiedLinkError: Can't obtain updateLastError method for class com.sun.jna.Native'
+
+* See [https://github.com/twall/jna/issues/281](https://github.com/twall/jna/issues/281)
+  * Adding `-Djna.nosys=true` to the java command-line seems to work ok
+  * You can have a look at an example, by looking at the `test` target in [build.xml](build.xml)
+
+# Development
+
+## Wrapping additional functions
 
 If you want to add additional functions, here's the procedure:
 
@@ -318,24 +411,31 @@ faster.  If it's O(n^2), then implementing it in native Java might be better.  F
 - applying the same operation to all values of a matrix is implemented in native Java
 - multiplying two matrices is implemented using wrapped C++/Eigen
 
-Download
-========
+# Third-party libraries used
 
-The jar files and native dll/so can be downloaded from http://bamboo.hughperkins.com/jeigen . You need
-any Jeigen.jar file (platform-independent), the jna-4.0.0.jar file (platform-independent), and
-the appropriate libjeigen.so or jeigen.dll file.
+- JNA https://github.com/twall/jna (LGPL license)
+- The build process uses cmake-for-ant, https://github.com/hughperkins/cmake-for-ant 
+- Unit tests use junit 4
+- And of course Eigen :-)  http://eigen.tuxfamily.org
 
-These are built using the Bamboo build server at https://hughperkins.atlassian.net/builds/browse/JEIGEN-JEIGEN .
-
-Third-party libraries used
-==========================
-
-The build process uses cmake-for-ant, https://github.com/hughperkins/cmake-for-ant .
-
-Unit tests use junit 4.
-
-License
-=======
+# License
 
 Jeigen is available under MPL v2 license, http://mozilla.org/MPL/2.0/
+
+# News
+
+- 12th Aug 2015:
+  - upgraded to Eigen 3.2.5
+  - fixed QR solver to work with non-square matrices
+- 14th Feb 2015:
+  - merged from Frograms branch
+  - investigated and documented fix for 'can't obtain lastUpdateError' jna linking issue
+- 17th Dec 2014:
+  - Added native library inside the jar, with automatic extraction, and 
+setting of the jna.library.path variable, so dont need to set this variable oneself
+  - Rebuilt on win64, win32, linux64, linux32, and uploaded to new downloads location
+at http://hughperkins.com/jeigen
+  - Created one single jar file, containing all native shared objects
+- 14th Dec 2014 Added eigenvector decomposition, and complex matrices
+
 

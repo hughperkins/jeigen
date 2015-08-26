@@ -5,6 +5,7 @@
 // obtain one at http://mozilla.org/MPL/2.0/.
 
 #include <stdexcept>
+#include <iostream>
 using namespace std;
 
 #include "jeigen.h"
@@ -12,6 +13,7 @@ using namespace std;
 #include "Eigen/Dense"
 #include "Eigen/Sparse"
 #include "Eigen/Core"
+#include "Eigen/Eigenvalues"
 #include "unsupported/Eigen/MatrixFunctions"
 using namespace Eigen;
 
@@ -100,32 +102,18 @@ DllExport void freeSparseMatrix( int handle ) {
 DllExport void dense_dummy_op1( int rows, int cols, double *afirst, double *aresult ) {
    Map<MatrixXd> first(afirst,rows,cols);
    Map<MatrixXd> result(aresult,rows,cols);
-   //valuesToMatrix( rows, cols, afirst, &first );
-  // MatrixXd result = first; // aliasing doesnt matter since we will copy this anyway
-//   matrixToValues( rows, cols, &result, aresult );
 }
 // dummy operation to measure end to end latency
 DllExport void dense_dummy_op2( int rows, int middle, int cols, double *afirst, double *asecond, double *aresult ) {
-//   MatrixXd first(rows,middle);
- //  valuesToMatrix( rows, middle, afirst, &first );
-  // MatrixXd second(middle,cols);
-   //valuesToMatrix( middle, cols, asecond, &second );
    Map<MatrixXd>first(afirst,rows,middle);
    Map<MatrixXd>second(asecond,middle,cols);
    Map<MatrixXd>result(aresult,rows,cols);
-   //MatrixXd result(rows,cols);
-   //matrixToValues( rows, cols, &result, aresult );
 }
 DllExport void dense_multiply( int rows, int middle, int cols, double *afirst, double *asecond, double *aresult ) {
-   //MatrixXd first(rows,middle);
-   //valuesToMatrix( rows, middle, afirst, &first );
-   //MatrixXd second(middle,cols);
-   //valuesToMatrix( middle, cols, asecond, &second );
    Map<MatrixXd>first(afirst,rows,middle);
    Map<MatrixXd>second(asecond,middle,cols);
    Map<MatrixXd>result(aresult,rows,cols);
    result = first * second;
-//   matrixToValues( rows, cols, &result, aresult );
 }
 DllExport int sparse_multiply( int rows, int middle, int cols,
    int onehandle, int twohandle ) {
@@ -145,51 +133,67 @@ DllExport int sparse_dummy_op2( int rows, int middle, int cols,
       }
    }
    presult->setFromTriplets(tripletList.begin(), tripletList.end() );
-//   *presult = (*getSparseMatrix_(onehandle)) * (*getSparseMatrix_(twohandle));
    return storeData_(presult);
 }
 DllExport void sparse_dense_multiply( int rows, int middle, int cols, int onehandle, double *asecond, double *aresult ) {
    Map<MatrixXd> second(asecond,middle,cols);
-   //valuesToMatrix( middle, cols, asecond, &second );
    Map<MatrixXd> result(aresult,rows,cols);
    result = (*getSparseMatrix_(onehandle)) * second;
-//   matrixToValues( rows, cols, &result, aresult );
 }
 DllExport void dense_sparse_multiply( int rows, int middle, int cols, double *afirst, int twohandle, double *aresult ) {
    Map<MatrixXd> first(afirst, rows,middle);
-//   valuesToMatrix( rows, middle, afirst, &first );
    Map<MatrixXd> result(aresult,rows,cols);
    result =  first * (*getSparseMatrix_(twohandle));
-   //matrixToValues( rows, cols, &result, aresult );
 }
 DllExport void ldlt_solve( int arows, int acols, int bcols, double *avalues, double *bvalues, double *xvalues ) {
    Map<MatrixXd> A(avalues,arows, acols);
-   //valuesToMatrix( arows, acols, avalues, &A );
-   Map<MatrixXd> b(bvalues, acols, bcols);
-   //valuesToMatrix( acols, bcols, bvalues, &b );
-   Map<MatrixXd> result(xvalues,acols,bcols);
+   Map<MatrixXd> b(bvalues, arows, bcols);
+   Map<MatrixXd> result(xvalues, acols, bcols);
    result = A.ldlt().solve(b);
-   //matrixToValues( acols, bcols, &result, xvalues );   
 }
 DllExport void fullpivhouseholderqr_solve( int arows, int acols, int bcols, double *avalues, double *bvalues, double *xvalues ) {
    Map<MatrixXd> A(avalues, arows, acols);
-   //valuesToMatrix( arows, acols, avalues, &A );
-   Map<MatrixXd> b(bvalues, acols, bcols);
-   //valuesToMatrix( acols, bcols, bvalues, &b );
-   Map<MatrixXd> result(xvalues,acols,bcols);
+   Map<MatrixXd> b(bvalues, arows, bcols);
+   Map<MatrixXd> result(xvalues, acols, bcols);
    result = A.fullPivHouseholderQr().solve(b);
-   //matrixToValues( acols, bcols, &result, xvalues );   
 }
 DllExport void svd_dense( int n, int p, double *in, double *u, double *s, double *v ) {
    int m = min( n,p);
    Map<MatrixXd> In(in, n, p );
-   //valuesToMatrix(n,p, in, &In );
    JacobiSVD<MatrixXd,HouseholderQRPreconditioner> svd(In, ComputeThinU | ComputeThinV);
    matrixToValues( n, m, &(svd.matrixU()), u );
    for( int i = 0; i < m; i++ ) {
       s[i] = svd.singularValues()(i);
    }
    matrixToValues( p, m, &(svd.matrixV()), v );
+}
+DllExport void jeigen_eig( int n, double* in, double* values_real, double *values_imag, double* vectors_real, double *vectors_imag ) {
+   Map<MatrixXd> In( in, n, n );
+   EigenSolver<MatrixXd> eigenSolve( In );
+   VectorXcd EigenValues = eigenSolve.eigenvalues();
+   MatrixXcd EigenVectors = eigenSolve.eigenvectors();
+   int i = 0;
+   for ( int r = 0; r < n; r++ ) { 
+      values_real[i] = EigenValues(r).real();
+      values_imag[i] = EigenValues(r).imag();
+      i++;
+   }
+   i = 0;
+   for( int c = 0; c < n; c++ ) {
+      for ( int r = 0; r < n; r++ ) { 
+         vectors_real[i] = EigenVectors(r,c).real();
+         vectors_imag[i] = EigenVectors(r,c).imag();
+         i++;
+      }
+   }
+}
+DllExport void jeigen_peig( int n, double* in, double* eigenValues, double* eigenVectors ) {
+   Map<MatrixXd> In( in, n, n );
+   EigenSolver<MatrixXd> eigenSolve( In );
+   MatrixXd EigenValues = eigenSolve.pseudoEigenvalueMatrix();
+   MatrixXd EigenVectors = eigenSolve.pseudoEigenvectors();
+   matrixToValues( n, n, &(EigenValues), eigenValues );
+   matrixToValues( n, n, &(EigenVectors), eigenVectors );
 }
 DllExport void jeigen_exp( int n, double *in, double *result ) {
    Map<MatrixXd> In(in, n, n );

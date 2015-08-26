@@ -3,24 +3,9 @@
 //
 // Copyright (C) 2006-2009 Benoit Jacob <jacob.benoit.1@gmail.com>
 //
-// Eigen is free software; you can redistribute it and/or
-// modify it under the terms of the GNU Lesser General Public
-// License as published by the Free Software Foundation; either
-// version 3 of the License, or (at your option) any later version.
-//
-// Alternatively, you can redistribute it and/or
-// modify it under the terms of the GNU General Public License as
-// published by the Free Software Foundation; either version 2 of
-// the License, or (at your option) any later version.
-//
-// Eigen is distributed in the hope that it will be useful, but WITHOUT ANY
-// // WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-// FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License or the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU Lesser General Public
-// License and a copy of the GNU General Public License along with
-// Eigen. If not, see <http://www.gnu.org/licenses/>.
+// This Source Code Form is subject to the terms of the Mozilla
+// Public License v. 2.0. If a copy of the MPL was not distributed
+// with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #ifndef EIGEN_LU_H
 #define EIGEN_LU_H
@@ -35,10 +20,11 @@ namespace Eigen {
   *
   * \param MatrixType the type of the matrix of which we are computing the LU decomposition
   *
-  * This class represents a LU decomposition of any matrix, with complete pivoting: the matrix A
-  * is decomposed as A = PLUQ where L is unit-lower-triangular, U is upper-triangular, and P and Q
-  * are permutation matrices. This is a rank-revealing LU decomposition. The eigenvalues (diagonal
-  * coefficients) of U are sorted in such a way that any zeros are at the end.
+  * This class represents a LU decomposition of any matrix, with complete pivoting: the matrix A is
+  * decomposed as \f$ A = P^{-1} L U Q^{-1} \f$ where L is unit-lower-triangular, U is
+  * upper-triangular, and P and Q are permutation matrices. This is a rank-revealing LU
+  * decomposition. The eigenvalues (diagonal coefficients) of U are sorted in such a way that any
+  * zeros are at the end.
   *
   * This decomposition provides the generic approach to solving systems of linear equations, computing
   * the rank, invertibility, inverse, kernel, and determinant.
@@ -308,11 +294,12 @@ template<typename _MatrixType> class FullPivLU
       */
     inline Index rank() const
     {
+      using std::abs;
       eigen_assert(m_isInitialized && "LU is not initialized.");
-      RealScalar premultiplied_threshold = internal::abs(m_maxpivot) * threshold();
+      RealScalar premultiplied_threshold = abs(m_maxpivot) * threshold();
       Index result = 0;
       for(Index i = 0; i < m_nonzero_pivots; ++i)
-        result += (internal::abs(m_lu.coeff(i,i)) > premultiplied_threshold);
+        result += (abs(m_lu.coeff(i,i)) > premultiplied_threshold);
       return result;
     }
 
@@ -387,6 +374,12 @@ template<typename _MatrixType> class FullPivLU
     inline Index cols() const { return m_lu.cols(); }
 
   protected:
+    
+    static void check_template_parameters()
+    {
+      EIGEN_STATIC_ASSERT_NON_INTEGER(Scalar);
+    }
+    
     MatrixType m_lu;
     PermutationPType m_p;
     PermutationQType m_q;
@@ -431,6 +424,11 @@ FullPivLU<MatrixType>::FullPivLU(const MatrixType& matrix)
 template<typename MatrixType>
 FullPivLU<MatrixType>& FullPivLU<MatrixType>::compute(const MatrixType& matrix)
 {
+  check_template_parameters();
+  
+  // the permutations are stored as int indices, so just to be sure:
+  eigen_assert(matrix.rows()<=NumTraits<int>::highest() && matrix.cols()<=NumTraits<int>::highest());
+  
   m_isInitialized = true;
   m_lu = matrix;
 
@@ -522,8 +520,8 @@ typename internal::traits<MatrixType>::Scalar FullPivLU<MatrixType>::determinant
 }
 
 /** \returns the matrix represented by the decomposition,
- * i.e., it returns the product: P^{-1} L U Q^{-1}.
- * This function is provided for debug purpose. */
+ * i.e., it returns the product: \f$ P^{-1} L U Q^{-1} \f$.
+ * This function is provided for debug purposes. */
 template<typename MatrixType>
 MatrixType FullPivLU<MatrixType>::reconstructedMatrix() const
 {
@@ -562,6 +560,7 @@ struct kernel_retval<FullPivLU<_MatrixType> >
 
   template<typename Dest> void evalTo(Dest& dst) const
   {
+    using std::abs;
     const Index cols = dec().matrixLU().cols(), dimker = cols - rank();
     if(dimker == 0)
     {
@@ -647,6 +646,7 @@ struct image_retval<FullPivLU<_MatrixType> >
 
   template<typename Dest> void evalTo(Dest& dst) const
   {
+    using std::abs;
     if(rank() == 0)
     {
       // The Image is just {0}, so it doesn't have a basis properly speaking, but let's

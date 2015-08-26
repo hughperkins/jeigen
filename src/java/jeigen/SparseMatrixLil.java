@@ -84,13 +84,13 @@ public class SparseMatrixLil {
 	public double getValue(int i ) {
 		return values[i];
 	}
-	public int[] getRowIdxs() {
+	public int[] getRowIdxs() { // note: this returns a ref to the underlying row idxs
 		return rowIdx;
 	}
-	public int[] getColIdxs() {
+	public int[] getColIdxs() { // note: this returns a ref to the underlying col idxs
 		return colIdx;
 	}
-	public double[] getValues() {
+	public double[] getValues() { // note: this returns a ref to the underlying values
 		return values;
 	}
 	public int getSize() {

@@ -14,9 +14,16 @@ import java.io.*;
  */
 class JeigenJna {
 	public static class Jeigen {
+        public static final ClassLoader getClassLoader() {
+            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+
+            if (classLoader == null) {
+                classLoader = Class.class.getClassLoader();
+            }
+            return classLoader;
+        }
 		public static final void addToJnaPath(String newpath ) throws Exception {
 			String oldLibraryPath = System.getProperty( "jna.library.path");
-//			System.out.println("adding " + newpath);
             if( oldLibraryPath != null ) {
 				System.setProperty( "jna.library.path", oldLibraryPath + File.pathSeparator + newpath );
 			} else {
@@ -25,12 +32,28 @@ class JeigenJna {
 		}
 		static {
 			try{
-				addToJnaPath(System.getProperty("java.library.path"));
+                String userDirectory = System.getProperty("user.home");
+                String nativeDirectory = userDirectory + File.separator + ".jeigen" + File.separator + "native2";
+                new File( nativeDirectory ).mkdirs();
+                ClassLoader classLoader = getClassLoader();
+                String nativefilename = "libjeigen-linux-" + OsHelper.jvmBits() + ".so";
+                if( OsHelper.isWindows() ) {
+                    nativefilename = "jeigen-win-" + OsHelper.jvmBits() + ".dll";
+                }
+                if( !new File( nativeDirectory + File.separator + nativefilename ).exists() ) {
+                    InputStream inputStream = classLoader.getResourceAsStream(nativefilename);
+                    OutputStream outputStream = new FileOutputStream( nativeDirectory + File.separator + nativefilename );
+                    FileHelper.copyBetweenStreams( inputStream, outputStream );
+                    inputStream.close();
+                    outputStream.close();
+                }
+				addToJnaPath( nativeDirectory );
+    			Native.register(nativefilename.replace("lib","").replace(".dll","").replace(".so","") );
 			} catch(Exception e ) {
 				e.printStackTrace();
 				System.exit(1);
 			}
-			Native.register("jeigen");
+//			Native.register("jeigen");
 		}
 		
 		public static native void init();
@@ -45,6 +68,11 @@ class JeigenJna {
         public static native void jeigen_exp( int n, double[] in, double[] result );
         public static native void jeigen_log( int n, double[] in, double[] result );
 		
+        // Eigenvectors, experimental...
+        public static native void jeigen_eig( int rows, double[] in, double[] values_real, double[] values_imag,
+            double[] vectors_real, double[] vectors_imag );
+        public static native void jeigen_peig( int rows, double[] in, double[] eigenValues, double[] eigenVectors );
+
 		public static native void ldlt_solve( int arow, int acols, int bcols, double []avalues, double []bvalues, double []xvalues );
 		public static native void fullpivhouseholderqr_solve( int arow, int acols, int bcols, double []avalues, double []bvalues, double []xvalues );
 
