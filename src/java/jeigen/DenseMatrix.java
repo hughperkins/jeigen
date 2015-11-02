@@ -648,6 +648,28 @@ public class DenseMatrix {
 		}
 		return result;
 	}
+    /**
+	 * for each element: element = Math.exp(element)
+	 */
+	public DenseMatrix exp() {
+		DenseMatrix result = new DenseMatrix(rows,cols);
+		int capacity = rows * cols;
+		for( int i = 0; i < capacity; i++ ) {
+			result.values[i] = Math.exp( values[i] );
+		}
+		return result;
+	}
+    /**
+	 * for each element: element = Math.log(element)
+	 */
+	public DenseMatrix log() {
+		DenseMatrix result = new DenseMatrix(rows,cols);
+		int capacity = rows * cols;
+		for( int i = 0; i < capacity; i++ ) {
+			result.values[i] = Math.log( values[i] );
+		}
+		return result;
+	}
 	/**
 	 * for each element: element = element / scalar
 	 */
@@ -936,6 +958,75 @@ public class DenseMatrix {
 		}
 		return result;
 	}
+    /**
+	 * for each element: element[result] = max(element[this], element[second])
+	 */
+	public DenseMatrix max( DenseMatrix second ) {
+		if( this.cols != second.cols || this.rows != second.rows ) {
+			throw new RuntimeException("matrix size mismatch " + shape() + " vs " + second.shape() );
+		}
+		DenseMatrix result = new DenseMatrix(rows,cols);
+		int numElements = rows * cols;
+		for( int i = 0; i < numElements; i++ ) {
+			if( values[i] < second.values[i] ) {
+				result.values[i] = second.values[i];
+			}
+            else
+                result.values[i] = values[i];
+		}
+		return result;
+	}
+    /**
+	 * for each element: element[result] = min(element[this], element[second])
+	 */
+	public DenseMatrix min( DenseMatrix second ) {
+		if( this.cols != second.cols || this.rows != second.rows ) {
+			throw new RuntimeException("matrix size mismatch " + shape() + " vs " + second.shape() );
+		}
+		DenseMatrix result = new DenseMatrix(rows,cols);
+		int numElements = rows * cols;
+		for( int i = 0; i < numElements; i++ ) {
+			if( values[i] > second.values[i] ) {
+				result.values[i] = second.values[i];
+			}
+            else
+                result.values[i] = values[i];
+		}
+		return result;
+	}
+
+    /**
+	 * for each element: element[result] = max(element[this], s)
+	 */
+	public DenseMatrix max( double s ) {
+		DenseMatrix result = new DenseMatrix(rows,cols);
+		int numElements = rows * cols;
+		for( int i = 0; i < numElements; i++ ) {
+			if( values[i] < s ) {
+				result.values[i] = s;
+			}
+            else
+                result.values[i] = values[i];
+		}
+		return result;
+	}
+
+    /**
+	 * for each element: element[result] = min(element[this], s)
+	 */
+	public DenseMatrix min( double s ) {
+		DenseMatrix result = new DenseMatrix(rows,cols);
+		int numElements = rows * cols;
+		for( int i = 0; i < numElements; i++ ) {
+			if( values[i] > s ) {
+				result.values[i] = s;
+			}
+            else
+                result.values[i] = values[i];
+		}
+		return result;
+	}
+
 	/**
 	 * Tests latency of multiplication: does everything except call the Eigen multiplication routine
 	 */
