@@ -10,8 +10,9 @@
         <condition property="jvm.word.size" value="32" ><os arch="x86" /></condition>
         <property name="jvm.word.size" value="64" />
         <condition property="build.dir.os" value="win"><os family="Windows" /></condition>
+        <condition property="build.dir.os" value="mac"><and><os family="Unix" /><contains string="${os.name}" substring="Mac OS" /></and></condition>
         <condition property="build.dir.os" value="linux"><os family="Unix" /></condition>
-        <echo message="os.arch: ${os.arch} os.family ${os.name} jvm.word.size ${jvm.word.size}" />
+        <echo message="os.arch: ${os.arch} os.family ${os.family} os.name ${os.name} jvm.word.size ${jvm.word.size}" />
         <echo message="build.dir.os ${build.dir.os}" />
 
         <!-- check generator matches word size.  only applies to visual studio -->
@@ -56,6 +57,7 @@
       </copy>
       <copy tofile="${build.dir}/classes/jeigen-${build.dir.os}-${jvm.word.size}.dll" failonerror="false" quiet="true" file="${cmakeoutdir}/jeigen.dll" overwrite="true" />
       <copy tofile="${build.dir}/classes/libjeigen-${build.dir.os}-${jvm.word.size}.so" failonerror="false" quiet="true" file="${cmakeoutdir}/libjeigen.so" overwrite="true" />
+      <copy tofile="${build.dir}/classes/libjeigen-${build.dir.os}-${jvm.word.size}.dylib" failonerror="false" quiet="true" file="${cmakeoutdir}/libjeigen.dylib" overwrite="true" />
       <copy todir="${build.dir}" >
           <fileset file="thirdparty/jna-4.1.0.jar" />
       </copy>
@@ -92,7 +94,7 @@
 
     <target name="package" depends="jar">
         <zip destfile="build/jeigen-${build.dir.os}-${jvm.word.size}.zip" basedir="build/${build.dir.os}-${jvm.word.size}"
-            includes="*.jar,${cmakeoutdir}/*.so,${cmakeoutdir}/*.dll" />
+            includes="*.jar,${cmakeoutdir}/*.so,${cmakeoutdir}/*.dll,${cmakeoutdir}/*.dylib" />
     </target>
 
     <target name="package-onefat" depends="compile,getinfo" >
