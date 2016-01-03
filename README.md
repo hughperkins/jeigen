@@ -80,6 +80,9 @@ These were built and tested on:
 - Windows Server 2003 R2 64-bit, using Visual Studio 2013, and 32-bit Sun jvm
 - Windows Server 2003 R2 64-bit, using Visual Studio 2013, and 64-bit Sun jvm
 
+You can use on Mac OS X too, but you'll need to build from source.  Tested on:
+- Mac OS X 10.11 64-bit  https://travis-ci.org/hughperkins/jeigen
+
 ## Linking to Jeigen
 
 You will need to add the following jars to the classpath:
@@ -328,6 +331,29 @@ You will need to add the following to your class-path:
 - Jeigen-linux-32.jar , or Jeigen-linux-64.jar
 - jna-4.1.0.jar
 
+## How to build, Mac OS X
+
+### Pre-requisites
+
+- git
+- jdk 1.6 or more recent
+- ant
+- cmake
+- xcode
+
+### Procedure
+
+```bash
+git clone git://github.com/hughperkins/jeigen.git
+cd jeigen
+ant
+```
+
+According to whether you use a 64-bit jvm or a 32-bit jvm, the files will be created in 'build/mac-32' or 'build/mac-64'.
+You will need to add the following to your class-path:
+- Jeigen-mac-32.jar , or Jeigen-mac-64.jar
+- jna-4.1.0.jar
+
 ## How to build, Windows
 
 ### Pre-requisites
@@ -424,6 +450,8 @@ Jeigen is available under MPL v2 license, http://mozilla.org/MPL/2.0/
 
 # News
 
+- 3rd Jan 2016:
+  - builds and tests run ok on Mac OS X https://travis-ci.org/hughperkins/jeigen/builds/99918875
 - 12th Aug 2015:
   - upgraded to Eigen 3.2.5
   - fixed QR solver to work with non-square matrices
