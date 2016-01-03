@@ -1,4 +1,4 @@
-// Copyright Hugh Perkins 2012, hughperkins -at- gmail
+// Copyright Hugh Perkins 2012, 2016 hughperkins -at- gmail
 //
 // This Source Code Form is subject to the terms of the Mozilla Public License, 
 // v. 2.0. If a copy of the MPL was not distributed with this file, You can 
@@ -50,7 +50,7 @@ class JeigenJna {
                     outputStream.close();
                 }
                 addToJnaPath( nativeDirectory );
-                Native.register(nativefilename.replace("lib","").replace(".dll","").replace(".so","").replace(".dylib","") );
+                Native.register(nativefilename.replace(".dylib","").replace("lib","").replace(".dll","").replace(".so","") );
             } catch(Exception e ) {
                 e.printStackTrace();
                 System.exit(1);
