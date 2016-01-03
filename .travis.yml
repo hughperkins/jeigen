@@ -29,8 +29,8 @@ before_install:
 script:
   - echo hello
   - env
-  - export PATH=$PATH:$HOME/apache-ant-1.9.6/bin
-  - export CLASSPATH=$CLASSPATH:$HOME/apache-ant-1.9.6/lib
+  - export PATH=$PATH:$HOME/apache-ant-1.9.6/dist/bin
+  - export CLASSPATH=$CLASSPATH:$HOME/apache-ant-1.9.6/dist/lib
   - ant
 
 notifications:
