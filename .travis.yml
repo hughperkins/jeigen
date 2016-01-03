@@ -1,4 +1,7 @@
 language: java
+jdk:
+  - openjdk7
+
 matrix:
   include:
     - env: OSX=10.11
@@ -17,11 +20,8 @@ before_install:
   - env
   - which java
   - ls -lh /usr/bin/java
-  - ls -lh /System/Library/Frameworks/JavaVM.framework/Versions/Current/Commands/java
   - export JAVA_HOME=$(/usr/libexec/java_home)
   - echo $JAVA_HOME
-  - ls -lh /usr/lib/jvm
-  - ls -lh /etc/alternatives/java
   - cd
   - wget http://apache.fayea.com//ant/source/apache-ant-1.9.6-src.tar.bz2
   - tar -xf apache-ant-1.9.6-src.tar.bz2
