@@ -20,6 +20,9 @@ before_install:
   - tar -xf apache-ant-1.9.6-src.tar.bz2
   - cd apache-ant-1.9.6
   - which java
+  - ls -lh /usr/bin/java
+  - ls -lh /usr/lib/jvm
+  - ls -lh /etc/alternatives/java
   - ./build.sh
   - cd /Users/travis/build/jeigen
 
