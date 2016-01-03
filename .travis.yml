@@ -24,7 +24,7 @@ before_install:
   - tar -xf apache-ant-1.9.6-src.tar.bz2
   - cd apache-ant-1.9.6
   - ./build.sh
-  - cd /Users/travis/build/jeigen
+  - cd $HOME/build/hughperkins/jeigen
 
 script:
   - echo hello
