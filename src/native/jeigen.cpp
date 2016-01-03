@@ -48,6 +48,7 @@ int storeData_(void *m) {
          return i;
       }
    }
+   return 0;
 }
 SparseMatrix<double> *getSparseMatrix_(int handle ) {
    return (SparseMatrix<double> *)(data[handle]);

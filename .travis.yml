@@ -32,6 +32,7 @@ script:
   - export PATH=$PATH:$HOME/apache-ant-1.9.6/dist/bin
   - export CLASSPATH=$CLASSPATH:$HOME/apache-ant-1.9.6/dist/lib
   - ant
+  - ant test
 
 notifications:
   email:
