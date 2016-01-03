@@ -13,5 +13,8 @@ final class OsHelper {
     public static final boolean isWindows() {
         return System.getProperty("os.name").toLowerCase().indexOf("win") >= 0;
     }
+    public static final boolean isMac() {
+        return System.getProperty("os.name").toLowerCase().indexOf("mac") >= 0;
+    }
 }
 
