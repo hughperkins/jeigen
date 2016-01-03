@@ -40,7 +40,7 @@ class JeigenJna {
                 if( OsHelper.isWindows() ) {
                     nativefilename = "jeigen-win-" + OsHelper.jvmBits() + ".dll";
                 } else if( OsHelper.isMac() ) {
-                    nativefilename = "jeigen-mac-" + OsHelper.jvmBits() + ".dylib";
+                    nativefilename = "libjeigen-mac-" + OsHelper.jvmBits() + ".dylib";
                 }
                 if( !new File( nativeDirectory + File.separator + nativefilename ).exists() ) {
                     InputStream inputStream = classLoader.getResourceAsStream(nativefilename);
