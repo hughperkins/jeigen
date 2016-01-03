@@ -32,6 +32,14 @@ script:
   - export PATH=$PATH:$HOME/apache-ant-1.9.6/dist/bin
   - export CLASSPATH=$CLASSPATH:$HOME/apache-ant-1.9.6/dist/lib
   - ant
+  - ls -l build/mac-64/native
+  - ls -l build/mac-64/classes
+  - ls -l build/mac-64
+  - jar -tf build/mac-64/Jeigen-mac-64.jar
+  - export CLASSPATH=$CLASSPATH:$PWD/build/mac-64/Jeigen-mac-64.jar
+  - export CLASSPATH=$CLASSPATH:$PWD/build/mac-64/jna-4.1.0.jar
+  - javac $PWD/TestSimple.java
+  - java -Djna.nosys=true TestSimple
   - ant test
 
 notifications:
