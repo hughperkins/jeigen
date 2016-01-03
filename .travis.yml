@@ -1,4 +1,4 @@
-language: objective-c
+language: java
 matrix:
   include:
     - env: OSX=10.11
