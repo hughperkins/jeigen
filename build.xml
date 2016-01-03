@@ -66,17 +66,17 @@
    </target>
 
     <target name="test" depends="jar">
-	   <echo message="cmakeoutdir: ${cmakeoutdir}" />
-       <junit printsummary="on" fork="on" haltonerror="on" haltonfailure="on" showoutput="withOutAndErr" >
+       <echo message="cmakeoutdir: ${cmakeoutdir}" />
+       <junit printsummary="withOutAndErr" fork="on" haltonerror="on" haltonfailure="on" showoutput="withOutAndErr" >
             <classpath>
                 <pathelement location="${build.dir}/Jeigen-${build.dir.os}-${jvm.word.size}.jar" />
                 <pathelement path="${build.dir}/jna-4.1.0.jar"/>
                 <pathelement path="thirdparty/junit-4.10.jar"/>
             </classpath>
-              <formatter type="xml"/>
+<!--              <formatter type="xml"/>-->
 <!--            <sysproperty key="java.library.path" value="${cmakeoutdir}" /> -->
-			<sysproperty key="jna.debug_load" value="true" />
-			<sysproperty key="jna.nosys" value="true" />
+             <sysproperty key="jna.debug_load" value="true" />
+             <sysproperty key="jna.nosys" value="true" />
              <test name="jeigen.TestJeigen" todir="${build.dir}"/>
              <test name="jeigen.TestEigenvalues" todir="${build.dir}"/>
              <test name="jeigen.TestDenseAggregator" todir="${build.dir}"/>
