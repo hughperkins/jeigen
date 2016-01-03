@@ -15,14 +15,15 @@ before_install:
   - ls ~
   - echo $HOME
   - env
+  - which java
+  - ls -lh /usr/bin/java
+  - ls -lh /System/Library/Frameworks/JavaVM.framework/Versions/Current/Commands/java
+  - ls -lh /usr/lib/jvm
+  - ls -lh /etc/alternatives/java
   - cd
   - wget http://apache.fayea.com//ant/source/apache-ant-1.9.6-src.tar.bz2
   - tar -xf apache-ant-1.9.6-src.tar.bz2
   - cd apache-ant-1.9.6
-  - which java
-  - ls -lh /usr/bin/java
-  - ls -lh /usr/lib/jvm
-  - ls -lh /etc/alternatives/java
   - ./build.sh
   - cd /Users/travis/build/jeigen
 
