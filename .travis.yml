@@ -15,10 +15,19 @@ before_install:
   - ls ~
   - echo $HOME
   - env
+  - cd
+  - wget http://apache.fayea.com//ant/source/apache-ant-1.9.6-src.tar.bz2
+  - tar -xf apache-ant-1.9.6-src.tar.bz2
+  - cd apache-ant-1.9.6
+  - which java
+  - ./build.sh
+  - cd /Users/travis/build/jeigen
 
 script:
   - echo hello
   - env
+  - export PATH=$PATH:$HOME/apache-ant-1.9.6/bin
+  - export CLASSPATH=$CLASSPATH:$HOME/apache-ant-1.9.6/lib
   - ant
 
 notifications:
