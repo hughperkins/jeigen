@@ -1,13 +1,11 @@
 language: java
-jdk:
-  - openjdk7
-
 matrix:
   include:
     - env: OSX=10.11
       os: osx
       osx_image: osx10.11
       rvm: system
+      jdk: openjdk7
 
 before_install:
   - if [ -f ".git/shallow" ]; then travis_retry git fetch --unshallow; fi
