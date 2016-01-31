@@ -8,16 +8,8 @@ matrix:
 
 before_install:
   - if [ -f ".git/shallow" ]; then travis_retry git fetch --unshallow; fi
-  - whoami
-  - pwd
-  - ls
   - git status
-  - ls ~
-  - echo $HOME
-  - env
   - which java
-  - ls -lh /usr/bin/java
-  - export JAVA_HOME=$(/usr/libexec/java_home)
   - echo $JAVA_HOME
   - cd
   - wget http://apache.fayea.com//ant/source/apache-ant-1.9.6-src.tar.bz2
@@ -27,8 +19,6 @@ before_install:
   - cd $HOME/build/hughperkins/jeigen
 
 script:
-  - echo hello
-  - env
   - export PATH=$PATH:$HOME/apache-ant-1.9.6/dist/bin
   - export CLASSPATH=$CLASSPATH:$HOME/apache-ant-1.9.6/dist/lib
   - ant
