@@ -382,6 +382,20 @@ You will need to add the following to your class-path:
 - Jeigen-win-32.jar , or Jeigen-win-64.jar
 - jna-4.1.0.jar
 
+## Sanity testing build
+
+linux, eg for linux-64:
+```
+java -cp build/linux-64/Jeigen-linux-64.jar:build/linux-64/jna-4.1.0.jar TestSimple
+```
+Should display a 2x2 matrix, with 1,2,3,4; and no error messages.
+
+Similarly for Windows, eg for win-64:
+```
+java -cp build\win-64\Jeigen-win-64.jar;build\win-64\jna-4.1.0.jar TestSimple
+```
+Again, should display a 2x2 matrix, with 1,2,3,4; and no error messages.
+
 ## Running unit-tests
 
 After following the build instructions, do:
