@@ -37,3 +37,9 @@ notifications:
     on_success: never
     on_failure: never
 
+addons:
+  artifacts: true
+  s3_region: "us-east-1" # defaults to "us-east-1"
+  paths:
+  - build/mac-64/Jeigen-mac-64.jar
+
