@@ -9,7 +9,7 @@ matrix:
 before_install:
   - if [ -f ".git/shallow" ]; then travis_retry git fetch --unshallow; fi
   - git status
-  - which java
+  - export JAVA_HOME=$(/usr/libexec/java_home)
   - echo $JAVA_HOME
   - cd
   - wget http://apache.fayea.com//ant/source/apache-ant-1.9.6-src.tar.bz2
