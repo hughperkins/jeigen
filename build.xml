@@ -115,33 +115,36 @@
               <fileset dir="${build.dir}/classes" />
           </copy>
          <!-- extract the zips, to get the jeigen jars -->
-         <unzip src="build/jeigen-linux-32.zip" dest="${onefat.unzip.dir}" >
-             <patternset><include name="Jeigen-linux-32.jar" /></patternset>
-         </unzip>
-         <unzip src="build/jeigen-linux-64.zip" dest="${onefat.unzip.dir}" >
-             <patternset><include name="Jeigen-linux-64.jar" /></patternset>
-         </unzip>
-         <unzip src="build/jeigen-win-32.zip" dest="${onefat.unzip.dir}" >
-             <patternset><include name="Jeigen-win-32.jar" /></patternset>
-         </unzip>
-         <unzip src="build/jeigen-win-64.zip" dest="${onefat.unzip.dir}" >
-             <patternset><include name="Jeigen-win-64.jar" /></patternset>
-         </unzip>
+<!--         <unzip src="build/jeigen-linux-32.zip" dest="${onefat.unzip.dir}" >-->
+<!--             <patternset><include name="Jeigen-linux-32.jar" /></patternset>-->
+<!--         </unzip>-->
+<!--         <unzip src="build/jeigen-linux-64.zip" dest="${onefat.unzip.dir}" >-->
+<!--             <patternset><include name="Jeigen-linux-64.jar" /></patternset>-->
+<!--         </unzip>-->
+<!--         <unzip src="build/jeigen-win-32.zip" dest="${onefat.unzip.dir}" >-->
+<!--             <patternset><include name="Jeigen-win-32.jar" /></patternset>-->
+<!--         </unzip>-->
+<!--         <unzip src="build/jeigen-win-64.zip" dest="${onefat.unzip.dir}" >-->
+<!--             <patternset><include name="Jeigen-win-64.jar" /></patternset>-->
+<!--         </unzip>-->
          <!-- extract the jars, to get the native shared objects -->
-         <unzip src="${onefat.unzip.dir}/Jeigen-linux-32.jar" dest="${onefat.staging.dir}" >
+         <unzip src="build/Jeigen-linux-32.jar" dest="${onefat.staging.dir}" >
              <patternset><include name="libjeigen-linux-32.so" /></patternset>
          </unzip>
-         <unzip src="${onefat.unzip.dir}/Jeigen-linux-64.jar" dest="${onefat.staging.dir}" >
+         <unzip src="build/Jeigen-linux-64.jar" dest="${onefat.staging.dir}" >
              <patternset><include name="libjeigen-linux-64.so" /></patternset>
          </unzip>
-         <unzip src="${onefat.unzip.dir}/Jeigen-win-32.jar" dest="${onefat.staging.dir}" >
-             <patternset><include name="jeigen-win-32.dll" /></patternset>
+         <unzip src="build/Jeigen-win-32.jar" dest="${onefat.staging.dir}" >
+             <patternset><include name="**/*.dll" /></patternset>
          </unzip>
-         <unzip src="${onefat.unzip.dir}/Jeigen-win-64.jar" dest="${onefat.staging.dir}" >
-             <patternset><include name="jeigen-win-64.dll" /></patternset>
+         <unzip src="build/Jeigen-win-64.jar" dest="${onefat.staging.dir}" >
+             <patternset><include name="**/*.dll" /></patternset>
+         </unzip>
+         <unzip src="build/Jeigen-mac-64.jar" dest="${onefat.staging.dir}" >
+             <patternset><include name="*.dylib" /></patternset>
          </unzip>
           <!-- make the jar :-) -->
-      <jar destfile="build/Jeigen-win-linux-32-64.jar" basedir="${onefat.staging.dir}" />
+      <jar destfile="build/Jeigen-onefat.jar" basedir="${onefat.staging.dir}" />
     </target>
 
     <target name="test-onefat" depends="getinfo" >
