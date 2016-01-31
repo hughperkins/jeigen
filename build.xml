@@ -63,7 +63,19 @@
       </copy>
    </target>
 
-   <target name="jar" depends="compile">
+   <condition property="isWin">
+     <os family="Windows"/>
+   </condition>
+
+   <target name="download-win-runtime" depends="compile" if="isWin">
+      <echo message="downloading win runtime" />
+      <get src="http://deepcl.hughperkins.com/vc2010redist.zip" usetimestamp="true" dest="${build.dir}/vc2010redist.zip" />
+      <unzip src="${build.dir}/vc2010redist.zip" dest="${build.dir}/vc2010redist" />
+      <copy tofile="${build.dir}/classes/msvc-redist/${build.dir.os}-${jvm.word.size}/msvcp100.dll" file="${build.dir}/vc2010redist/vc2010redist/${build.dir.os}${jvm.word.size}/msvcp100.dll" />
+      <copy tofile="${build.dir}/classes/msvc-redist/${build.dir.os}-${jvm.word.size}/msvcr100.dll" file="${build.dir}/vc2010redist/vc2010redist/${build.dir.os}${jvm.word.size}/msvcr100.dll" />
+   </target>
+
+   <target name="jar" depends="compile,download-win-runtime">
       <jar destfile="${build.dir}/Jeigen-${build.dir.os}-${jvm.word.size}.jar" basedir="${build.dir}/classes" />
    </target>
 

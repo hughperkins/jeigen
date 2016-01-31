@@ -1,3 +1,5 @@
+package jeigen;
+
 import jeigen.*;
 
 class TestSimple {

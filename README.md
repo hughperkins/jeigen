@@ -386,7 +386,7 @@ You will need to add the following to your class-path:
 
 linux, eg for linux-64:
 ```
-java -cp build/linux-64/Jeigen-linux-64.jar:build/linux-64/jna-4.1.0.jar TestSimple
+java -cp build/linux-64/Jeigen-linux-64.jar:build/linux-64/jna-4.1.0.jar jeigen.TestSimple
 ```
 Should display a 2x2 matrix, with 1,2,3,4; and no error messages:
 ```
