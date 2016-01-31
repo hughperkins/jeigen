@@ -75,12 +75,6 @@ You will need:
 - [jna-4.1.0.jar](https://github.com/hughperkins/jeigen/releases/download/v1.2/jna-4.1.0.jar)
 
 These were built and tested on:
-- Ubuntu 14.04 32-bit
-- Ubuntu 14.04 64-bit
-- Windows Server 2003 R2 64-bit, using Visual Studio 2013, and 32-bit Sun jvm
-- Windows Server 2003 R2 64-bit, using Visual Studio 2013, and 64-bit Sun jvm
-
-Nuance, the new 1.2 builds (in progress) are built/tested on:
 - Ubuntu 14.04 32-bit, using openjdk-7-jdk 32-bit
 - Ubuntu 14.04 64-bit, using openjdk-7-jdk 64-bit
 - Windows Server 2012 R2 64-bit, using Visual Studio 2010 Express, and 32-bit Sun jvm 1.7
