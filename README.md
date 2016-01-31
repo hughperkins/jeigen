@@ -80,6 +80,12 @@ These were built and tested on:
 - Windows Server 2003 R2 64-bit, using Visual Studio 2013, and 32-bit Sun jvm
 - Windows Server 2003 R2 64-bit, using Visual Studio 2013, and 64-bit Sun jvm
 
+Nuance, the new 1.2 builds (in progress) are built/tested on:
+- Ubuntu 14.04 32-bit, using openjdk-7-jdk 32-bit
+- Ubuntu 14.04 64-bit, using openjdk-7-jdk 64-bit
+- Windows Server 2012 R2 64-bit, using Visual Studio 2010 Express, and 32-bit Sun jvm 1.7
+- Windows Server 2012 R2 64-bit, using Visual Studio 2010 Express, and 64-bit Sun jvm 1.7
+
 You can use on Mac OS X too, but you'll need to build from source.  Tested on:
 - Mac OS X 10.11 64-bit  https://travis-ci.org/hughperkins/jeigen
 
@@ -362,7 +368,7 @@ You will need to add the following to your class-path:
 - have a jdk available, at least 1.6
 - have installed ant
 - have installed cmake, version 3.x
-- have installed Visual Studio C++ Express 2013
+- have installed Visual Studio C++ Express 2010 (or later version; but tested on 2010)
 
 ### Procedure
 
@@ -370,10 +376,11 @@ You will need to add the following to your class-path:
 2. cd jeigen
 3. set PATH=%PATH%;c:\apache-ant\bin
  * set to appropriate path for your ant installation
-4. ant -Dcmake_home="c:\program files (x86)\Cmake" -Dgenerator="Visual Studio 12 2013 Win64"
+4. ant -Dcmake_home="c:\program files (x86)\Cmake" -Dgenerator="Visual Studio 10 2010 Win64"
  * set to appropriate path for your cmake installation
  * if you're using Visual Studio 2010, please change generator name to "Visual Studio 10 2010 Win64"
  * if you're using Visual Studio 2012, please change generator name to "Visual Studio 11 2012 Win64"
+ * if you're using Visual Studio 2013, please change generator name to "Visual Studio 12 2013 Win64"
  * if you're using 32-bit Java JDK, please remove " Win64" from end of generator name
 
 According to whether you use a 64-bit jvm or a 32-bit jvm, the files will be created in 'build\win-32' or 'build\win-64'.
@@ -473,6 +480,8 @@ Jeigen is available under MPL v2 license, http://mozilla.org/MPL/2.0/
 
 # News
 
+- 31 Jan 2016:
+  - windows build process based on vs 2010 now, and adds the msvc 2010 redistributables to the jar file
 - 3rd Jan 2016:
   - builds and tests run ok on Mac OS X https://travis-ci.org/hughperkins/jeigen/builds/99918875
 - 12th Aug 2015:
