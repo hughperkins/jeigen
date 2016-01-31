@@ -388,7 +388,16 @@ linux, eg for linux-64:
 ```
 java -cp build/linux-64/Jeigen-linux-64.jar:build/linux-64/jna-4.1.0.jar TestSimple
 ```
-Should display a 2x2 matrix, with 1,2,3,4; and no error messages.
+Should display a 2x2 matrix, with 1,2,3,4; and no error messages:
+```
+DenseMatrix, 2 * 2:
+
+ 1.00000  2.00000 
+ 3.00000  4.00000 
+
+
+If you got this far, saw a 2x2 matrix with numbers 1,2,3,4, and no error message, then everything is working ok
+```
 
 Similarly for Windows, eg for win-64:
 ```
