@@ -71,8 +71,8 @@ commands such as 'zeros', 'ones', 'eye' and 'diag'.
 ## Download
 
 You will need:
-- [Jeigen-win-linux-32-64.jar](http://hughperkins.com/jeigen/Jeigen-win-linux-32-64.jar)
-- [jna-4.0.0.jar](http://hughperkins.com/jeigen/jna-4.0.0.jar)
+- [Jeigen-onefat.jar](https://github.com/hughperkins/jeigen/releases/download/v1.2/Jeigen-onefat.jar)
+- [jna-4.1.0.jar](https://github.com/hughperkins/jeigen/releases/download/v1.2/jna-4.1.0.jar)
 
 These were built and tested on:
 - Ubuntu 14.04 32-bit
@@ -85,17 +85,15 @@ Nuance, the new 1.2 builds (in progress) are built/tested on:
 - Ubuntu 14.04 64-bit, using openjdk-7-jdk 64-bit
 - Windows Server 2012 R2 64-bit, using Visual Studio 2010 Express, and 32-bit Sun jvm 1.7
 - Windows Server 2012 R2 64-bit, using Visual Studio 2010 Express, and 64-bit Sun jvm 1.7
-
-You can use on Mac OS X too, but you'll need to build from source.  Tested on:
-- Mac OS X 10.11 64-bit  https://travis-ci.org/hughperkins/jeigen
+- Mac OS X 10.11 64-bit, via https://travis-ci.org/hughperkins/jeigen , and as per [.travis.yml](.travis.yml)
 
 ## Linking to Jeigen
 
 You will need to add the following jars to the classpath:
-- Jeigen-win-linux-32-64.jar
-- jna-4.0.0.jar
+- Jeigen-onefat.jar
+- jna-4.1.0.jar
 
-Jeigen-win-linux-32-64.jar contains the native .dll or .so, for all these
+Jeigen-onefat.jar contains the native .dylib, .dlls and .so, for: win32, win64, linux32, linux64, and Mac OS X 64-bit
 platforms, which will be decompressed into the '.jeigen' folder, in your home-directory, at runtime.
 
 # Jeigen API
@@ -482,6 +480,7 @@ Jeigen is available under MPL v2 license, http://mozilla.org/MPL/2.0/
 
 - 31 Jan 2016:
   - windows build process based on vs 2010 now, and adds the msvc 2010 redistributables to the jar file
+  - published v1.2 jar, containing latest changes, and which should run on all of win32, win64, linux32, linux64, Mac OS X
 - 3rd Jan 2016:
   - builds and tests run ok on Mac OS X https://travis-ci.org/hughperkins/jeigen/builds/99918875
 - 12th Aug 2015:
