@@ -38,9 +38,9 @@ script:
   - jar -tf build/mac-64/Jeigen-mac-64.jar
   - export CLASSPATH=$CLASSPATH:$PWD/build/mac-64/Jeigen-mac-64.jar
   - export CLASSPATH=$CLASSPATH:$PWD/build/mac-64/jna-4.1.0.jar
-  - javac $PWD/TestSimple.java
-  - java -Djna.nosys=true TestSimple
   - ant test
+  - java -cp build/mac-64/Jeigen-mac-64.jar:build/mac-64/jna-4.1.0.jar jeigen.TestSimple
+
 
 notifications:
   email:
