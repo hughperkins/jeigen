@@ -12,15 +12,17 @@ before_install:
   - export JAVA_HOME=$(/usr/libexec/java_home)
   - echo $JAVA_HOME
   - cd
-  - wget http://apache.fayea.com//ant/source/apache-ant-1.9.6-src.tar.bz2
-  - tar -xf apache-ant-1.9.6-src.tar.bz2
-  - cd apache-ant-1.9.6
-  - ./build.sh
+  - # wget http://apache.fayea.com//ant/source/apache-ant-1.9.6-src.tar.bz2
+  - # tar -xf apache-ant-1.9.6-src.tar.bz2
+  - # cd apache-ant-1.9.6
+  - # ./build.sh
+  - wget http://www.apache.org/dist/ant/binaries/apache-ant-1.9.6-bin.tar.bz2
+  - tar -xf apache-ant-1.9.6-bin.tar.bz2
   - cd $HOME/build/hughperkins/jeigen
 
 script:
-  - export PATH=$PATH:$HOME/apache-ant-1.9.6/dist/bin
-  - export CLASSPATH=$CLASSPATH:$HOME/apache-ant-1.9.6/dist/lib
+  - export PATH=$PATH:$HOME/apache-ant-1.9.6/bin
+  - export CLASSPATH=$CLASSPATH:$HOME/apache-ant-1.9.6/lib
   - ant
   - ls -l build/mac-64/native
   - ls -l build/mac-64/classes
@@ -30,6 +32,9 @@ script:
   - export CLASSPATH=$CLASSPATH:$PWD/build/mac-64/jna-4.1.0.jar
   - ant test
   - java -cp build/mac-64/Jeigen-mac-64.jar:build/mac-64/jna-4.1.0.jar jeigen.TestSimple
+  - rm -Rf build/mac-64/classes
+  - rm -Rf build/mac-64/native
+  - rm -Rf build/mac-64/jna-4.1.0.jar
 
 
 notifications:
