@@ -375,7 +375,7 @@ public class SparseMatrixLil {
 		return toDense().sub(second);
 	}
 	public DenseMatrix add( DenseMatrix second ) {
-		return toDense().sub(second);
+		return toDense().add(second);
 	}
 	public DenseMatrix div( DenseMatrix second ) {
 		return toDense().sub(second);
