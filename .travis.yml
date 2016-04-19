@@ -16,13 +16,13 @@ before_install:
   - # tar -xf apache-ant-1.9.6-src.tar.bz2
   - # cd apache-ant-1.9.6
   - # ./build.sh
-  - wget http://www.apache.org/dist/ant/binaries/apache-ant-1.9.6-bin.tar.bz2
-  - tar -xf apache-ant-1.9.6-bin.tar.bz2
+  - wget http://www.apache.org/dist/ant/binaries/apache-ant-1.9.7-bin.tar.bz2
+  - tar -xf apache-ant-1.9.7-bin.tar.bz2
   - cd $HOME/build/hughperkins/jeigen
 
 script:
-  - export PATH=$PATH:$HOME/apache-ant-1.9.6/bin
-  - export CLASSPATH=$CLASSPATH:$HOME/apache-ant-1.9.6/lib
+  - export PATH=$PATH:$HOME/apache-ant-1.9.7/bin
+  - export CLASSPATH=$CLASSPATH:$HOME/apache-ant-1.9.7/lib
   - ant
   - ls -l build/mac-64/native
   - ls -l build/mac-64/classes
