@@ -378,10 +378,10 @@ public class SparseMatrixLil {
 		return toDense().add(second);
 	}
 	public DenseMatrix div( DenseMatrix second ) {
-		return toDense().sub(second);
+		return toDense().div(second);
 	}
 	public DenseMatrix mul( DenseMatrix second ) {
-		return toDense().sub(second);
+		return toDense().mul(second);
 	}
 	public SparseMatrixLil neg() {
 		SparseMatrixLil result = new SparseMatrixLil(rows,cols);
