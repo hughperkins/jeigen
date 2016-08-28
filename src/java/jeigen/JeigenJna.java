@@ -30,8 +30,8 @@ class JeigenJna {
                 System.setProperty( "jna.library.path", newpath );
             }
         }
-	static void installFile(String sourcePath, String destPath) throws IOException, FileNotFoundException, Exception {
-		ClassLoader classLoader = getClassLoader();
+    static void installFile(String sourcePath, String destPath) throws IOException, FileNotFoundException, Exception {
+        ClassLoader classLoader = getClassLoader();
                 if( !new File(destPath).exists() ) {
                     InputStream inputStream = classLoader.getResourceAsStream(sourcePath);
                     OutputStream outputStream = new FileOutputStream(destPath );
@@ -39,14 +39,14 @@ class JeigenJna {
                     inputStream.close();
                     outputStream.close();
                 }
-	}
+    }
         static {
             try{
                 String userDirectory = System.getProperty("user.home");
                 String nativeDirectory = userDirectory + File.separator + ".jeigen" + File.separator + "native2";
-		if(OsHelper.isWindows()) {
-			nativeDirectory = nativeDirectory + File.separator + "win-" + OsHelper.jvmBits();
-		}
+        if(OsHelper.isWindows()) {
+            nativeDirectory = nativeDirectory + File.separator + "win-" + OsHelper.jvmBits();
+        }
                 new File( nativeDirectory ).mkdirs();
                 ClassLoader classLoader = getClassLoader();
                 String nativefilename = "libjeigen-linux-" + OsHelper.jvmBits() + ".so";
@@ -55,11 +55,11 @@ class JeigenJna {
                 } else if( OsHelper.isMac() ) {
                     nativefilename = "libjeigen-mac-" + OsHelper.jvmBits() + ".dylib";
                 }
-		installFile(nativefilename, nativeDirectory + File.separator + nativefilename);
-		if(OsHelper.isWindows()) {
-			installFile("msvc-redist/win-" + OsHelper.jvmBits() + "/msvcp100.dll", nativeDirectory + File.separator + "msvcp100.dll");
-			installFile("msvc-redist/win-" + OsHelper.jvmBits() + "/msvcr100.dll", nativeDirectory + File.separator + "msvcr100.dll");
-		}
+        installFile(nativefilename, nativeDirectory + File.separator + nativefilename);
+        if(OsHelper.isWindows()) {
+            installFile("msvc-redist/win-" + OsHelper.jvmBits() + "/msvcp100.dll", nativeDirectory + File.separator + "msvcp100.dll");
+            installFile("msvc-redist/win-" + OsHelper.jvmBits() + "/msvcr100.dll", nativeDirectory + File.separator + "msvcr100.dll");
+        }
                 addToJnaPath( nativeDirectory );
                 Native.register(nativefilename.replace(".dylib","").replace("lib","").replace(".dll","").replace(".so","") );
             } catch(Exception e ) {

@@ -1,22 +1,21 @@
 // Copyright Hugh Perkins 2012, hughperkins -at- gmail
 //
-// This Source Code Form is subject to the terms of the Mozilla Public License, 
+// This Source Code Form is subject to the terms of the Mozilla Public License,
 // v. 2.0. If a copy of the MPL was not distributed with this file, You can 
 // obtain one at http://mozilla.org/MPL/2.0/.
 
 #pragma once
 
-// This wrapper presents a 'C' interface using only primitive types and 1d primitive arrays, 
+// This wrapper presents a 'C' interface using only primitive types and 1d primitive arrays,
 // which is then easy to link with from jna
 
 #if defined _WIN32 || defined _WIN64
-#define DllExport   __declspec( dllexport ) 
+#define DllExport __declspec(dllexport)
 #else 
-#define DllExport 
+#define DllExport
 #endif
 
 extern "C" {
-
     DllExport void init();
     DllExport void dense_dummy_op1( int rows, int cols, double *one, double *result ); // just used for measuring the overhead of java/jna calls
     DllExport void dense_dummy_op2( int rows, int middle, int cols, double *one, double *two, double *result ); // just used for measuring the overhead of java/jna calls
@@ -41,11 +40,11 @@ extern "C" {
 
     // does thin svd, returning u,s,v
     DllExport void svd_dense( int numrows, int numcols, double *in, double *u, double *s, double *v );
+
     //does approximate randomised svd
     DllExport void svd_random( int numrows, int numcols, double *in, double *u, double *s, double *v,int npc,int q);
-    
+
     // from unsupported
     DllExport void jeigen_exp( int n, double *in, double *result );
     DllExport void jeigen_log( int n, double *in, double *result );
-
 }

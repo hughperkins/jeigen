@@ -16,7 +16,7 @@ import junit.framework.TestCase;
 public class TestEigenvalues extends TestCase {
     public void testEigenvaluesEigenExample() {
         // based on example at top-ish of http://eigen.tuxfamily.org/dox/classEigen_1_1EigenSolver.html#a4140972e2b45343d1ef1793c2824159c
-		DenseMatrix A = new DenseMatrix(
+        DenseMatrix A = new DenseMatrix(
 "  0.68   -0.33   -0.27  -0.717  -0.687  0.0259;" +
 " -0.211   0.536  0.0268   0.214  -0.198   0.678;" +
 "  0.566  -0.444   0.904  -0.967   -0.74   0.225;" +
@@ -54,7 +54,7 @@ public class TestEigenvalues extends TestCase {
     }
     // from http://lpsa.swarthmore.edu/MtrxVibe/EigMat/MatrixEigen.html
     public void testEigenvaluesLpsa() {
-		DenseMatrix A = new DenseMatrix(
+        DenseMatrix A = new DenseMatrix(
 "     0   1;" +
 "  -2  -3");
         System.out.println( A );
@@ -79,7 +79,7 @@ public class TestEigenvalues extends TestCase {
         assertTrue( absvectorsdiff < 0.01 );
     }
     public void testEigenvaluesCircul() { // from http://www.mathworks.com/help/matlab/ref/eig.html
-		DenseMatrix A = new DenseMatrix(
+        DenseMatrix A = new DenseMatrix(
 "     1     2     3;" +
 "     3     1     2;" +
 "     2     3     1");
@@ -91,7 +91,7 @@ public class TestEigenvalues extends TestCase {
     }
     public void testPseudoEigenvaluesComplexCase() {
         // based on example at bottom of http://eigen.tuxfamily.org/dox/classEigen_1_1EigenSolver.html#a4140972e2b45343d1ef1793c2824159c
-		DenseMatrix A = new DenseMatrix(new double[][]{
+        DenseMatrix A = new DenseMatrix(new double[][]{
 {0.68  , -0.33  , -0.27 , -0.717,  -0.687 , 0.0259},
 { -0.211 ,  0.536 , 0.0268  , 0.214 , -0.198  , 0.678},
 {  0.566,  -0.444 ,  0.904 , -0.967 ,  -0.74   ,0.225},
