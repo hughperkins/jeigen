@@ -1,7 +1,7 @@
 // Copyright Hugh Perkins 2012, hughperkins -at- gmail
 //
-// This Source Code Form is subject to the terms of the Mozilla Public License, 
-// v. 2.0. If a copy of the MPL was not distributed with this file, You can 
+// This Source Code Form is subject to the terms of the Mozilla Public License,
+// v. 2.0. If a copy of the MPL was not distributed with this file, You can
 // obtain one at http://mozilla.org/MPL/2.0/.
 
 #include <stdexcept>
@@ -86,10 +86,10 @@ extern "C" {
         int i = 0;
         for (int k=0; k<pmat->outerSize(); ++k) {
             for (SparseMatrix<double>::InnerIterator it(*pmat,k); it; ++it) {
-              rows[i] = it.row();
-              cols[i] = it.col();
-              values[i] = it.value();
-              i++;
+                rows[i] = it.row();
+                cols[i] = it.col();
+                values[i] = it.value();
+                i++;
             }
       }
     }

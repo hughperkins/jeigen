@@ -10,8 +10,8 @@
 // which is then easy to link with from jna
 
 #if defined _WIN32 || defined _WIN64
-#define DllExport    __declspec(dllexport)
-#else 
+#define DllExport __declspec(dllexport)
+#else
 #define DllExport
 #endif
 
