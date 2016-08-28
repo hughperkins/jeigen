@@ -8,7 +8,7 @@ public class DenseMatrixComplex {
     DenseMatrix imag;
     public DenseMatrixComplex( DenseMatrix real, DenseMatrix imag ) {
         if( real.rows != imag.rows || real.cols != imag.cols ) {
-			throw new RuntimeException("matrix size mismatch: " + real.shape() + " vs " + imag.shape() );
+            throw new RuntimeException("matrix size mismatch: " + real.shape() + " vs " + imag.shape() );
         }
         this.real = new DenseMatrix( real );
         this.imag = new DenseMatrix( imag );
@@ -58,15 +58,15 @@ public class DenseMatrixComplex {
     public double getImag( int row, int col ) {
         return imag.get(row, col );
     }
-	public DenseMatrixComplex sub(DenseMatrixComplex second){
-		if( real.cols != second.real.cols || this.real.rows != second.real.rows ) {
-			throw new RuntimeException("matrix size mismatch: " + real.shape() + " vs " + second.real.shape() );
-		}
+    public DenseMatrixComplex sub(DenseMatrixComplex second){
+        if( real.cols != second.real.cols || this.real.rows != second.real.rows ) {
+            throw new RuntimeException("matrix size mismatch: " + real.shape() + " vs " + second.real.shape() );
+        }
         DenseMatrix realResult = this.real.sub( second.real );
         DenseMatrix imagResult = this.imag.sub( second.imag );
-		DenseMatrixComplex result = new DenseMatrixComplex(realResult, imagResult);
-		return result;
-	}
+        DenseMatrixComplex result = new DenseMatrixComplex(realResult, imagResult);
+        return result;
+    }
     public DenseMatrix real() {
         return new DenseMatrix( real );
     }
@@ -76,26 +76,26 @@ public class DenseMatrixComplex {
     public DenseMatrix abs() {  // abs returns always reals, so can return a normal DenseMatrix?
         DenseMatrix result = new DenseMatrix( this.real.rows, this.real.cols );
         int numElements = this.real.rows * this.real.cols;
-		for( int i = 0; i < numElements; i++ ) {
-    		result.values[i] = Math.sqrt( real.values[i] * real.values[i] + imag.values[i] * imag.values[i] );
-		}
+        for( int i = 0; i < numElements; i++ ) {
+            result.values[i] = Math.sqrt( real.values[i] * real.values[i] + imag.values[i] * imag.values[i] );
+        }
         return result;
     }
     public String toString() {
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("DenseMatrixComplex, " + real.rows + " * " + real.cols + ":\n");
-		stringBuilder.append("\n");
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("DenseMatrixComplex, " + real.rows + " * " + real.cols + ":\n");
+        stringBuilder.append("\n");
         int rows = real.rows;
         int cols = real.cols;
-		for( int r = 0; r < rows; r++ ) {
-			for( int c = 0; c < cols; c++ ) {
-				stringBuilder.append( "(" + real.get(r,c) + "," + imag.get(r,c) + ")");
-				stringBuilder.append(" ");
-			}
-			stringBuilder.append("\n");
-		}
-		stringBuilder.append("\n");
-		return stringBuilder.toString();
+        for( int r = 0; r < rows; r++ ) {
+            for( int c = 0; c < cols; c++ ) {
+                stringBuilder.append( "(" + real.get(r,c) + "," + imag.get(r,c) + ")");
+                stringBuilder.append(" ");
+            }
+            stringBuilder.append("\n");
+        }
+        stringBuilder.append("\n");
+        return stringBuilder.toString();
     }
 }
 
