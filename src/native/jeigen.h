@@ -11,7 +11,7 @@
 
 #if defined _WIN32 || defined _WIN64
 #define DllExport __declspec(dllexport)
-#else 
+#else
 #define DllExport
 #endif
 
