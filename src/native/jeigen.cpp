@@ -18,18 +18,18 @@ using namespace std;
 
 #include "RandomSVD.hpp"
 
-
 using namespace Eigen;
+
 
 /* use Map intead of this method
 void valuesToMatrix( int rows, int cols, double *values, MatrixXd *pM ) {
-   int i = 0;
-   for( int c = 0; c < cols; c++ ) {
-       for ( int r = 0; r < rows; r++ ) {
-           (*pM)(r,c) = values[i];
-           i++;
-       }
-   }
+    int i = 0;
+    for( int c = 0; c < cols; c++ ) {
+        for ( int r = 0; r < rows; r++ ) {
+            (*pM)(r,c) = values[i];
+            i++;
+        }
+    }
 }*/
 
 void matrixToValues( int rows, int cols, const MatrixXd *pM, double *values ) {
