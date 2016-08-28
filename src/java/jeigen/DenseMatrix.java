@@ -38,32 +38,32 @@ public class DenseMatrix {
     public double s() {
         return values[0];
     }
-    //        public class Row {
-    //                final int row;
-    //                public Row(int row ){
-    //                        this.row = row;
-    //                }
-    //                public double get(int col) {
-    //                        return values[rows * col + row];
-    //                }
-    //                public void set( int col, double value ){
-    //                        values[rows * col + row] = value;
-    //                }
+    //    public class Row {
+    //        final int row;
+    //        public Row(int row ){
+    //            this.row = row;
     //        }
-    //        public class Col {
-    //                final int col;
-    //                final int offset;
-    //                public Col(int col ){
-    //                        this.col = col;
-    //                        this.offset = rows * col;
-    //                }
-    //                public double get(int row) {
-    //                        return values[offset + row];
-    //                }
-    //                public void set( int row, double value ){
-    //                        values[offset + row] = value;
-    //                }
+    //        public double get(int col) {
+    //            return values[rows * col + row];
     //        }
+    //        public void set( int col, double value ){
+    //            values[rows * col + row] = value;
+    //        }
+    //    }
+    //    public class Col {
+    //        final int col;
+    //        final int offset;
+    //        public Col(int col ){
+    //            this.col = col;
+    //            this.offset = rows * col;
+    //        }
+    //        public double get(int row) {
+    //            return values[offset + row];
+    //        }
+    //        public void set( int row, double value ){
+    //            values[offset + row] = value;
+    //        }
+    //    }
     /**
      * return copy of column col
      */
@@ -340,14 +340,14 @@ public class DenseMatrix {
         }
         return result;
     }
-    //        public DenseMatrix getCol(int col) {
-    //                DenseMatrix result = new DenseMatrix(rows,1);
-    //                int offset = rows * col;
-    //                for( int i = 0; i < rows; i++ ) {
-    //                        result.values[i] = values[offset + i ];
-    //                }
-    //                return result;
+    //    public DenseMatrix getCol(int col) {
+    //        DenseMatrix result = new DenseMatrix(rows,1);
+    //        int offset = rows * col;
+    //        for( int i = 0; i < rows; i++ ) {
+    //            result.values[i] = values[offset + i ];
     //        }
+    //        return result;
+    //    }
     /**
      * return rows*cols matrix of uniform random values from 0 to 1
      */

@@ -23,13 +23,13 @@ using namespace Eigen;
 
 /* use Map intead of this method
    void valuesToMatrix( int rows, int cols, double *values, MatrixXd *pM ) {
-   int i = 0;
-   for( int c = 0; c < cols; c++ ) {
-   for ( int r = 0; r < rows; r++ ) {
-   (*pM)(r,c) = values[i];
-   i++;
-   }
-   }
+       int i = 0;
+       for( int c = 0; c < cols; c++ ) {
+           for ( int r = 0; r < rows; r++ ) {
+               (*pM)(r,c) = values[i];
+               i++;
+           }
+       }
    }*/
 
 void matrixToValues( int rows, int cols, const MatrixXd *pM, double *values ) {
@@ -178,7 +178,7 @@ extern "C" {
     DllExport void svd_random( int n, int p, double *in, double *u, double *s, double *v,int npc,int q) {
         Map<MatrixXd> In(in, n, p );
         RandomSVD<MatrixXd> svd(In, npc, q);
-        matrixToValues( n, npc, &(svd.matrixU()), u );       
+        matrixToValues( n, npc, &(svd.matrixU()), u );
         for( int i = 0; i < npc; i++ ) {
             s[i] = svd.singularValues()(i);
         }
