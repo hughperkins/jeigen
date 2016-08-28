@@ -1131,7 +1131,7 @@ public class DenseMatrix {
         return result;
     }
     public static class EigenResult {
-        public DenseMatrixComplex values; // will be n * 1 matrix, where n * n 
+        public DenseMatrixComplex values; // will be n * 1 matrix, where n * n
         // is size of the vectors matrix
         public DenseMatrixComplex vectors;
         public EigenResult( DenseMatrixComplex values, DenseMatrixComplex vectors ) {
